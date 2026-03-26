@@ -33,7 +33,7 @@
   --content-max:720px;
 }
 html{font-size:14px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:80px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:100px}
 *{font-family:inherit}
 button{cursor:pointer;border:none;outline:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 textarea,select,input{font-family:inherit}
@@ -249,7 +249,7 @@ const WEBHOOK='https://hook.us2.make.com/pz24jw68dgh7c3realu1locfwlq1ny67';
 const WA_GROUP='https://chat.whatsapp.com/G0erwUW5npX4ejKNcU3lT5';
 const USERS_KEY='konclui_users';
 const SESSION_KEY='konclui_session';
-const VERSION='2026.12';
+const VERSION='2026.14';
 const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab';
 
 (function(){
@@ -259,14 +259,14 @@ const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab
 
 const DEFAULT_USERS={
   gabriela:{name:'Gabriela',login:'gabriela',role:'subgerente',pwd:PWD_2026,first:false,color:'#E8001C'},
-  vitoria:{name:'Vitória',login:'vitoria',role:'subgerente',pwd:PWD_2026,first:false,color:'#7C3AED'},
+  vitoria:{name:'Vitória',login:'vitoria',role:'subgerente_noite',pwd:PWD_2026,first:false,color:'#7C3AED'},
   bruna:{name:'Bruna',login:'bruna',role:'suporte',pwd:PWD_2026,first:false,color:'#2563EB'},
   gerente:{name:'Gerente',login:'gerente',role:'gerente',pwd:PWD_2026,first:false,color:'#00B37E'},
   camila:{name:'Camila',login:'camila',role:'ceo',pwd:PWD_2026,first:false,color:'#1A1A1A'},
   derik:{name:'Derik',login:'derik',role:'gerencia',pwd:PWD_2026,first:false,color:'#0F4C81'},
   viviane:{name:'Viviane',login:'viviane',role:'dp',pwd:PWD_2026,first:false,color:'#0891B2'},
 };
-function getUsers(){try{const u=JSON.parse(localStorage.getItem(USERS_KEY))||{...DEFAULT_USERS};if(!u.derik)u.derik={...DEFAULT_USERS.derik};if(!u.viviane)u.viviane={...DEFAULT_USERS.viviane};return u;}catch{return{...DEFAULT_USERS};}}
+function getUsers(){try{const u=JSON.parse(localStorage.getItem(USERS_KEY))||{...DEFAULT_USERS};if(!u.derik)u.derik={...DEFAULT_USERS.derik};if(!u.viviane)u.viviane={...DEFAULT_USERS.viviane};if(!u.gabriela)u.gabriela={...DEFAULT_USERS.gabriela};else if(u.gabriela.role!=='subgerente')u.gabriela.role='subgerente';if(!u.vitoria)u.vitoria={...DEFAULT_USERS.vitoria};else if(u.vitoria.role!=='subgerente_noite')u.vitoria.role='subgerente_noite';return u;}catch{return{...DEFAULT_USERS};}}
 function saveUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
 function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY));}catch{return null;}}
 function saveSession(s){sessionStorage.setItem(SESSION_KEY,JSON.stringify(s));}
@@ -428,6 +428,10 @@ var DP_BLOCOS_MENSAL=[
     {id:'dp_m3_i2',texto:'Necessidades de contratação foram levantadas'},
     {id:'dp_m3_i3',texto:'Treinamentos obrigatórios foram agendados'},
     {id:'dp_m3_i4',texto:'Relatório mensal de DP foi elaborado e entregue'}
+  ]},
+  {id:'dp_m4',titulo:'Benefícios — VR e VT',itens:[
+    {id:'dp_m4_i1',texto:'VT calculado e processado corretamente — Dia 15',vr_vt:'vt'},
+    {id:'dp_m4_i2',texto:'VR calculado e processado corretamente — Dia 30',vr_vt:'vr'}
   ]}
 ];
 var DP_FREQ_MAP={
@@ -566,10 +570,17 @@ function DPBlocoItem(props){
   return(
     <div className={'chk-item lc'+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}>
       <div className="chk-title">{item.texto}</div>
+      {item.vr_vt&&<div style={{display:'inline-flex',alignItems:'center',gap:5,background:item.vr_vt==='vt'?'#EDE9FE':'#FEF3C7',color:item.vr_vt==='vt'?'#5B21B6':'#92400E',borderRadius:99,padding:'3px 10px',fontSize:10,fontWeight:700,marginBottom:8}}>{item.vr_vt==='vt'?'💳 VT — Dia 15':'🍽️ VR — Dia 30'}</div>}
       <div className="ans-row">
         <button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={handleSim}><span>{resp==='sim'?'✓':'○'}</span> Sim</button>
         <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
       </div>
+      {resp==='sim'&&item.vr_vt&&(
+        <div style={{marginTop:10}}>
+          <div style={{fontSize:11,fontWeight:600,color:'var(--ink2)',marginBottom:5}}>Dúvida ou anotação? <span style={{color:'var(--ink3)',fontWeight:400}}>(opcional)</span></div>
+          <textarea className="neg-obs" value={(neg&&neg.obs_vr_vt)||''} onChange={function(e){onNeg(item.id,function(prev){return Object.assign({},prev||{},{obs_vr_vt:e.target.value});});}} placeholder="Ex: colaborador entrou dia 20, inclui proporcional..." style={{minHeight:52,width:'100%',fontSize:12}}/>
+        </div>
+      )}
       {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
       {resp==='nao'&&(
         <div>
@@ -797,7 +808,18 @@ function DPHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
   if(mode==='dp')return<DPChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>📋</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>DP — Departamento Pessoal · CheckON</div></div><button onClick={function(){setMode('dp');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:32}}>📋</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Preencher Checklist</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Diário · Semanal · Mensal</div></div></button><button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+  if(mode==='historico')return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
+      <div style={{background:'#0891B2',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · DP</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+        </div>
+      </div>
+      <HistoricoPanel user={user} tabela="dp_checklists" labelTurno={function(d){return({'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'})[d.freq]||'📋';}}/>
+    </div>
+  );
+  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>📋</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>DP — Departamento Pessoal · CheckON</div></div><button onClick={function(){setMode('dp');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:32}}>📋</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Preencher Checklist</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Diário · Semanal · Mensal</div></div></button><button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:28}}>📈</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico e falhas frequentes</div></div></button><button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
 }
 
 function GerNaoForm(props){return<SharedNaoForm data={props.data} onChange={props.onChange} showErr={props.showErr} responsaveis={['Bruna','Camila','Derik','Vinicius','Débora','Cíntia','Viviane','Manutenção','Eu mesmo']}/>;}
@@ -961,7 +983,80 @@ function ChecklistScreen(props){
   return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div></div>);
 }
 
-/* ═══ CEO DASHBOARD ═══ */
+/* ── CEO: linha expandível de turno da subgerência ── */
+function SubgerCEORow(props){
+  var d=props.d;
+  var _o=useState(false);var open=_o[0];var setOpen=_o[1];
+  var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';
+  var st=d.status==='ok'?'Operação controlada':d.status==='atencao'?'Atenção':'Crítico';
+  var stBg=st==='Operação controlada'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';
+  var stC=st==='Operação controlada'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';
+  var allSgItems=SUBGER_ETAPAS.reduce(function(a,e){return a.concat(e.itens);},[]);
+  var etapasDef=[
+    {titulo:'Abertura do Turno',ids:SUBGER_ETAPAS[0].itens.map(function(i){return i.id;})},
+    {titulo:'Controle da Operação',ids:SUBGER_ETAPAS[1].itens.map(function(i){return i.id;})},
+    {titulo:'Fechamento do Turno Manhã',ids:SUBGER_ETAPAS[2].itens.map(function(i){return i.id;})}
+  ];
+  return(
+    <div style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',overflow:'hidden'}}>
+      <div onClick={function(){setOpen(function(o){return !o;});}} style={{padding:'13px 14px',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}}>
+        <div style={{flex:1}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:5,flexWrap:'wrap'}}>
+            <span style={{fontSize:11,fontWeight:600,color:'var(--brand)'}}>🌅 Manhã</span>
+            <span style={{fontSize:11,color:'var(--ink3)'}}>{d.data_fmt||d.data} · {d.hora}</span>
+            <span style={{fontSize:11,fontWeight:700,color:'var(--ink2)'}}>{d.user_name}</span>
+          </div>
+          <div style={{display:'flex',gap:12,fontSize:11,color:'var(--ink2)',flexWrap:'wrap'}}>
+            <span>✅ {d.total-(d.falhas||0)}/{d.total} OK</span>
+            {(d.falhas||0)>0&&<span style={{color:'var(--danger)',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}
+            {(d.pendencias||0)>0&&<span style={{color:'var(--warn)',fontWeight:600}}>⏳ {d.pendencias} pendência{d.pendencias>1?'s':''}</span>}
+          </div>
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:8,flexShrink:0}}>
+          <span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{sc}</span>
+          <span className="pill" style={{background:stBg,color:stC}}>{st}</span>
+          <span style={{fontSize:11,color:'var(--ink3)'}}>{open?'▴':'▾'}</span>
+        </div>
+      </div>
+      {open&&(
+        <div style={{borderTop:'1px solid #F3F4F6',background:'#FAFAFA',padding:'12px 14px'}}>
+          <div style={{fontSize:11,fontWeight:700,color:'var(--ink3)',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Etapas</div>
+          {etapasDef.map(function(e){
+            var rs=d.resps||{};var ng=d.negs||{};
+            var fl=e.ids.filter(function(id){return rs[id]==='nao';}).length;
+            var ok=e.ids.every(function(id){return rs[id];});
+            return(
+              <div key={e.titulo} style={{marginBottom:10}}>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'8px 10px',background:fl>0?'#FEF2F2':ok?'#F0FDF4':'#F9FAFB',borderRadius:'var(--r8)',border:'1px solid '+(fl>0?'var(--danger-line)':ok?'var(--ok-line)':'var(--line)')}}>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>{e.titulo}</div>
+                  <span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':ok?'var(--ok)':'var(--ink3)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):ok?'✅ OK':'⏳'}</span>
+                </div>
+                {fl>0&&e.ids.filter(function(id){return rs[id]==='nao';}).map(function(id){
+                  var sgItem=allSgItems.find(function(it){return it.id===id;});
+                  var neg=ng[id]||{};
+                  return(
+                    <div key={id} style={{padding:'8px 10px',borderBottom:'1px solid #F3F4F6',background:'#FFF5F5',marginTop:2,borderRadius:'var(--r4)'}}>
+                      <div style={{fontSize:12,color:'var(--ink)',lineHeight:1.4,marginBottom:3}}>{sgItem?sgItem.texto:id}</div>
+                      <div style={{fontSize:11,color:'#991B1B',lineHeight:1.5}}>
+                        {neg.aconteceu&&<span>O que: {neg.aconteceu}</span>}
+                        {neg.feito&&<span> · Ação: {neg.feito}</span>}
+                        {neg.prox&&<div style={{fontWeight:600,marginTop:2}}>{neg.prox==='Sim, fica pendente'?'⚠️ Pendente':'✅ Encerrado'}</div>}
+                        {neg.detalhe&&<div style={{color:'var(--ink2)',marginTop:1}}>{neg.detalhe}</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+          {d.relato&&<div style={{marginTop:8,background:'#F0F9FF',borderRadius:'var(--r8)',padding:'10px 12px',fontSize:12,color:'#0369A1',lineHeight:1.5}}><strong>Obs. do turno:</strong> {d.relato}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══ CEO DASHBOARD ══ */
 function CEODashboard(props){
   var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
   var _t=useState('overview');var tab=_t[0];var setTab=_t[1];
@@ -969,6 +1064,9 @@ function CEODashboard(props){
   var _gerData=useState([]);var gerData=_gerData[0];var setGerData=_gerData[1];
   var _dpData=useState([]);var dpData=_dpData[0];var setDpData=_dpData[1];
   var _dpSugs=useState([]);var dpSugs=_dpSugs[0];var setDpSugs=_dpSugs[1];
+  var _subgerData=useState([]);var subgerData=_subgerData[0];var setSubgerData=_subgerData[1];
+  var _noiteData=useState([]);var noiteData=_noiteData[0];var setNoiteData=_noiteData[1];
+  var _pendData=useState([]);var pendData=_pendData[0];var setPendData=_pendData[1];
   var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
   var _dpDetail=useState(null);var dpDetail=_dpDetail[0];var setDpDetail=_dpDetail[1];
 
@@ -978,6 +1076,9 @@ function CEODashboard(props){
       if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){var d=await sbSelect('checklists');setCkData(d);}
       if(tab==='overview'||tab==='gerencia'){var g=await sbSelect('ger_checklists');setGerData(g);}
       if(tab==='overview'||tab==='dp'){var dp=await sbSelect('dp_checklists');setDpData(dp);var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
+      if(tab==='overview'||tab==='subgerencia'){var sg=await sbSelect('subger_checklists');setSubgerData(sg);}
+      if(tab==='overview'||tab==='vitoria'){var nt=await sbSelect('subger_noite_checklists');setNoiteData(nt);}
+      if(tab==='overview'||tab==='pendencias'){var pd=await sbSelect('checkon_pendencias');setPendData(pd.filter(function(r){return r.status==='aberta';}));}
       setLoading(false);
     }
     load();
@@ -986,6 +1087,8 @@ function CEODashboard(props){
   var kpi=useMemo(function(){var r=ckData;var tot=r.length;var avg=tot>0?Math.round(r.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=r.reduce(function(a,b){return a+b.falhas;},0);var cr=r.reduce(function(a,b){return a+b.criticos;},0);var conf=r.filter(function(d){return d.status==='conforme';}).length;return{tot:tot,avg:avg,fl:fl,cr:cr,conf:conf,taxa:tot>0?Math.round(conf/tot*100):0};},[ckData]);
   var gerKpi=useMemo(function(){var tot=gerData.length;var avg=tot>0?Math.round(gerData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=gerData.reduce(function(a,b){return a+b.falhas;},0);return{tot:tot,avg:avg,fl:fl};},[gerData]);
   var dpKpi=useMemo(function(){var tot=dpData.length;var avg=tot>0?Math.round(dpData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=dpData.reduce(function(a,b){return a+b.falhas;},0);var ok=dpData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,ok:ok};},[dpData]);
+  var subgerKpi=useMemo(function(){var tot=subgerData.length;var avg=tot>0?Math.round(subgerData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=subgerData.reduce(function(a,b){return a+b.falhas;},0);var pend=subgerData.reduce(function(a,b){return a+(b.pendencias||0);},0);var ok=subgerData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,pend:pend,ok:ok};},[subgerData]);
+  var noiteKpi=useMemo(function(){var tot=noiteData.length;var avg=tot>0?Math.round(noiteData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=noiteData.reduce(function(a,b){return a+b.falhas;},0);var pend=noiteData.reduce(function(a,b){return a+(b.pendencias||0);},0);var ok=noiteData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,pend:pend,ok:ok};},[noiteData]);
   var ranking=useMemo(function(){var names=[];ckData.forEach(function(d){if(names.indexOf(d.user_name)<0)names.push(d.user_name);});return names.map(function(name){var d=ckData.filter(function(x){return x.user_name===name;});return{name:name,avg:Math.round(d.reduce(function(a,b){return a+b.score;},0)/d.length),turnos:d.length,falhas:d.reduce(function(a,b){return a+b.falhas;},0)};}).sort(function(a,b){return b.avg-a.avg;});},[ckData]);
   var alertas=useMemo(function(){return ckData.filter(function(d){return d.criticos>0;}).slice(0,8).map(function(d){return{msg:d.user_name+' · '+(d.turno==='manha'?'Manhã':'Tarde')+' · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score};});},[ckData]);
   var aColors=['#E8001C','#7C3AED','#2563EB','#F97316'];
@@ -1018,10 +1121,10 @@ function CEODashboard(props){
             <button className="hdr-btn" style={{background:'rgba(255,255,255,.12)',border:'1.5px solid rgba(255,255,255,.25)',color:'#fff',borderRadius:99,padding:'6px 12px',fontSize:10,fontWeight:700}} onClick={onLogout}>Sair</button>
           </div>
         </div>
-        <div style={{marginTop:8,fontSize:10,opacity:.55}}>{todayFmt()} · {ckData.length} turnos · {gerData.length} gerenciais · {dpData.length} DP</div>
+        <div style={{marginTop:8,fontSize:10,opacity:.55}}>{todayFmt()} · {ckData.length} turnos · {gerData.length} gerenciais · {dpData.length} DP · {subgerData.length} subger.</div>
       </div>
       <div className="ceo-nav">
-        {[['overview','📊 Geral'],['gerencia','🏢 Gerência'],['dp','🗂️ DP'],['ranking','🏆 Ranking'],['alertas','🚨 Alertas'],['turnos','📋 Turnos']].map(function(x){
+        {[['overview','📊 Geral'],['gerencia','🏢 Gerência'],['dp','🗂️ DP'],['subgerencia','🌅 Gabriela'],['vitoria','🌙 Vitória'],['pendencias','⚠️ Pendências'],['ranking','🏆 Ranking'],['alertas','🚨 Alertas'],['turnos','📋 Turnos']].map(function(x){
           var badge=x[0]==='dp'&&dpSugs.length>0?React.createElement('span',{style:{background:'var(--warn)',color:'#fff',borderRadius:99,padding:'1px 6px',fontSize:9,fontWeight:800,marginLeft:4}},dpSugs.length):null;
           return<button key={x[0]} className={'nav-tab'+(tab===x[0]?' active':'')} onClick={function(){setTab(x[0]);}}>{x[1]}{badge}</button>;
         })}
@@ -1046,6 +1149,9 @@ function CEODashboard(props){
               <div className="kpi-card kc-o"><div className="kpi-ico">🔴</div><div className="kpi-lbl">Críticos</div><div className="kpi-val">{kpi.cr}</div></div>
               <div className="kpi-card kc-b"><div className="kpi-ico">🏢</div><div className="kpi-lbl">Rel. Gerenciais</div><div className="kpi-val">{gerData.length}</div><div className="kpi-sub">Derik</div></div>
               <div className="kpi-card kc-t"><div className="kpi-ico">🗂️</div><div className="kpi-lbl">Rotinas DP</div><div className="kpi-val">{dpData.length}</div><div className="kpi-sub">Viviane</div></div>
+              <div className="kpi-card kc-o"><div className="kpi-ico">🌅</div><div className="kpi-lbl">Turnos Manhã</div><div className="kpi-val">{subgerData.length}</div><div className="kpi-sub">Gabriela</div></div>
+              <div className="kpi-card" style={{borderTop:'3px solid #7C3AED'}}><div className="kpi-ico">🌙</div><div className="kpi-lbl">Turnos Noite</div><div className="kpi-val">{noiteData.length}</div><div className="kpi-sub">Vitória</div></div>
+              {pendData.length>0&&<div className="kpi-card kc-r" style={{gridColumn:'span 2'}}><div className="kpi-ico">⚠️</div><div className="kpi-lbl">Pendências abertas</div><div className="kpi-val" style={{color:'var(--danger)'}}>{pendData.length}</div><div className="kpi-sub">de toda a equipe</div></div>}
             </div>
           )}
         </div>
@@ -1111,7 +1217,42 @@ function CEODashboard(props){
         )
       )}
 
+      {!loading&&tab==='subgerencia'&&(
+        <div>
+          <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'var(--brand)',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{subgerData.length} turno{subgerData.length!==1?'s':''} registrado{subgerData.length!==1?'s':''}</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>Subgerência Manhã · Score médio: {subgerKpi.avg||'–'}/100 · Falhas: {subgerKpi.fl}</div></div>
+          <div className="kpi-grid">
+            <div className="kpi-card kc-t"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{subgerKpi.avg||'–'}</div></div>
+            <div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">OK</div><div className="kpi-val">{subgerKpi.ok}</div></div>
+            <div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Falhas</div><div className="kpi-val">{subgerKpi.fl}</div></div>
+            <div className="kpi-card kc-o"><div className="kpi-ico">⏳</div><div className="kpi-lbl">Pendências</div><div className="kpi-val">{subgerKpi.pend}</div></div>
+          </div>
+          {subgerData.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'var(--surface)',borderRadius:'var(--r12)',textAlign:'center',border:'1px solid var(--line)',color:'var(--ink3)',fontSize:13}}>Nenhum turno de subgerência ainda.</div>}
+          {subgerData.length>0&&subgerData.slice(0,30).map(function(d,i){return<SubgerCEORow key={d.id||i} d={d}/>;})}</div>
+      )}
+
       {!loading&&tab==='ranking'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🏆 Ranking de Subgerentes</div>{ranking.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum dado ainda.</div>}{ranking.map(function(u,i){return(<div key={u.name} className="rank-row"><div className="rank-pos" style={{color:i===0?'#F59E0B':i===1?'#9CA3AF':'#B45309'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div className="rank-avatar" style={{background:aColors[i%aColors.length]}}>{u.name.charAt(0)}</div><div style={{flex:1}}><div className="rank-name">{u.name}</div><div className="rank-sub">{u.turnos} turnos · {u.falhas} falhas</div><div style={{marginTop:5,background:'#F0F0F0',borderRadius:99,height:5,overflow:'hidden'}}><div style={{height:'100%',borderRadius:99,background:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)',width:u.avg+'%',transition:'width .5s'}}/></div></div><div className="rank-score" style={{color:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)'}}>{u.avg}</div></div>);})}</div>)}
+
+      {!loading&&tab==='vitoria'&&(
+        <div>
+          <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'linear-gradient(135deg,#0a0020,#7C3AED)',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{noiteData.length} turno{noiteData.length!==1?'s':''} da noite</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>Score médio: {noiteKpi.avg||'–'}/100 · Falhas: {noiteKpi.fl} · Pendências: {noiteKpi.pend}</div></div>
+          <div className="kpi-grid">
+            <div className="kpi-card kc-t"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{noiteKpi.avg||'–'}</div></div>
+            <div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">OK</div><div className="kpi-val">{noiteKpi.ok}</div></div>
+            <div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Falhas</div><div className="kpi-val">{noiteKpi.fl}</div></div>
+            <div className="kpi-card kc-o"><div className="kpi-ico">⏳</div><div className="kpi-lbl">Pendências</div><div className="kpi-val">{noiteKpi.pend}</div></div>
+          </div>
+          {noiteData.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'var(--surface)',borderRadius:'var(--r12)',textAlign:'center',border:'1px solid var(--line)',color:'var(--ink3)',fontSize:13}}>Nenhum turno da noite ainda.</div>}
+          {noiteData.length>0&&noiteData.slice(0,20).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='ok'?'OK':d.status==='atencao'?'Atenção':'Crítico';var stBg=st==='OK'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';var stC=st==='OK'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';return(<div key={d.id||i} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:13,fontWeight:700,color:'var(--ink)'}}>{d.user_name||'Vitória'}</span><span style={{fontSize:11,color:'var(--ink3)'}}>{d.data_fmt||d.data} · {d.hora}</span></div><div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{sc}</span><span className="pill" style={{background:stBg,color:stC}}>{st}</span></div></div><div style={{display:'flex',gap:16,fontSize:11,color:'var(--ink2)'}}><span>✅ {d.total-d.falhas}/{d.total} OK</span>{d.falhas>0&&<span style={{color:'var(--danger)',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}{(d.pendencias||0)>0&&<span style={{color:'var(--warn)',fontWeight:600}}>⏳ {d.pendencias} pendente{d.pendencias>1?'s':''}</span>}</div>{d.relato&&<div style={{marginTop:8,fontSize:12,color:'var(--ink2)',background:'#F5F3FF',borderRadius:8,padding:'8px 10px',lineHeight:1.5,borderLeft:'3px solid #7C3AED'}}>{d.relato}</div>}</div>);})}
+        </div>
+      )}
+
+      {!loading&&tab==='pendencias'&&(
+        <div>
+          <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'var(--brand)',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{pendData.length} pendência{pendData.length!==1?'s':''} abertas</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>De toda a equipe · Aguardando confirmação</div></div>
+          {pendData.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'var(--surface)',borderRadius:'var(--r12)',textAlign:'center',border:'1px solid var(--line)',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:14}}>✅ Nenhuma pendência aberta!</div>}
+          {pendData.length>0&&pendData.map(function(p,i){return(<div key={p.id||i} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1.5px solid var(--danger-line)',padding:'13px 14px'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ink)'}}>{p.user_name}</div><span style={{fontSize:10,fontWeight:700,background:'var(--danger-bg)',color:'var(--danger)',borderRadius:99,padding:'2px 8px'}}>⚠️ Aberta</span></div><div style={{fontSize:13,color:'var(--ink)',lineHeight:1.4,marginBottom:6}}>{p.item_texto}</div><div style={{fontSize:11,color:'var(--ink3)'}}>{p.data_fmt} · {p.turno}{p.aconteceu?' · '+p.aconteceu:''}</div>{p.feito&&<div style={{fontSize:11,color:'var(--ink2)',marginTop:3}}>Ação: {p.feito}</div>}</div>);})}
+        </div>
+      )}
 
       {!loading&&tab==='alertas'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🚨 Alertas Operacionais</div>{alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta ativo!</div>}{alertas.map(function(a,i){return(<div key={i} className="alert-row"><div className="a-dot a-r"/><div style={{flex:1}}><div className="a-title">{a.msg}</div><div className="a-sub">{a.sub}</div></div><div className="a-badge" style={{background:'#FEE2E2',color:'#991B1B'}}>🔴 Crítico</div></div>);})}</div>)}
 
@@ -1140,7 +1281,18 @@ function GerenciaHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
   if(mode==='checklist')return<GerChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>🏢</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Gerência — CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer'}}><span style={{fontSize:30}}>📊</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Visão do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>{GER_BLOCOS.length} blocos · {GER_ITEMS.length} itens</div></div></button></div><button onClick={onLogout} style={{width:'100%',marginTop:12,padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+  if(mode==='historico')return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
+      <div style={{background:'#0F4C81',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+        </div>
+      </div>
+      <HistoricoPanel user={user} tabela="ger_checklists" labelTurno={function(d){return d.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';}}/>
+    </div>
+  );
+  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>🏢</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Gerência — CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer'}}><span style={{fontSize:30}}>📊</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Visão do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>{GER_BLOCOS.length} blocos · {GER_ITEMS.length} itens</div></div></button><button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer'}}><span style={{fontSize:28}}>📈</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico e falhas frequentes</div></div></button></div><button onClick={onLogout} style={{width:'100%',marginTop:12,padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
 }
 
 function SuporteHub(props){
@@ -1172,6 +1324,1128 @@ function UserManager(props){
   var userList=Object.entries(users);
   return(<div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}><div className="um-hdr"><div className="um-hdr-inner"><div><div style={{fontSize:10,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase',color:'#fff'}}>CheckON · Suporte</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:800,color:'#fff'}}>👥 Gestão de Usuários</div></div><div style={{display:'flex',gap:6}}><button onClick={onBack} className="hdr-btn">← Hub</button><button onClick={onLogout} className="hdr-btn">Sair</button></div></div></div>{toast&&<div style={{position:'fixed',top:70,left:'50%',transform:'translateX(-50%)',background:'#1A1A1A',color:'#fff',padding:'9px 20px',borderRadius:99,fontSize:13,fontWeight:600,zIndex:9999,whiteSpace:'nowrap'}}>{toast}</div>}<div style={{margin:'14px 14px 0',background:'#fff',borderRadius:'var(--r12)',boxShadow:'var(--sh1)',overflow:'hidden'}}><div style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>Usuários do Sistema</div><button onClick={function(){setShowNew(function(s){return !s;});}} style={{background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',padding:'7px 14px',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>{showNew?'✕ Cancelar':'+ Novo'}</button></div>{showNew&&(<div style={{padding:'16px',background:'#F0F4FF',borderBottom:'1px solid var(--line)'}}><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}><div className="f-group"><label className="f-label">Nome *</label><input className="f-input" value={newUser.name} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{name:e.target.value});});}} placeholder="Nome completo"/></div><div className="f-group"><label className="f-label">Login *</label><input className="f-input" value={newUser.login} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{login:e.target.value.toLowerCase()});});}} placeholder="login"/></div></div><div className="f-group" style={{marginBottom:12}}><label className="f-label">Role</label><select className="f-input" value={newUser.role} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{role:e.target.value});});}}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div><button onClick={createUser} style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800}}>CRIAR USUÁRIO</button></div>)}{userList.map(function(entry){var key=entry[0];var u=entry[1];var isEdit=editKey===key;var inactive=u.active===false;return(<div key={key} style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',opacity:inactive?.5:1}}>{!isEdit?(<div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:10}}><div style={{width:36,height:36,borderRadius:'50%',background:u.color||'#555',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:14,flexShrink:0}}>{u.name.charAt(0)}</div><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>{u.name}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>@{u.login} · <span style={{background:(ROLE_COLORS[u.role]||'#555')+'22',color:ROLE_COLORS[u.role]||'#555',borderRadius:99,padding:'1px 7px',fontSize:10,fontWeight:700}}>{ROLES[u.role]||u.role}</span></div></div></div><div style={{display:'flex',gap:5,flexWrap:'wrap',justifyContent:'flex-end'}}><button onClick={function(){setEditKey(key);}} style={{background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>✏️</button><button onClick={function(){resetPwd(key);}} style={{background:'#FEF3C7',color:'#92400E',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🔑</button><button onClick={function(){toggleActive(key);}} style={{background:inactive?'#D1FAE5':'#FEE2E2',color:inactive?'#065F46':'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>{inactive?'✅':'⛔'}</button>{key!=='camila'&&key!=='bruna'&&<button onClick={function(){deleteUser(key);}} style={{background:'#FEE2E2',color:'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🗑</button>}</div></div></div>):(<div style={{background:'#F8F8F8',borderRadius:'var(--r8)',padding:'12px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--brand)',marginBottom:10,textTransform:'uppercase'}}>Editando: @{key}</div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}><div className="f-group" style={{marginBottom:0}}><label className="f-label">Nome</label><input className="f-input" defaultValue={u.name} id={'name_'+key}/></div><div className="f-group" style={{marginBottom:0}}><label className="f-label">Role</label><select className="f-input" defaultValue={u.role} id={'role_'+key}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div></div><div style={{display:'flex',gap:8}}><button onClick={function(){var n=document.getElementById('name_'+key).value;var r=document.getElementById('role_'+key).value;saveEdit(key,{name:n,role:r});}} style={{flex:1,padding:'10px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>💾 Salvar</button><button onClick={function(){setEditKey(null);}} style={{flex:1,padding:'10px',background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Cancelar</button></div></div>)}</div>);})}</div></div>);
 }
+
+/* ══════════════════════════════════════════
+   SUBGERÊNCIA — TURNO DA MANHÃ (GABRIELA)
+   Módulo incremental plugado no CheckON
+   ══════════════════════════════════════════ */
+
+var SUBGER_SAVE_KEY_PREFIX='checkon_subger_';
+
+/* ── Checklist Gabriela — 3 momentos com horário ── */
+var SUBGER_ETAPAS=[
+  {id:'sg_e1',titulo:'Abertura do Turno',horario:'9h – 11h',emoji:'🌅',itens:[
+    {id:'sg1', critico:false,texto:'Livro de ocorrências e Trello verificados'},
+    {id:'sg2', critico:false,texto:'Grupo da gerência verificado — pendências do turno anterior identificadas'},
+    {id:'sg3', critico:false,texto:'Equipe presente, redistribuída e com função definida'},
+    {id:'sg4', critico:false,texto:'Atrasos e faltas tratados'},
+    {id:'sg5', critico:true, texto:'Saipos, WebCardápio e iFood funcionando'},
+    {id:'sg6', critico:false,texto:'Impressoras, maquininhas, internet e Wi-Fi funcionando'},
+    {id:'sg7', critico:false,texto:'Cozinha pronta — bancadas organizadas, área de trabalho funcional'},
+    {id:'sg8', critico:true, texto:'Insumos e recheios disponíveis — produtos verificados'},
+    {id:'sg9', critico:true, texto:'Itens próximos do vencimento identificados — uso priorizado do mais antigo'},
+    {id:'sg10',critico:false,texto:'Dispense abastecido — mesa e gaveteiro organizados'},
+    {id:'sg11',critico:true, texto:'Produção iniciada'},
+    {id:'sg26',critico:true, texto:'Os recheios da dispensa foram verificados e estão sendo utilizados na ordem correta (mais antigo → mais novo)'}
+  ]},
+  {id:'sg_e2',titulo:'Controle da Operação',horario:'11h – 13h',emoji:'⚙️',itens:[
+    {id:'sg27',critico:true, texto:'Produção fluindo sem acúmulo'},
+    {id:'sg29',critico:true, texto:'Pedidos parados identificados e tratados'},
+    {id:'sg31',critico:true, texto:'Atrasos tratados antes de impactar cliente'},
+    {id:'sg35',critico:true, texto:'Nenhum colaborador sem direção'},
+    {id:'sg36',critico:true, texto:'Insumos críticos monitorados — reposição antecipada realizada'},
+    {id:'sg38',critico:true, texto:'Não houve falta de insumo por falha de controle'},
+    {id:'sg39',critico:false,texto:'Padrão operacional seguido — nenhuma execução fora do padrão'},
+    {id:'sg41',critico:false,texto:'Checklists da equipe respondidos e validados'},
+    {id:'sg47',critico:true, texto:'Falhas relevantes registradas'},
+    {id:'sg48',critico:true, texto:'Nenhum problema ficou sem responsável'}
+  ]},
+  {id:'sg_e3',titulo:'Fechamento do Turno',horario:'13h+',emoji:'✅',itens:[
+    {id:'sg49',critico:false,texto:'Loja organizada para continuidade do dia'},
+    {id:'sg50',critico:true, texto:'Operação está em condição de continuidade'},
+    {id:'sg51',critico:true, texto:'Pendências identificadas e registradas'},
+    {id:'sg52',critico:true, texto:'Falhas relevantes registradas'},
+    {id:'sg53',critico:true, texto:'Problemas encaminhados — nenhum crítico sem responsável'},
+    {id:'sg54',critico:false,texto:'Informações do turno comunicadas para o próximo'}
+  ]}
+];
+
+/* id do item de recheio especial */
+var SUBGER_RECHEIO_ID='sg26';
+
+/* ── Chips de justificativa (spec bloco 9) ── */
+var SUBGER_CHIPS_ACONTECEU=['Não houve tempo','Falta de insumo','Falta de funcionário','Atraso da equipe','Sistema indisponível','Equipamento com falha','Dependência externa','Problema já existia no início do turno','Improviso da operação','Falha de processo','Não verifiquei a dispensa','Peguei recheio sem conferir validade','Organização incorreta na dispensa','Outro'];
+var SUBGER_CHIPS_FEITO=['Resolvi na hora','Corrigi parcialmente','Reorganizei a dispensa','Orientei equipe','Passei para alguém','Ficou pendente','Registrei ocorrência','Acionei suporte','Acionei gerência','Acionei direção'];
+var SUBGER_CHIPS_PROX=['Sim, fica pendente','Não, encerrado'];
+
+function validateSubgerNeg(neg){
+  var n=neg||{};
+  return !!(n.aconteceu&&n.feito&&n.prox);
+}
+
+function SubgerNaoForm(props){
+  var data=props.data||{};var showErr=props.showErr;var itemId=props.itemId||'';
+  var isRecheio=itemId===SUBGER_RECHEIO_ID;
+  function set(k,v){props.onChange(function(prev){return Object.assign({},prev||{},{[k]:v});});}
+  function stop(e){e.stopPropagation();}
+  return(
+    <div onClick={stop} style={{background:'#FFF5F5',border:'1.5px solid var(--danger-line)',borderRadius:'var(--r12)',padding:'14px',marginTop:10}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:isRecheio?8:14}}>
+        <span style={{fontSize:16}}>🔴</span>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--danger)',textTransform:'uppercase',letterSpacing:.5}}>Não realizado — registre o motivo</div>
+      </div>
+      {isRecheio&&(
+        <div style={{background:'#FEF3C7',border:'1px solid #FDE68A',borderRadius:'var(--r8)',padding:'10px 12px',marginBottom:12,fontSize:12,color:'#92400E',fontWeight:600,lineHeight:1.5}}>
+          ⚠️ Se houve erro de uso de recheio, a verificação não foi realizada corretamente no início do turno.
+        </div>
+      )}
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>1. O que aconteceu?{showErr&&!data.aconteceu&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{SUBGER_CHIPS_ACONTECEU.map(function(c){var sel=data.aconteceu===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('aconteceu',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.aconteceu&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione o motivo</div>}
+      </div>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>2. O que foi feito?{showErr&&!data.feito&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{SUBGER_CHIPS_FEITO.map(function(c){var sel=data.feito===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('feito',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.feito&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione a ação</div>}
+      </div>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>3. Fica para o próximo turno?{showErr&&!data.prox&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div style={{display:'flex',gap:8}}>{SUBGER_CHIPS_PROX.map(function(c){var sel=data.prox===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('prox',c);}} style={{flex:1,padding:'10px 6px',borderRadius:'var(--r8)',border:'1.5px solid',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',textAlign:'center',transition:'all .13s',borderColor:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--line)',background:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--surface)',color:sel?'#fff':'var(--ink2)'}}>{c==='Sim, fica pendente'?'⚠️ '+c:'✅ '+c}</button>);})}</div>
+        {showErr&&!data.prox&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Obrigatório</div>}
+      </div>
+      <div>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>4. Detalhe adicional <span style={{color:'var(--ink3)',fontWeight:400,textTransform:'none'}}>(opcional)</span></div>
+        <textarea className="neg-obs" value={data.detalhe||''} onClick={function(e){e.stopPropagation();}} onChange={function(e){e.stopPropagation();set('detalhe',e.target.value.slice(0,280));}} placeholder="Complemento rápido..." style={{minHeight:52,width:'100%'}}/>
+      </div>
+    </div>
+  );
+}
+
+function SubgerBlocoItem(props){
+  var item=props.item;var resp=props.resp;var neg=props.neg;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
+  var _f=useState(false);var flash=_f[0];var setFlash=_f[1];
+  var _open=useState(false);var open=_open[0];var setOpen=_open[1];
+  function handleSim(){onAns(item.id,'sim');setOpen(false);}
+  function handleNao(){
+    if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}
+    onAns(item.id,'nao');setOpen(true);
+  }
+  if(resp&&!open){
+    var isSim=resp==='sim';
+    var negLabel=!isSim&&neg?(neg.aconteceu||'')+(neg.feito?' · '+neg.feito:''):'';
+    var negOk=validateSubgerNeg(neg);
+    return(
+      <div className={'chk-item'+(item.critico?' lc':' lr')} style={{cursor:'pointer',padding:'10px 16px'}} onClick={function(){setOpen(true);}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{flexShrink:0,width:28,height:28,borderRadius:'50%',background:isSim?'var(--ok)':'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>{isSim?'✓':'✕'}</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.4}}>{item.texto}</div>
+            {!isSim&&negLabel&&<div style={{fontSize:11,color:'var(--danger)',marginTop:2,fontWeight:600}}>{negLabel}</div>}
+            {!isSim&&!negOk&&showErr&&<div style={{fontSize:10,color:'var(--danger)',marginTop:2,fontWeight:700}}>⚠ Complete o registro</div>}
+          </div>
+          <span style={{flexShrink:0,fontSize:10,fontWeight:700,borderRadius:99,padding:'2px 9px',background:isSim?'var(--ok-bg)':'var(--danger-bg)',color:isSim?'var(--ok)':'var(--danger)'}}>{isSim?'SIM':'NÃO'}</span>
+          <span style={{fontSize:11,color:'var(--ink4)'}}>✎</span>
+        </div>
+      </div>
+    );
+  }
+  return(
+    <div className={'chk-item'+(item.critico?' lc':' lr')+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}>
+      {item.critico&&<span className="lvl lv-c">crítico</span>}
+      <div className="chk-title">{item.texto}</div>
+      <div className="ans-row">
+        <button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={handleSim}><span>{resp==='sim'?'✓':'○'}</span> Sim</button>
+        <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
+      </div>
+      {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
+      {resp==='nao'&&(
+        <div>
+          <SubgerNaoForm data={neg} itemId={item.id} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>
+          {validateSubgerNeg(neg)&&(
+            <button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>
+              ✓ Confirmar e recolher
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SubgerEtapaAcc(props){
+  var etapa=props.etapa;var resps=props.resps;var negs=props.negs;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
+  var _o=useState(true);var open=_o[0];var setOpen=_o[1];
+  var items=etapa.itens||[];var tot=items.length;
+  var resp=items.filter(function(i){return resps[i.id];}).length;
+  var fl=items.filter(function(i){return resps[i.id]==='nao';}).length;
+  var allDone=resp===tot&&tot>0;
+  var hasErr=showErr&&items.some(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'){return !validateSubgerNeg(negs[i.id]);}return false;});
+  return(
+    <div className="section">
+      <div className={'sec-head'+(hasErr?' has-err':'')} onClick={function(){setOpen(function(o){return !o;});}}>
+        <div className="sec-hl"><span className="sec-icon">{etapa.emoji}</span><div><div className="sec-name">{etapa.titulo}</div><div className="sec-meta">{etapa.horario&&<span style={{color:'var(--brand)',fontWeight:700}}>{etapa.horario} · </span>}{resp}/{tot} respondidos{fl>0?' · '+fl+' NÃO':''}</div></div></div>
+        <div className="sec-right"><span className={'sec-badge'+(allDone?' sb-ok':hasErr?' sb-err':' sb-d')}>{resp}/{tot}</span><span className={'sec-chev'+(open?' open':'')}>▾</span></div>
+      </div>
+      {open&&<div style={{background:'#FAFAFA'}}>{items.map(function(item){return<SubgerBlocoItem key={item.id} item={item} resp={resps[item.id]} neg={negs[item.id]} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}</div>}
+    </div>
+  );
+}
+
+function SubgerSummaryScreen(props){
+  var resps=props.resps;var negs=props.negs;var user=props.user;var horaInicio=props.horaInicio;var onNovo=props.onNovo;
+  var _copied=useState(false);var copied=_copied[0];var setCopied=_copied[1];
+  var _conf=useState(false);var confirmando=_conf[0];var setConfirmando=_conf[1];
+  var allItems=SUBGER_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);
+  var total=allItems.length;
+  var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
+  var falhas=falhasItems.length;
+  var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
+  var pendencias=falhasItems.filter(function(i){var n=negs[i.id]||{};return n.prox==='Sim, fica pendente';}).length;
+  var etapasConcluidas=SUBGER_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
+  var status=criticos>0?'Crítico':falhas>0?'Atenção':'Operação controlada';
+  var statusCor=criticos>0?'var(--danger)':falhas>0?'var(--warn)':'var(--ok)';
+  var statusBg=criticos>0?'var(--danger-bg)':falhas>0?'var(--warn-bg)':'var(--ok-bg)';
+  var statusEmoji=criticos>0?'🚨':falhas>0?'⚠️':'✅';
+  var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+  function calcTempo(){if(!horaInicio)return '';try{var parts=horaInicio.split(':');var now=new Date();var then=new Date();then.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);var diff=Math.round((now-then)/60000);if(diff<0||diff>600)return '';var h=Math.floor(diff/60);var m=diff%60;return h>0?h+'h '+(m>0?m+'min':''):(m+'min');}catch(e){return '';}}
+  var tempo=calcTempo();
+
+  function buildTextGrupo(){
+    var linhas=[];
+    var pendentes=[];var resolvidosNaHora=0;var escalados=[];
+    falhasItems.forEach(function(it){
+      var n=negs[it.id]||{};
+      if(n.feito==='Resolvi na hora'||n.feito==='Corrigi parcialmente')resolvidosNaHora++;
+      else if(n.feito==='Acionei gerência'||n.feito==='Acionei direção')escalados.push({item:it.texto,motivo:n.aconteceu||''});
+      else if(n.prox==='Sim, fica pendente')pendentes.push({item:it.texto,motivo:n.aconteceu||''});
+    });
+    linhas.push('🌅 Subgerência Manhã · '+todayFmt());linhas.push('');
+    if(falhas===0){
+      linhas.push(user.name+' fechou o turno da manhã. Tudo em ordem,');
+      linhas.push(total+' de '+total+' itens. Score '+score+'.');
+      linhas.push('');linhas.push('Nada pra reportar. ✅');
+    }else{
+      linhas.push(user.name+' fechou. Score '+score+', '+falhas+' item'+(falhas>1?'s':'')+' com ocorrência.');
+      if(tempo)linhas.push('⏱ Duração: '+tempo+'.');linhas.push('');
+      if(escalados.length>0){linhas.push('Precisa de atenção:');escalados.forEach(function(e){linhas.push('→ '+e.item+(e.motivo?' — '+e.motivo:'')+'.');});}
+      if(pendentes.length>0){linhas.push('');linhas.push('Ficou pendente:');pendentes.forEach(function(e){linhas.push('→ '+e.item+'.');});}
+      if(resolvidosNaHora>0){linhas.push('');linhas.push(resolvidosNaHora+' resolvido'+(resolvidosNaHora>1?'s':'')+' na hora.');}
+      linhas.push('');linhas.push('Registrado no CheckON.');
+    }
+    linhas.push('');linhas.push('— CheckON · Pastel da Camilla');
+    return linhas.join('\n');
+  }
+
+  function buildTextCopy(){
+    var txt=[SISTEMA+' — Subgerência Manhã','━━━━━━━━━━',user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:''),'Status: '+status+' · Score: '+score+'/100'];
+    txt.push('━━━━━━━━━━','✅ OK: '+(total-falhas)+'/'+total+'  ❌ Falhas: '+falhas+(pendencias>0?'  ⏳ Pendências: '+pendencias:''));
+    if(falhas>0){txt.push('','🔴 Ocorrências:');falhasItems.forEach(function(it,i){var n=negs[it.id]||{};txt.push((i+1)+'. '+it.texto);if(n.aconteceu)txt.push('   O que: '+n.aconteceu);if(n.feito)txt.push('   Ação: '+n.feito);if(n.prox==='Sim, fica pendente')txt.push('   ⚠️ Pendente para o próximo turno');});}
+    txt.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');
+    return txt.join('\n');
+  }
+
+  function handleCopy(){
+    var s=buildTextCopy();
+    if(navigator.clipboard){navigator.clipboard.writeText(s).catch(function(){var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}
+    else{var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  }
+
+  function handleEnviarGrupo(){
+    var txt=buildTextGrupo();
+    try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).catch(function(){});}else{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(ex){}document.body.removeChild(ta);}}catch(ex){}
+    setCopied(true);
+    setTimeout(function(){window.location.href=WA_GROUP;},800);
+  }
+
+  if(confirmando){
+    return(
+      <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+        <div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}>
+          <button onClick={function(){setConfirmando(false);}} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer',marginBottom:10}}>← Voltar</button>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <span style={{fontSize:28}}>📲</span>
+            <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Enviar para o grupo</div><div style={{fontSize:12,opacity:.75,marginTop:1}}>{falhas===0?'Turno impecável!':'Relatório com ocorrências.'}</div></div>
+          </div>
+        </div>
+        <div style={{maxWidth:720,margin:'0 auto',padding:'16px 16px 0'}}>
+          <div style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'16px',marginBottom:16}}>
+            <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.7,marginBottom:14}}>{falhas===0?'Turno concluído com excelência! Clique para avisar o grupo.':'Clique abaixo — o texto é copiado e o WhatsApp abre. Cole e envie!'}</div>
+            {!copied&&(<div style={{display:'flex',flexDirection:'column',gap:8}}>{[{n:'1',txt:'Toque no botão verde abaixo'},{n:'2',txt:'O WhatsApp vai abrir'},{n:'3',txt:'Segure a caixa de texto e toque em Colar'}].map(function(step){return(<div key={step.n} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 12px',background:'#F8FAFC',borderRadius:'var(--r8)',border:'1px solid var(--line)'}}><div style={{width:26,height:26,borderRadius:'50%',background:'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,flexShrink:0}}>{step.n}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500}}>{step.txt}</div></div>);})}  </div>)}
+            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>Abrindo o WhatsApp...</div></div></div>)}
+          </div>
+          <button onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+            <span style={{fontSize:22}}>📲</span>{copied?'Abrindo...':'Enviar para o grupo'}
+          </button>
+          <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar ao resumo</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}>
+      <div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}>
+        <div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Subgerência</div>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno da Manhã — Concluído ✓</div>
+        <div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {todayFmt()}{tempo?' · ⏱ '+tempo:''}</div>
+      </div>
+      <div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}>
+        <div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}>
+          <div style={{fontSize:44,flexShrink:0}}>{statusEmoji}</div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>{status}</div>
+            <div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma falha registrada.':falhas+' falha'+(falhas>1?'s':'')+' · '+criticos+' crítico'+(criticos!==1?'s':'')+'.'}</div>
+            {tempo&&<div style={{fontSize:11,color:statusCor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempo}</div>}
+          </div>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div>
+            <div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:12}}>
+          {[{icon:'📋',val:total,lbl:'Total itens'},{icon:'✅',val:total-falhas,lbl:'OK'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'⏳',val:pendencias,lbl:'Pendências'}].map(function(x){return(<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>);})}
+        </div>
+        <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}>
+          <div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por etapa</div>
+          {SUBGER_ETAPAS.map(function(e){var fl2=e.itens.filter(function(i){return resps[i.id]==='nao';}).length;var ok=e.itens.every(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl2>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{e.titulo}</div><span style={{fontSize:11,fontWeight:700,color:fl2>0?'var(--danger)':'var(--ok)'}}>{fl2>0?fl2+' falha'+(fl2>1?'s':''):'OK'}</span></div>);})}
+        </div>
+        {falhasItems.length>0&&(
+          <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--danger)',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>🔴 Ocorrências registradas</div>
+            {falhasItems.map(function(item){var n=negs[item.id]||{};return(<div key={item.id} style={{padding:'9px 0',borderBottom:'1px solid #F3F4F6'}}><div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.4,marginBottom:4}}>{item.texto}</div><div style={{fontSize:11,color:'#991B1B',lineHeight:1.6}}>{n.aconteceu&&<div>O que: {n.aconteceu}</div>}{n.feito&&<div>Ação: {n.feito}</div>}{n.prox&&<div style={{fontWeight:600,marginTop:2}}>{n.prox==='Sim, fica pendente'?'⚠️ Pendente':'✅ Encerrado'}</div>}{n.detalhe&&<div style={{color:'var(--ink2)',marginTop:2}}>{n.detalhe}</div>}</div></div>);})}
+          </div>
+        )}
+        <div style={{display:'flex',gap:8,marginBottom:8}}>
+          <button onClick={function(){setConfirmando(true);}} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button>
+          <button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button>
+        </div>
+        <button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button>
+      </div>
+    </div>
+  );
+}
+
+/* ── Etapa por etapa (paginação de blocos) ── */
+function SubgerChecklistScreen(props){
+  var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
+  var SAVE_KEY=SUBGER_SAVE_KEY_PREFIX+user.login;
+  var _sc=useState('inicio');var screen=_sc[0];var setScreen=_sc[1];
+  var _etapaIdx=useState(0);var etapaIdx=_etapaIdx[0];var setEtapaIdx=_etapaIdx[1];
+  var _resps=useState({});var resps=_resps[0];var setResps=_resps[1];
+  var _negs=useState({});var negs=_negs[0];var setNegs=_negs[1];
+  var _showErr=useState(false);var showErr=_showErr[0];var setShowErr=_showErr[1];
+  var _sending=useState(false);var sending=_sending[0];var setSending=_sending[1];
+  var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
+  var _inicio=useState(null);var horaInicio=_inicio[0];var setHoraInicio=_inicio[1];
+
+  useEffect(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(SAVE_KEY));
+      if(s&&s.resps&&Object.keys(s.resps).length>0){
+        setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);
+      }
+    }catch(e){}
+  },[]);
+
+  useEffect(function(){
+    if(screen==='checklist'){
+      try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}
+    }
+  },[resps,negs,screen,horaInicio]);
+
+  function onAns(id,val){
+    setResps(function(r){return Object.assign({},r,{[id]:val});});
+    if(val==='sim'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}
+  }
+  function onNeg(id,updater){
+    setNegs(function(n){var current=n[id]||{};var next=typeof updater==='function'?updater(current):updater;return Object.assign({},n,{[id]:next});});
+  }
+
+  var allItems=useMemo(function(){return SUBGER_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);},[]);
+  var totalItems=allItems.length;
+  var respondidos=allItems.filter(function(i){return resps[i.id];}).length;
+  var falhasTotal=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
+  var pct=totalItems>0?Math.round(respondidos/totalItems*100):0;
+
+  var etapaAtual=SUBGER_ETAPAS[etapaIdx];
+
+  function validateEtapa(idx){
+    var etapa=SUBGER_ETAPAS[idx];
+    var errs=[];
+    etapa.itens.forEach(function(item){
+      if(!resps[item.id]){errs.push(item.texto);return;}
+      if(resps[item.id]==='nao'&&!validateSubgerNeg(negs[item.id])){errs.push(item.texto+' — complete o registro');}
+    });
+    return errs;
+  }
+
+  function handleAvancar(){
+    var errs=validateEtapa(etapaIdx);
+    if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Preencha todos os itens');return;}
+    setShowErr(false);
+    if(etapaIdx<SUBGER_ETAPAS.length-1){
+      setEtapaIdx(function(i){return i+1;});
+      window.scrollTo({top:0,behavior:'smooth'});
+    }else{
+      setScreen('ocorrencias');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  }
+
+  function handleVoltar(){
+    if(etapaIdx>0){setEtapaIdx(function(i){return i-1;});window.scrollTo({top:0,behavior:'smooth'});}
+    else{setScreen('inicio');}
+    setShowErr(false);
+  }
+
+  async function handleFinalizar(relato){
+    setSending(true);
+    var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
+    var falhas=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
+    var pendencias=allItems.filter(function(i){var n=negs[i.id]||{};return resps[i.id]==='nao'&&n.prox==='Sim, fica pendente';}).length;
+    var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
+    var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
+    var etapasConcluidas=SUBGER_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
+    await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||''});
+    await sendWebhook(SISTEMA+' — SUBGERÊNCIA MANHÃ\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Subgerência] '+statusKey.toUpperCase()+' – '+user.name});
+    try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+    setSending(false);
+    setScreen('summary');
+  }
+
+  function handleLimpar(){
+    if(!window.confirm('Limpar checklist atual?'))return;
+    try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+    setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');
+  }
+
+  var subgerHdr=(
+    <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div>
+          <div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Manhã</div>
+        </div>
+        <div style={{display:'flex',gap:6}}>
+          <div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Hub</button>}
+          <button className="hdr-btn" onClick={onLogout}>Sair</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  if(screen==='summary'){
+    return<SubgerSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
+  }
+
+  if(screen==='ocorrencias'){
+    var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
+    return(
+      <div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:24}}>
+        {subgerHdr}
+        <div style={{maxWidth:720,margin:'0 auto',padding:'16px'}}>
+          <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'18px',marginBottom:12}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,marginBottom:4}}>{falhasItems.length===0?'🎉 Turno impecável!':'📋 Resumo final'}</div>
+            <div style={{fontSize:13,color:'var(--ink2)',marginBottom:12}}>{respondidos} de {totalItems} itens respondidos · {falhasTotal} {falhasTotal===1?'falha':'falhas'}</div>
+            {falhasItems.length>0&&(
+              <div style={{marginBottom:12}}>
+                <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--ink)',marginBottom:6}}>Observações finais do turno (opcional)</label>
+                <SubgerRelatoField onFinalizar={handleFinalizar}/>
+              </div>
+            )}
+            {falhasItems.length===0&&<button onClick={function(){handleFinalizar('');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🚀 Enviar relatório</button>}
+          </div>
+          <button onClick={function(){setScreen('checklist');setShowErr(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Revisar checklist</button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Início ── */
+  var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));return s&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
+
+  if(screen==='inicio'){
+    return(
+      <div>
+        {subgerHdr}
+        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
+        <div className="card">
+          <div className="card-title">🌅 Subgerência — Turno da Manhã</div>
+          <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:14}}>
+            Checklist completo do turno da manhã. Dividido em <strong>3 etapas</strong> com {totalItems} itens no total.
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            {SUBGER_ETAPAS.map(function(e){var done=e.itens.every(function(i){return resps[i.id];});var hasData=e.itens.some(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderRadius:'var(--r8)',border:'1.5px solid var(--line)',background:done?'var(--ok-bg)':'var(--surface)'}}><span style={{fontSize:22}}>{done?'✅':e.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:done?'var(--ok)':'var(--ink)'}}>{e.titulo}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>{e.itens.length} itens</div></div>{done&&<span style={{fontSize:11,fontWeight:700,color:'var(--ok)'}}>✓ OK</span>}{!done&&hasData&&<span style={{fontSize:11,fontWeight:700,color:'var(--warn)'}}>Em andamento</span>}</div>);})}
+          </div>
+        </div>
+        {rascunhoSalvo&&(
+          <div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}>
+            <span style={{fontSize:20,flexShrink:0}}>📝</span>
+            <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div>
+            <div style={{display:'flex',gap:6,flexShrink:0}}>
+              <button onClick={function(){setScreen('checklist');setEtapaIdx(0);}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button>
+              <button onClick={handleLimpar} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button>
+            </div>
+          </div>
+        )}
+        <div style={{padding:'12px 16px 0'}}>
+          <button onClick={function(){setHoraInicio(nowTime());setScreen('checklist');setEtapaIdx(0);setShowErr(false);}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8,boxShadow:'var(--sh-brand)'}}>
+            🌅 Iniciar Turno da Manhã →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Checklist por etapa ── */
+  return(
+    <div>
+      {sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
+      <Toast msg={toast.msg} show={toast.show}/>
+      {subgerHdr}
+      <div className="prog-card">
+        <div className="prog-top"><div className="prog-lbl">Progresso geral</div><div className="prog-pct">{pct}%</div></div>
+        <div className="prog-track"><div className="prog-fill" style={{width:pct+'%',background:'var(--brand)'}}/></div>
+        <div className="prog-stats">
+          <div><div className="pv" style={{color:'var(--ok)'}}>{respondidos}</div><div className="pl">Resp.</div></div>
+          <div><div className="pv" style={{color:'var(--ink3)'}}>{totalItems-respondidos}</div><div className="pl">Pend.</div></div>
+          <div><div className="pv" style={{color:'var(--brand)'}}>{falhasTotal}</div><div className="pl">Falhas</div></div>
+          <div><div className="pv" style={{color:'var(--brand)'}}>{SUBGER_ETAPAS.length}</div><div className="pl">Etapas</div></div>
+        </div>
+      </div>
+      <div style={{margin:'10px 16px 0',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'var(--surface)',borderRadius:'var(--r12)',border:'1px solid var(--line)'}}>
+        <div>
+          <div style={{fontSize:12,color:'var(--ink3)',fontWeight:600}}>Etapa {etapaIdx+1} de {SUBGER_ETAPAS.length}</div>
+          {etapaAtual.horario&&<div style={{fontSize:11,color:'var(--brand)',fontWeight:700,marginTop:1}}>🕐 {etapaAtual.horario}</div>}
+        </div>
+        <div style={{display:'flex',gap:4}}>
+          {SUBGER_ETAPAS.map(function(e,i){var done=e.itens.every(function(it){return resps[it.id];});return(<div key={e.id} style={{width:28,height:6,borderRadius:3,background:i===etapaIdx?'var(--brand)':done?'var(--ok)':'var(--line)',transition:'background .2s'}}/>);})}
+        </div>
+      </div>
+      <SubgerEtapaAcc etapa={etapaAtual} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>
+      {(function(){
+        var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateSubgerNeg(negs[i.id]))return true;return false;}).length;
+        var etapaOk=pendentesEtapa===0;
+        return(
+          <div className="fab">
+            <div className="fab-inner">
+              {etapaIdx>0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Voltar</button>}
+              {etapaIdx===0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
+              <button className="fab-send" onClick={handleAvancar} disabled={sending} style={{opacity:etapaOk?1:.45,background:etapaOk?'var(--brand)':'var(--ink3)',boxShadow:etapaOk?'var(--sh-brand)':'none',transition:'all .2s'}}>
+                {etapaOk
+                  ?(etapaIdx<SUBGER_ETAPAS.length-1?'Próxima etapa →':'Finalizar turno 🚀')
+                  :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
+              </button>
+              <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('inicio');},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+            </div>
+          </div>
+        );
+      })()}
+      <div style={{height:90}}/>
+    </div>
+  );
+}
+
+function SubgerRelatoField(props){
+  var _r=useState('');var relato=_r[0];var setRelato=_r[1];
+  return(
+    <div>
+      <textarea value={relato} onChange={function(e){setRelato(e.target.value);}} placeholder="Descreva ocorrências, pendências ou observações do turno..." style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#fff',resize:'none',minHeight:88,fontFamily:'inherit',lineHeight:1.6}}/>
+      <button onClick={function(){props.onFinalizar(relato);}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none',marginTop:10}}>🚀 Enviar relatório</button>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   HISTÓRICO PESSOAL — compartilhado por todos
+   ══════════════════════════════════════════════ */
+function HistoricoPanel(props){
+  var user=props.user;var tabela=props.tabela;var labelTurno=props.labelTurno||function(d){return d.turno||d.freq||'–';};
+  var _data=useState([]);var data=_data[0];var setData=_data[1];
+  var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
+  useEffect(function(){
+    async function load(){
+      setLoading(true);
+      var rows=await sbSelect(tabela,{login:user.login});
+      setData(rows.slice(0,14));
+      setLoading(false);
+    }
+    load();
+  },[]);
+  if(loading)return(<div style={{padding:'24px',textAlign:'center',color:'var(--ink3)',fontSize:13}}><div className="spin" style={{margin:'0 auto 10px'}}/> Carregando histórico...</div>);
+  if(data.length===0)return(<div style={{padding:'24px',textAlign:'center',color:'var(--ink3)',fontSize:13,background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',margin:'12px 16px 0'}}>Nenhum registro ainda. Complete seu primeiro turno!</div>);
+  var ultimo=data[0];var penultimo=data[1];
+  var streak=0;for(var i=0;i<data.length;i++){if((data[i].criticos||0)===0)streak++;else break;}
+  var falhaMap={};data.forEach(function(d){var rs=d.resps||{};var ng=d.negs||{};Object.keys(rs).forEach(function(id){if(rs[id]==='nao'){var texto=(ng[id]&&ng[id].aconteceu)||id;falhaMap[texto]=(falhaMap[texto]||0)+1;}});});
+  var topFalha=Object.entries(falhaMap).sort(function(a,b){return b[1]-a[1];})[0];
+  var diff=penultimo?ultimo.falhas-penultimo.falhas:null;
+  var statusCor=ultimo.status==='ok'||ultimo.status==='conforme'?'var(--ok)':ultimo.status==='atencao'||ultimo.status==='ressalvas'?'var(--warn)':'var(--danger)';
+  return(
+    <div style={{paddingBottom:16}}>
+      <div style={{margin:'12px 16px 0',background:'linear-gradient(135deg,#1A0003,#EA1D2C)',borderRadius:'var(--r12)',padding:'16px',color:'#fff'}}>
+        <div style={{fontSize:10,opacity:.7,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,marginBottom:8}}>Sua evolução</div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>
+          <div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900}}>{ultimo.score}</div><div style={{fontSize:10,opacity:.7}}>Último score</div></div>
+          <div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900}}>{streak}</div><div style={{fontSize:10,opacity:.7}}>Sem crítico 🔥</div></div>
+          <div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900}}>{data.length}</div><div style={{fontSize:10,opacity:.7}}>Registros</div></div>
+        </div>
+        {diff!==null&&<div style={{fontSize:12,opacity:.85,marginBottom:6}}>{diff<0?'📈 Você melhorou! '+Math.abs(diff)+' falha'+(Math.abs(diff)!==1?'s':'')+ ' a menos que antes.':diff===0?'➡️ Mesmo número de falhas que antes.':'📉 Mais '+diff+' falha'+(diff!==1?'s':'')+' que antes. Você consegue melhorar!'}</div>}
+        {topFalha&&topFalha[1]>1&&<div style={{fontSize:11,opacity:.8,background:'rgba(255,255,255,.12)',borderRadius:'var(--r8)',padding:'7px 10px'}}>⚠️ Falha mais frequente: <strong>{topFalha[0]}</strong> ({topFalha[1]}x)</div>}
+        {streak>=5&&<div style={{fontSize:11,opacity:.9,marginTop:8,background:'rgba(255,255,255,.15)',borderRadius:'var(--r8)',padding:'7px 10px'}}>🏆 {streak} turnos sem nenhum item crítico! Continue assim.</div>}
+      </div>
+      <div style={{margin:'10px 16px 0',background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',overflow:'hidden'}}>
+        <div style={{padding:'11px 14px',borderBottom:'1px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Últimos registros</div>
+        {data.slice(0,7).map(function(d,i){
+          var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';
+          var st=d.status==='ok'||d.status==='conforme'?'OK':d.status==='atencao'||d.status==='ressalvas'?'Atenção':'Crítico';
+          var stBg=st==='OK'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';
+          var stC=st==='OK'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';
+          return(
+            <div key={d.id||i} style={{padding:'11px 14px',borderBottom:'1px solid var(--line2)',display:'flex',alignItems:'center',gap:10}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:600,color:'var(--ink)'}}>{d.data_fmt||d.data} · {d.hora}</div>
+                <div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{labelTurno(d)}{d.falhas>0?' · ❌ '+d.falhas+' falha'+(d.falhas!==1?'s':''):' · ✅ Sem falhas'}</div>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                <span style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900,color:c}}>{sc}</span>
+                <span style={{background:stBg,color:stC,borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{st}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   PENDÊNCIAS — bloco que aparece na abertura
+   ══════════════════════════════════════════════ */
+async function salvarPendencias(items,negs,resps,user,turno,tabela_origem){
+  var pendentes=items.filter(function(i){var n=negs[i.id]||{};return resps[i.id]==='nao'&&(n.prox==='Sim, fica pendente'||n.prox==='Sim');});
+  for(var i=0;i<pendentes.length;i++){
+    var it=pendentes[i];var neg=negs[it.id]||{};
+    await sbInsert('checkon_pendencias',{login:user.login,user_name:user.name,turno:turno,data:todayISO(),data_fmt:todayFmt(),item_id:it.id,item_texto:it.texto||it.ti||it.id,aconteceu:neg.aconteceu||neg.ocorrencia||'',feito:neg.feito||neg.acao||'',detalhe:neg.detalhe||'',status:'aberta',checklist_origem:tabela_origem});
+  }
+}
+
+function PendenciasBlock(props){
+  var user=props.user;var turnosFiltro=props.turnos||null;
+  var onResolvidas=props.onResolvidas;
+  var _pend=useState([]);var pend=_pend[0];var setPend=_pend[1];
+  var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
+  var _resolvendo=useState({});var resolvendo=_resolvendo[0];var setResolvendo=_resolvendo[1];
+  useEffect(function(){
+    async function load(){
+      setLoading(true);
+      var rows=await sbSelect('checkon_pendencias',{login:user.login});
+      var abertas=rows.filter(function(r){return r.status==='aberta';});
+      setPend(abertas.slice(0,20));
+      setLoading(false);
+      if(abertas.length===0&&onResolvidas)onResolvidas();
+    }
+    load();
+  },[]);
+  async function resolver(id,como){
+    setResolvendo(function(r){return Object.assign({},r,{[id]:true});});
+    try{await sb.from('checkon_pendencias').update({status:'resolvida',resolvida_por:user.name,resolvida_em:nowTime(),resolvida_data:todayFmt()}).eq('id',id);}catch(e){}
+    setPend(function(p){return p.filter(function(x){return x.id!==id;});});
+  }
+  if(loading)return null;
+  if(pend.length===0)return null;
+  return(
+    <div style={{margin:'12px 16px 0',background:'#FEF2F2',border:'2px solid var(--danger-line)',borderRadius:'var(--r12)',overflow:'hidden'}}>
+      <div style={{background:'var(--brand)',padding:'12px 14px',display:'flex',alignItems:'center',gap:8}}>
+        <span style={{fontSize:18}}>⚠️</span>
+        <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>{pend.length} pendência{pend.length!==1?'s':''} do turno anterior</div><div style={{fontSize:11,color:'rgba(255,255,255,.75)',marginTop:1}}>Confirme o que foi resolvido antes de continuar</div></div>
+      </div>
+      {pend.map(function(p){var resol=resolvendo[p.id];return(
+        <div key={p.id} style={{padding:'12px 14px',borderBottom:'1px solid var(--danger-line)',background:resol?'#F0FDF4':'#fff'}}>
+          <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.4,marginBottom:6}}>{p.item_texto}</div>
+          {p.aconteceu&&<div style={{fontSize:11,color:'var(--ink2)',marginBottom:4}}>O que era: {p.aconteceu}</div>}
+          <div style={{fontSize:10,color:'var(--ink3)',marginBottom:8}}>{p.data_fmt} · {p.turno}</div>
+          {!resol&&(
+            <div style={{display:'flex',gap:6}}>
+              <button onClick={function(){resolver(p.id,'sim');}} style={{flex:1,padding:'8px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,border:'none',cursor:'pointer'}}>✅ Resolvida</button>
+              <button onClick={function(){resolver(p.id,'nao');}} style={{flex:1,padding:'8px',background:'#FEF3C7',color:'#92400E',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,border:'none',cursor:'pointer'}}>⏳ Ainda aberta</button>
+            </div>
+          )}
+          {resol&&<div style={{fontSize:12,color:'var(--ok)',fontWeight:700}}>✓ Confirmada</div>}
+        </div>
+      );})}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   VITÓRIA — TURNO DA NOITE
+   ══════════════════════════════════════════════ */
+var NOITE_SAVE_KEY_PREFIX='checkon_noite_';
+var NOITE_CHIPS_ACONTECEU=['Não houve tempo','Falta de insumo','Falta de funcionário','Atraso da equipe','Sistema indisponível','Equipamento com falha','Cliente conflituoso','Problema já existia no início do turno','Improviso da operação','Falha de processo','Outro'];
+var NOITE_CHIPS_FEITO=['Resolvi na hora','Corrigi parcialmente','Orientei equipe','Passei para alguém','Ficou pendente','Registrei ocorrência','Acionei gerência','Acionei direção'];
+
+var NOITE_ETAPAS=[
+  {id:'vt_e1',titulo:'Chegada e Recebimento',horario:'17h – 18h',emoji:'🌆',itens:[
+    {id:'vt1', critico:false,texto:'Passagem do turno anterior recebida — pendências verificadas'},
+    {id:'vt2', critico:false,texto:'Livro de ocorrências e Trello verificados'},
+    {id:'vt3', critico:false,texto:'Grupo da gerência verificado'},
+    {id:'vt4', critico:false,texto:'Equipe presente, redistribuída e com função definida'},
+    {id:'vt5', critico:false,texto:'Atrasos e faltas tratados'},
+    {id:'vt6', critico:true, texto:'Saipos, WebCardápio e iFood funcionando'},
+    {id:'vt7', critico:false,texto:'Impressoras, maquininhas, internet e Wi-Fi funcionando'},
+    {id:'vt8', critico:true, texto:'Insumos e recheios disponíveis para o turno da noite'},
+    {id:'vt9', critico:false,texto:'Cozinha organizada e pronta para operação'}
+  ]},
+  {id:'vt_e2',titulo:'Operação e Pico',horario:'18h – 21h',emoji:'⚡',itens:[
+    {id:'vt10',critico:true, texto:'Pico 18h–20h: tempo e qualidade mantidos'},
+    {id:'vt11',critico:true, texto:'Pedidos delivery monitorados e conferidos antes de sair'},
+    {id:'vt12',critico:true, texto:'Pedidos parados identificados e tratados'},
+    {id:'vt13',critico:true, texto:'Atrasos tratados antes de impactar cliente'},
+    {id:'vt14',critico:true, texto:'Nenhum colaborador sem direção'},
+    {id:'vt15',critico:false,texto:'Padrão operacional seguido — nenhuma execução fora do padrão'},
+    {id:'vt16',critico:false,texto:'Nenhuma reclamação de cliente em aberto'},
+    {id:'vt17',critico:true, texto:'Insumos críticos monitorados — reposição realizada'},
+    {id:'vt18',critico:true, texto:'Falhas relevantes registradas — nenhuma sem responsável'}
+  ]},
+  {id:'vt_e3',titulo:'Fechamento Completo',horario:'21h+',emoji:'🔒',itens:[
+    {id:'vt19',critico:true, texto:'Caixa fechado e conferido — divergência registrada'},
+    {id:'vt20',critico:true, texto:'Contagem de caixa realizada e registrada'},
+    {id:'vt21',critico:true, texto:'Gás desligado e verificado'},
+    {id:'vt22',critico:true, texto:'Fritadeiras desligadas e limpas'},
+    {id:'vt23',critico:true, texto:'Limpeza completa da área de produção e atendimento'},
+    {id:'vt24',critico:true, texto:'Luzes apagadas em todas as áreas'},
+    {id:'vt25',critico:true, texto:'Portas travadas e segurança verificada'},
+    {id:'vt26',critico:true, texto:'Alarme ativado'},
+    {id:'vt27',critico:false,texto:'Insumos para a manhã deixados organizados e identificados'},
+    {id:'vt28',critico:true, texto:'Passagem registrada — o que a manhã precisa saber'}
+  ]}
+];
+
+function validateNoiteNeg(neg){var n=neg||{};return !!(n.aconteceu&&n.feito&&n.prox);}
+
+function NoiteNaoForm(props){
+  var data=props.data||{};var showErr=props.showErr;
+  function set(k,v){props.onChange(function(prev){return Object.assign({},prev||{},{[k]:v});});}
+  function stop(e){e.stopPropagation();}
+  return(
+    <div onClick={stop} style={{background:'#FFF5F5',border:'1.5px solid var(--danger-line)',borderRadius:'var(--r12)',padding:'14px',marginTop:10}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+        <span style={{fontSize:16}}>🔴</span>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--danger)',textTransform:'uppercase',letterSpacing:.5}}>Não realizado — registre o motivo</div>
+      </div>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>1. O que aconteceu?{showErr&&!data.aconteceu&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{NOITE_CHIPS_ACONTECEU.map(function(c){var sel=data.aconteceu===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('aconteceu',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.aconteceu&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione o motivo</div>}
+      </div>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>2. O que foi feito?{showErr&&!data.feito&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{NOITE_CHIPS_FEITO.map(function(c){var sel=data.feito===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('feito',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.feito&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione a ação</div>}
+      </div>
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>3. Fica para o próximo turno?{showErr&&!data.prox&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div style={{display:'flex',gap:8}}>{['Sim, fica pendente','Não, encerrado'].map(function(c){var sel=data.prox===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('prox',c);}} style={{flex:1,padding:'10px 6px',borderRadius:'var(--r8)',border:'1.5px solid',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',textAlign:'center',transition:'all .13s',borderColor:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--line)',background:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--surface)',color:sel?'#fff':'var(--ink2)'}}>{c==='Sim, fica pendente'?'⚠️ '+c:'✅ '+c}</button>);})}</div>
+        {showErr&&!data.prox&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Obrigatório</div>}
+      </div>
+      <div>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>4. Detalhe <span style={{color:'var(--ink3)',fontWeight:400,textTransform:'none'}}>(opcional)</span></div>
+        <textarea className="neg-obs" value={data.detalhe||''} onClick={function(e){e.stopPropagation();}} onChange={function(e){e.stopPropagation();set('detalhe',e.target.value.slice(0,280));}} placeholder="Complemento rápido..." style={{minHeight:52,width:'100%'}}/>
+      </div>
+    </div>
+  );
+}
+
+function NoiteBlocoItem(props){
+  var item=props.item;var resp=props.resp;var neg=props.neg;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
+  var _f=useState(false);var flash=_f[0];var setFlash=_f[1];
+  var _open=useState(false);var open=_open[0];var setOpen=_open[1];
+  function handleSim(){onAns(item.id,'sim');setOpen(false);}
+  function handleNao(){if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}onAns(item.id,'nao');setOpen(true);}
+  if(resp&&!open){
+    var isSim=resp==='sim';
+    var negLabel=!isSim&&neg?(neg.aconteceu||'')+(neg.feito?' · '+neg.feito:''):'';
+    return(
+      <div className={'chk-item'+(item.critico?' lc':' lr')} style={{cursor:'pointer',padding:'10px 16px'}} onClick={function(){setOpen(true);}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{flexShrink:0,width:28,height:28,borderRadius:'50%',background:isSim?'var(--ok)':'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>{isSim?'✓':'✕'}</span>
+          <div style={{flex:1}}><div style={{fontSize:13,color:'var(--ink)',lineHeight:1.4}}>{item.texto}</div>{!isSim&&negLabel&&<div style={{fontSize:11,color:'var(--danger)',marginTop:2,fontWeight:600}}>{negLabel}</div>}</div>
+          <span style={{flexShrink:0,fontSize:10,fontWeight:700,borderRadius:99,padding:'2px 9px',background:isSim?'var(--ok-bg)':'var(--danger-bg)',color:isSim?'var(--ok)':'var(--danger)'}}>{isSim?'SIM':'NÃO'}</span>
+          <span style={{fontSize:11,color:'var(--ink4)'}}>✎</span>
+        </div>
+      </div>
+    );
+  }
+  return(
+    <div className={'chk-item'+(item.critico?' lc':' lr')+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}>
+      {item.critico&&<span className="lvl lv-c">crítico</span>}
+      <div className="chk-title">{item.texto}</div>
+      <div className="ans-row">
+        <button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={handleSim}><span>{resp==='sim'?'✓':'○'}</span> Sim</button>
+        <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
+      </div>
+      {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
+      {resp==='nao'&&(<div><NoiteNaoForm data={neg} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>{validateNoiteNeg(neg)&&<button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>✓ Confirmar e recolher</button>}</div>)}
+    </div>
+  );
+}
+
+function NoiteEtapaAcc(props){
+  var etapa=props.etapa;var resps=props.resps;var negs=props.negs;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
+  var _o=useState(true);var open=_o[0];var setOpen=_o[1];
+  var items=etapa.itens||[];var tot=items.length;
+  var resp=items.filter(function(i){return resps[i.id];}).length;
+  var fl=items.filter(function(i){return resps[i.id]==='nao';}).length;
+  var allDone=resp===tot&&tot>0;
+  var hasErr=showErr&&items.some(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao')return !validateNoiteNeg(negs[i.id]);return false;});
+  return(
+    <div className="section">
+      <div className={'sec-head'+(hasErr?' has-err':'')} onClick={function(){setOpen(function(o){return !o;});}}>
+        <div className="sec-hl"><span className="sec-icon">{etapa.emoji}</span><div><div className="sec-name">{etapa.titulo}</div><div className="sec-meta">{etapa.horario&&<span style={{color:'var(--brand)',fontWeight:700}}>{etapa.horario} · </span>}{resp}/{tot} respondidos{fl>0?' · '+fl+' NÃO':''}</div></div></div>
+        <div className="sec-right"><span className={'sec-badge'+(allDone?' sb-ok':hasErr?' sb-err':' sb-d')}>{resp}/{tot}</span><span className={'sec-chev'+(open?' open':'')}>▾</span></div>
+      </div>
+      {open&&<div style={{background:'#FAFAFA'}}>{items.map(function(item){return<NoiteBlocoItem key={item.id} item={item} resp={resps[item.id]} neg={negs[item.id]} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}</div>}
+    </div>
+  );
+}
+
+function NoiteSummaryScreen(props){
+  var resps=props.resps;var negs=props.negs;var user=props.user;var horaInicio=props.horaInicio;var onNovo=props.onNovo;
+  var _copied=useState(false);var copied=_copied[0];var setCopied=_copied[1];
+  var _conf=useState(false);var confirmando=_conf[0];var setConfirmando=_conf[1];
+  var allItems=NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);
+  var total=allItems.length;var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
+  var falhas=falhasItems.length;var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
+  var pendencias=falhasItems.filter(function(i){var n=negs[i.id]||{};return n.prox==='Sim, fica pendente';}).length;
+  var status=criticos>0?'Crítico':falhas>0?'Atenção':'Turno fechado ✓';
+  var statusCor=criticos>0?'var(--danger)':falhas>0?'var(--warn)':'var(--ok)';
+  var statusBg=criticos>0?'var(--danger-bg)':falhas>0?'var(--warn-bg)':'var(--ok-bg)';
+  var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+  function calcTempo(){if(!horaInicio)return '';try{var parts=horaInicio.split(':');var now=new Date();var then=new Date();then.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);var diff=Math.round((now-then)/60000);if(diff<0||diff>600)return '';var h=Math.floor(diff/60);var m=diff%60;return h>0?h+'h '+(m>0?m+'min':''):(m+'min');}catch(e){return '';}}
+  var tempo=calcTempo();
+
+  function buildTextGrupo(){
+    var linhas=[];
+    var pendentes=[];var resolvidosNaHora=0;var escalados=[];
+    falhasItems.forEach(function(it){
+      var n=negs[it.id]||{};
+      if(n.feito==='Resolvi na hora'||n.feito==='Corrigi parcialmente')resolvidosNaHora++;
+      else if(n.feito==='Acionei gerência'||n.feito==='Acionei direção')escalados.push({item:it.texto,motivo:n.aconteceu||''});
+      else if(n.prox==='Sim, fica pendente')pendentes.push({item:it.texto,motivo:n.aconteceu||''});
+    });
+    linhas.push('🌙 Subgerência Noite · '+todayFmt());linhas.push('');
+    if(falhas===0){
+      linhas.push(user.name+' fechou o turno da noite. Tudo em ordem,');
+      linhas.push(total+' de '+total+' itens. Score '+score+'.');
+      linhas.push('');linhas.push('Loja fechada corretamente. ✅');
+    }else{
+      linhas.push(user.name+' fechou. Score '+score+', '+falhas+' item'+(falhas>1?'s':'')+' com ocorrência.');
+      if(tempo)linhas.push('⏱ Duração: '+tempo+'.');linhas.push('');
+      if(escalados.length>0){linhas.push('Precisa de atenção:');escalados.forEach(function(e){linhas.push('→ '+e.item+(e.motivo?' — '+e.motivo:'')+'.');});}
+      if(pendentes.length>0){linhas.push('');linhas.push('Fica para a manhã:');pendentes.forEach(function(e){linhas.push('→ '+e.item+'.');});}
+      if(resolvidosNaHora>0){linhas.push('');linhas.push(resolvidosNaHora+' resolvido'+(resolvidosNaHora>1?'s':'')+' na hora.');}
+      linhas.push('');linhas.push('Registrado no CheckON.');
+    }
+    linhas.push('');linhas.push('— CheckON · Pastel da Camilla');
+    return linhas.join('\n');
+  }
+
+  function handleCopy(){
+    var txt=[SISTEMA+' — Subgerência Noite','━━━━━━━━━━',user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:''),'Status: '+status+' · Score: '+score+'/100'];
+    txt.push('━━━━━━━━━━','✅ OK: '+(total-falhas)+'/'+total+'  ❌ Falhas: '+falhas+(pendencias>0?'  ⏳ Pendências: '+pendencias:''));
+    if(falhas>0){txt.push('','🔴 Ocorrências:');falhasItems.forEach(function(it,i){var n=negs[it.id]||{};txt.push((i+1)+'. '+it.texto);if(n.aconteceu)txt.push('   O que: '+n.aconteceu);if(n.feito)txt.push('   Ação: '+n.feito);if(n.prox==='Sim, fica pendente')txt.push('   ⚠️ Pendente para a manhã');});}
+    txt.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');
+    var s=txt.join('\n');
+    if(navigator.clipboard){navigator.clipboard.writeText(s).catch(function(){var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}
+    else{var ta=document.createElement('textarea');ta.value=s;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  }
+
+  function handleEnviarGrupo(){
+    var txt=buildTextGrupo();
+    try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).catch(function(){});}else{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(ex){}document.body.removeChild(ta);}}catch(ex){}
+    setCopied(true);
+    setTimeout(function(){window.location.href=WA_GROUP;},800);
+  }
+
+  if(confirmando){
+    return(
+      <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+        <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',padding:'14px 16px'}}>
+          <button onClick={function(){setConfirmando(false);}} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer',marginBottom:10}}>← Voltar</button>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <span style={{fontSize:28}}>📲</span>
+            <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Enviar para o grupo</div><div style={{fontSize:12,opacity:.75,marginTop:1}}>{falhas===0?'Fechamento impecável!':'Relatório com ocorrências.'}</div></div>
+          </div>
+        </div>
+        <div style={{maxWidth:720,margin:'0 auto',padding:'16px 16px 0'}}>
+          <div style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'16px',marginBottom:16}}>
+            <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.7,marginBottom:14}}>{falhas===0?'Loja fechada com excelência! Clique para avisar o grupo.':'Clique abaixo — o texto é copiado e o WhatsApp abre. Cole e envie!'}</div>
+            {!copied&&(<div style={{display:'flex',flexDirection:'column',gap:8}}>{[{n:'1',txt:'Toque no botão verde abaixo'},{n:'2',txt:'O WhatsApp vai abrir'},{n:'3',txt:'Segure a caixa de texto e toque em Colar'}].map(function(step){return(<div key={step.n} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 12px',background:'#F8FAFC',borderRadius:'var(--r8)',border:'1px solid var(--line)'}}><div style={{width:26,height:26,borderRadius:'50%',background:'#7C3AED',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,flexShrink:0}}>{step.n}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500}}>{step.txt}</div></div>);})}  </div>)}
+            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>Abrindo o WhatsApp...</div></div></div>)}
+          </div>
+          <button onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
+            <span style={{fontSize:22}}>📲</span>{copied?'Abrindo...':'Enviar para o grupo'}
+          </button>
+          <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar ao resumo</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}>
+      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',padding:'14px 16px'}}>
+        <div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Subgerência</div>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno da Noite — Concluído ✓</div>
+        <div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {todayFmt()}{tempo?' · ⏱ '+tempo:''}</div>
+      </div>
+      <div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}>
+        <div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}>
+          <div style={{fontSize:44,flexShrink:0}}>{criticos>0?'🚨':falhas>0?'⚠️':'✅'}</div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>{status}</div>
+            <div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Fechamento impecável.':falhas+' falha'+(falhas>1?'s':'')+' · '+pendencias+' pendente'+(pendencias!==1?'s':'')+'.'}</div>
+            {tempo&&<div style={{fontSize:11,color:statusCor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempo}</div>}
+          </div>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div>
+            <div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:12}}>
+          {[{icon:'📋',val:total,lbl:'Total'},{icon:'✅',val:total-falhas,lbl:'OK'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'⏳',val:pendencias,lbl:'Pendências'}].map(function(x){return(<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>);})}
+        </div>
+        <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}>
+          <div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por etapa</div>
+          {NOITE_ETAPAS.map(function(e){var fl2=e.itens.filter(function(i){return resps[i.id]==='nao';}).length;var ok=e.itens.every(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl2>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{e.titulo}</div><span style={{fontSize:11,fontWeight:700,color:fl2>0?'var(--danger)':'var(--ok)'}}>{fl2>0?fl2+' falha'+(fl2>1?'s':''):'OK'}</span></div>);})}
+        </div>
+        {falhasItems.length>0&&(
+          <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--danger)',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>🔴 Ocorrências registradas</div>
+            {falhasItems.map(function(item){var n=negs[item.id]||{};return(<div key={item.id} style={{padding:'9px 0',borderBottom:'1px solid #F3F4F6'}}><div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.4,marginBottom:4}}>{item.texto}</div><div style={{fontSize:11,color:'#991B1B',lineHeight:1.6}}>{n.aconteceu&&<div>O que: {n.aconteceu}</div>}{n.feito&&<div>Ação: {n.feito}</div>}{n.prox&&<div style={{fontWeight:600,marginTop:2}}>{n.prox==='Sim, fica pendente'?'⚠️ Pendente para a manhã':'✅ Encerrado'}</div>}{n.detalhe&&<div style={{color:'var(--ink2)',marginTop:2}}>{n.detalhe}</div>}</div></div>);})}
+          </div>
+        )}
+        <div style={{display:'flex',gap:8,marginBottom:8}}>
+          <button onClick={function(){setConfirmando(true);}} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button>
+          <button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button>
+        </div>
+        <button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button>
+      </div>
+    </div>
+  );
+}
+
+function NoiteChecklistScreen(props){
+  var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
+  var SAVE_KEY=NOITE_SAVE_KEY_PREFIX+user.login;
+  var _sc=useState('inicio');var screen=_sc[0];var setScreen=_sc[1];
+  var _etapaIdx=useState(0);var etapaIdx=_etapaIdx[0];var setEtapaIdx=_etapaIdx[1];
+  var _resps=useState({});var resps=_resps[0];var setResps=_resps[1];
+  var _negs=useState({});var negs=_negs[0];var setNegs=_negs[1];
+  var _showErr=useState(false);var showErr=_showErr[0];var setShowErr=_showErr[1];
+  var _sending=useState(false);var sending=_sending[0];var setSending=_sending[1];
+  var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
+  var _inicio=useState(null);var horaInicio=_inicio[0];var setHoraInicio=_inicio[1];
+  var _relato=useState('');var relato=_relato[0];var setRelato=_relato[1];
+  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&s.resps&&Object.keys(s.resps).length>0){setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);}}catch(e){}},[]);
+  useEffect(function(){if(screen==='checklist'){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}}},[resps,negs,screen,horaInicio]);
+  function onAns(id,val){setResps(function(r){return Object.assign({},r,{[id]:val});});if(val==='sim'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}}
+  function onNeg(id,updater){setNegs(function(n){var current=n[id]||{};var next=typeof updater==='function'?updater(current):updater;return Object.assign({},n,{[id]:next});});}
+  var allItems=useMemo(function(){return NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);},[]);
+  var totalItems=allItems.length;
+  var respondidos=allItems.filter(function(i){return resps[i.id];}).length;
+  var falhasTotal=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
+  var pct=totalItems>0?Math.round(respondidos/totalItems*100):0;
+  var etapaAtual=NOITE_ETAPAS[etapaIdx];
+  function validateEtapa(idx){var etapa=NOITE_ETAPAS[idx];var errs=[];etapa.itens.forEach(function(item){if(!resps[item.id]){errs.push(item.texto);return;}if(resps[item.id]==='nao'&&!validateNoiteNeg(negs[item.id])){errs.push(item.texto+' — complete o registro');}});return errs;}
+  function handleAvancar(){var errs=validateEtapa(etapaIdx);if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Preencha todos os itens');return;}setShowErr(false);if(etapaIdx<NOITE_ETAPAS.length-1){setEtapaIdx(function(i){return i+1;});window.scrollTo({top:0,behavior:'smooth'});}else{setScreen('resumo');window.scrollTo({top:0,behavior:'smooth'});}}
+  function handleVoltar(){if(etapaIdx>0){setEtapaIdx(function(i){return i-1;});window.scrollTo({top:0,behavior:'smooth'});}else{setScreen('inicio');}setShowErr(false);}
+  async function handleFinalizar(relato){
+    setSending(true);
+    var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
+    var falhas=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
+    var pendencias=allItems.filter(function(i){var n=negs[i.id]||{};return resps[i.id]==='nao'&&n.prox==='Sim, fica pendente';}).length;
+    var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
+    var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
+    var etapasConcluidas=NOITE_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
+    await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||''});
+    await salvarPendencias(allItems,negs,resps,user,'noite','subger_noite_checklists');
+    await sendWebhook(SISTEMA+' — SUBGERÊNCIA NOITE\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Noite] '+statusKey.toUpperCase()+' – '+user.name});
+    try{localStorage.removeItem(SAVE_KEY);}catch(e){}
+    setSending(false);setScreen('summary');
+  }
+  function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}
+  var noiteHdr=(
+    <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
+        <div style={{display:'flex',gap:6}}>
+          <div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Hub</button>}
+          <button className="hdr-btn" onClick={onLogout}>Sair</button>
+        </div>
+      </div>
+    </div>
+  );
+  if(screen==='summary')return<NoiteSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
+  if(screen==='resumo'){
+    var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
+    return(
+      <div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:24}}>{noiteHdr}
+        <div style={{maxWidth:720,margin:'0 auto',padding:'16px'}}>
+          <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'18px',marginBottom:12}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,marginBottom:4}}>{falhasItems.length===0?'🎉 Fechamento impecável!':'📋 Resumo final'}</div>
+            <div style={{fontSize:13,color:'var(--ink2)',marginBottom:12}}>{respondidos} de {totalItems} itens · {falhasTotal} falha{falhasTotal!==1?'s':''}</div>
+            <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--ink)',marginBottom:6}}>Observações para a manhã <span style={{color:'var(--ink3)',fontWeight:400}}>(opcional)</span></label>
+            <textarea value={relato} onChange={function(e){setRelato(e.target.value);}} placeholder="O que a Gabriela precisa saber ao chegar..." style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#fff',resize:'none',minHeight:88,fontFamily:'inherit',lineHeight:1.6,marginBottom:12}}/>
+            <button onClick={function(){handleFinalizar(relato);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🔒 Fechar turno</button>
+          </div>
+          <button onClick={function(){setScreen('checklist');setShowErr(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Revisar checklist</button>
+        </div>
+      </div>
+    );
+  }
+  var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));return s&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
+  if(screen==='inicio'){
+    return(
+      <div>{noiteHdr}
+        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
+        <PendenciasBlock user={user}/>
+        <div className="card">
+          <div className="card-title">🌙 Subgerência — Turno da Noite</div>
+          <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:14}}>{NOITE_ETAPAS.length} etapas · {totalItems} itens · 17h–21h+</div>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            {NOITE_ETAPAS.map(function(e){var done=e.itens.every(function(i){return resps[i.id];});var hasData=e.itens.some(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderRadius:'var(--r8)',border:'1.5px solid var(--line)',background:done?'var(--ok-bg)':'var(--surface)'}}><span style={{fontSize:22}}>{done?'✅':e.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:done?'var(--ok)':'var(--ink)'}}>{e.titulo}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>{e.horario} · {e.itens.length} itens</div></div>{done&&<span style={{fontSize:11,fontWeight:700,color:'var(--ok)'}}>✓ OK</span>}</div>);})}
+          </div>
+        </div>
+        {rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){setScreen('checklist');setEtapaIdx(0);}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={handleLimpar} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}
+        <div style={{padding:'12px 16px 0'}}>
+          <button onClick={function(){setHoraInicio(nowTime());setScreen('checklist');setEtapaIdx(0);setShowErr(false);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>🌙 Iniciar Turno da Noite →</button>
+        </div>
+      </div>
+    );
+  }
+  return(
+    <div>
+      {sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
+      <Toast msg={toast.msg} show={toast.show}/>
+      {noiteHdr}
+      <div className="prog-card">
+        <div className="prog-top"><div className="prog-lbl">Progresso geral</div><div className="prog-pct">{pct}%</div></div>
+        <div className="prog-track"><div className="prog-fill" style={{width:pct+'%',background:'#7C3AED'}}/></div>
+        <div className="prog-stats">
+          <div><div className="pv" style={{color:'var(--ok)'}}>{respondidos}</div><div className="pl">Resp.</div></div>
+          <div><div className="pv" style={{color:'var(--ink3)'}}>{totalItems-respondidos}</div><div className="pl">Pend.</div></div>
+          <div><div className="pv" style={{color:'var(--brand)'}}>{falhasTotal}</div><div className="pl">Falhas</div></div>
+          <div><div className="pv" style={{color:'#7C3AED'}}>{NOITE_ETAPAS.length}</div><div className="pl">Etapas</div></div>
+        </div>
+      </div>
+      <div style={{margin:'10px 16px 0',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',background:'var(--surface)',borderRadius:'var(--r12)',border:'1px solid var(--line)'}}>
+        <div><div style={{fontSize:12,color:'var(--ink3)',fontWeight:600}}>Etapa {etapaIdx+1} de {NOITE_ETAPAS.length}</div>{etapaAtual.horario&&<div style={{fontSize:11,color:'#7C3AED',fontWeight:700,marginTop:1}}>🕐 {etapaAtual.horario}</div>}</div>
+        <div style={{display:'flex',gap:4}}>{NOITE_ETAPAS.map(function(e,i){var done=e.itens.every(function(it){return resps[it.id];});return(<div key={e.id} style={{width:28,height:6,borderRadius:3,background:i===etapaIdx?'#7C3AED':done?'var(--ok)':'var(--line)',transition:'background .2s'}}/>);})}</div>
+      </div>
+      <NoiteEtapaAcc etapa={etapaAtual} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>
+      {(function(){
+        var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateNoiteNeg(negs[i.id]))return true;return false;}).length;
+        var etapaOk=pendentesEtapa===0;
+        var bgOk='linear-gradient(135deg,#0a0020,#7C3AED)';
+        return(
+          <div className="fab"><div className="fab-inner">
+            {etapaIdx>0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Voltar</button>}
+            {etapaIdx===0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
+            <button className="fab-send" onClick={handleAvancar} disabled={sending} style={{background:etapaOk?bgOk:'var(--ink3)',opacity:etapaOk?1:.45,boxShadow:etapaOk?'none':'none',transition:'all .2s'}}>
+              {etapaOk
+                ?(etapaIdx<NOITE_ETAPAS.length-1?'Próxima etapa →':'Resumo final 🔒')
+                :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
+            </button>
+            <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('inicio');},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+          </div></div>
+        );
+      })()}
+      <div style={{height:90}}/>
+    </div>
+  );
+}
+
+function SubgerenteNoiteHub(props){
+  var user=props.user;var onLogout=props.onLogout;
+  var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+  if(mode==='checklist')return<NoiteChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
+  if(mode==='historico')return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
+      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+        </div>
+      </div>
+      <HistoricoPanel user={user} tabela="subger_noite_checklists" labelTurno={function(){return'🌙 Noite';}}/>
+    </div>
+  );
+  return(
+    <div style={{minHeight:'100vh',background:'linear-gradient(145deg,#0a0020,#1a0050,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}>
+      <div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}>
+        <div style={{textAlign:'center',marginBottom:24}}>
+          <div style={{fontSize:46,marginBottom:8}}>🌙</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div>
+          <div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Subgerência — Turno da Noite · CheckON</div>
+        </div>
+        <button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid #7C3AED',background:'#F5F3FF',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
+          <span style={{fontSize:32}}>📋</span>
+          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'#7C3AED'}}>Checklist do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Noite · {NOITE_ETAPAS.length} etapas · {NOITE_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0)} itens · 17h–21h+</div></div>
+        </button>
+        <button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
+          <span style={{fontSize:28}}>📈</span>
+          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico, score e falhas frequentes</div></div>
+        </button>
+        <button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══ Atualizar SubgerenteHub (Gabriela) com histórico e pendências ══ */
+
+function SubgerenteHub(props){
+  var user=props.user;var onLogout=props.onLogout;
+  var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+  if(mode==='checklist')return<SubgerChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
+  if(mode==='historico')return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
+      <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+        </div>
+      </div>
+      <HistoricoPanel user={user} tabela="subger_checklists" labelTurno={function(){return'🌅 Manhã';}}/>
+    </div>
+  );
+  return(
+    <div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}>
+      <div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}>
+        <div style={{textAlign:'center',marginBottom:24}}>
+          <div style={{fontSize:46,marginBottom:8}}>🌅</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div>
+          <div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Subgerência — Turno da Manhã · CheckON</div>
+        </div>
+        <button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
+          <span style={{fontSize:32}}>📋</span>
+          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Checklist do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Manhã · {SUBGER_ETAPAS.length} etapas · {SUBGER_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0)} itens · 9h–13h</div></div>
+        </button>
+        <button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
+          <span style={{fontSize:28}}>📈</span>
+          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico, score e falhas frequentes</div></div>
+        </button>
+        <button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══ FIM DOS MÓDULOS SUBGERÊNCIA ══ */
 
 function Login(props){
   var onLogin=props.onLogin;
@@ -1236,6 +2510,8 @@ function App(){
     if(user.role==='gerente')return<GerenteHub user={user} onLogout={onLogout}/>;
     if(user.role==='gerencia')return<GerenciaHub user={user} onLogout={onLogout}/>;
     if(user.role==='dp')return<DPHub user={user} onLogout={onLogout}/>;
+    if(user.role==='subgerente')return<SubgerenteHub user={user} onLogout={onLogout}/>;
+    if(user.role==='subgerente_noite')return<SubgerenteNoiteHub user={user} onLogout={onLogout}/>;
     return<ChecklistScreen user={user} onLogout={onLogout}/>;
   }
   return<Login onLogin={onLogin}/>;
