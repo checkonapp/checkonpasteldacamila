@@ -101,14 +101,14 @@ img{display:block;max-width:100%}
 /* Logo com fundo preto: mix-blend-mode:multiply remove o branco/cinza,
    mas para fundo PRETO usamos screen sobre um círculo escuro */
 .card-arch-bg{
-  background:#1A1A1A; /* fundo escuro para o screen funcionar */
+  background:#ffffff;
 }
 .card-arch-bg img{
   width:126px;
   height:126px;
   object-fit:contain;
-  mix-blend-mode:screen; /* remove fundo preto */
-  filter:brightness(1.05);
+  mix-blend-mode:multiply;
+  filter:contrast(1.05) saturate(1.1);
 }
 .card-arch-fallback{
   font-size:64px;
