@@ -31,9 +31,10 @@
   --sh3:0 8px 24px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);
   --sh-brand:0 4px 14px rgba(234,29,44,.30);
   --content-max:720px;
+  --fab-h:68px;
 }
 html{font-size:14px;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:100px}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:calc(var(--fab-h) + 24px + env(safe-area-inset-bottom,0px))}
 *{font-family:inherit}
 button{cursor:pointer;border:none;outline:none;background:transparent;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 textarea,select,input{font-family:inherit}
@@ -151,10 +152,10 @@ img{display:block;max-width:100%}
 .val-item{font-size:12px;color:#B91C1C;padding:5px 0;border-bottom:1px solid var(--danger-line);display:flex;gap:7px;align-items:flex-start;line-height:1.5}
 .val-item:last-child{border-bottom:none}
 .val-item::before{content:'·';font-size:18px;line-height:.8;color:var(--danger);flex-shrink:0}
-.fab{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px 12px;display:flex;gap:8px;box-shadow:0 -2px 12px rgba(0,0,0,.08)}
-.fab-inner{width:100%;max-width:var(--content-max);margin:0 auto;display:flex;gap:8px;align-items:center}
-.fab-save{flex:0 0 auto;padding:11px 16px;border-radius:var(--r8);background:var(--surface2);border:1.5px solid var(--line);font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--ink2);transition:all .13s;min-height:44px}
-.fab-send{flex:1;padding:12px;border-radius:var(--r8);background:var(--brand);color:#fff;font-family:'Sora',sans-serif;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;box-shadow:var(--sh-brand);min-height:44px}
+.fab{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;box-shadow:0 -2px 12px rgba(0,0,0,.08);min-height:var(--fab-h)}
+.fab-inner{width:100%;max-width:var(--content-max);margin:0 auto;display:flex;gap:6px;align-items:center}
+.fab-save{flex:0 0 auto;padding:11px 12px;border-radius:var(--r8);background:var(--surface2);border:1.5px solid var(--line);font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--ink2);transition:all .13s;min-height:44px;white-space:nowrap}
+.fab-send{flex:1;padding:12px 8px;border-radius:var(--r8);background:var(--brand);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s;box-shadow:var(--sh-brand);min-height:44px;white-space:nowrap}
 .fab-send:hover{background:var(--brand-dark)}
 .fab-send:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 .fab-del{flex:0 0 auto;padding:11px 14px;border-radius:var(--r8);background:var(--surface2);border:1.5px solid var(--line);font-size:17px;min-height:44px;transition:all .13s}
@@ -230,7 +231,7 @@ img{display:block;max-width:100%}
 .btn-brand:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .alert-box{background:var(--danger-bg);border:1px solid var(--danger-line);color:#991B1B;border-radius:var(--r8);padding:11px 14px;font-size:13px;font-weight:500;margin-bottom:16px}
 @media(min-width:640px){html{font-size:15px}.kpi-grid{grid-template-columns:repeat(3,1fr)}.card{padding:22px;margin:14px 20px 0}.section{margin:10px 20px 0}.prog-card{margin:14px 20px 0;padding:18px}.day-badge{margin:16px 20px 0}.hdr{height:60px}.prog-stats{gap:8px}.ans-sim,.ans-nao{padding:14px 18px;font-size:15px}.chip{padding:8px 16px;font-size:13px}}
-@media(min-width:960px){:root{--content-max:760px}.kpi-grid{grid-template-columns:repeat(4,1fr)}body{padding-bottom:0}.fab{padding:14px 24px 16px}.fab-inner{max-width:760px}.chart-card{margin:0 20px 14px}}
+@media(min-width:960px){:root{--content-max:760px}.kpi-grid{grid-template-columns:repeat(4,1fr)}body{padding-bottom:0}.fab{padding:14px 24px 16px}.fab-inner{max-width:760px}.chart-card{margin:0 20px 14px}.fab-send{font-size:14px}.fab-save{font-size:12px;padding:11px 16px}}
 @media print{.fab,.hdr,.ceo-nav,.ceo-hdr,.um-hdr{display:none!important}body{padding-bottom:0;background:#fff}}
 @supports(padding-bottom:env(safe-area-inset-bottom)){.fab{padding-bottom:calc(12px + env(safe-area-inset-bottom))}}
 </style>
@@ -247,6 +248,16 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const SISTEMA='CheckON Pastel da Camilla';
 const WEBHOOK='https://hook.us2.make.com/pz24jw68dgh7c3realu1locfwlq1ny67';
 const WA_GROUP='https://chat.whatsapp.com/G0erwUW5npX4ejKNcU3lT5';
+function openWA(){
+  try{
+    var a=document.createElement('a');
+    a.href=WA_GROUP;a.target='_blank';a.rel='noopener noreferrer';
+    a.style.display='none';document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);},200);
+  }catch(e){
+    try{window.open(WA_GROUP,'_blank','noopener,noreferrer');}catch(e2){}
+  }
+}
 const USERS_KEY='konclui_users';
 const SESSION_KEY='konclui_session';
 const VERSION='2026.14';
@@ -367,15 +378,15 @@ function filterItems(allItems,turno,ctx){
 var DP_BLOCOS_DATA=[
   {id:'dp_b1',titulo:'Controle Diário do DP',itens:[
     {id:'dp_b1_i1',texto:'Pendências do dia foram verificadas e priorizadas'},
-    {id:'dp_b1_i2',texto:'Admissões e demissões do período foram conferidas'},
+    {id:'dp_b1_i2',texto:'Admissões e demissões do dia foram conferidas',cond:'admissao'},
     {id:'dp_b1_i3',texto:'Documentos obrigatórios do período foram organizados'},
-    {id:'dp_b1_i4',texto:'Prazos críticos do dia foram revisados e estão sob controle'}
+    {id:'dp_b1_i4',texto:'⚠️ Tem algum prazo que, se não for tratado hoje, vai causar problema?',alerta:true}
   ]},
   {id:'dp_b2',titulo:'Documentação e Arquivos',itens:[
     {id:'dp_b2_i1',texto:'Documentos físicos e digitais estão devidamente organizados'},
     {id:'dp_b2_i2',texto:'Arquivos recentes foram atualizados no sistema'},
     {id:'dp_b2_i3',texto:'Pendências documentais foram identificadas e registradas'},
-    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada'}
+    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada',cond:'assinatura'}
   ]},
   {id:'dp_b3',titulo:'Apoio à Operação e Equipe',itens:[
     {id:'dp_b3_i1',texto:'Solicitações dos colaboradores foram verificadas e encaminhadas'},
@@ -387,21 +398,22 @@ var DP_BLOCOS_DATA=[
     {id:'dp_b4_i1',texto:'Pendências para o próximo turno/dia foram registradas'},
     {id:'dp_b4_i2',texto:'Status das atividades do DP foi atualizado'},
     {id:'dp_b4_i3',texto:'Ocorrências relevantes do dia foram registradas'},
-    {id:'dp_b4_i4',texto:'Rotina do dia foi concluída conforme planejado'}
+    {id:'dp_b4_i4',texto:'Rotina do dia foi concluída conforme planejado'},
+    {id:'dp_b4_i5',texto:'Sistema de ponto foi acompanhado e está correto hoje',critico:true}
   ]}
 ];
 var DP_BLOCOS_SEMANAL=[
   {id:'dp_s1',titulo:'Revisão Semanal de Documentos',itens:[
     {id:'dp_s1_i1',texto:'Ponto da semana foi conferido e lançado corretamente'},
     {id:'dp_s1_i2',texto:'Escalas da próxima semana foram verificadas e comunicadas'},
-    {id:'dp_s1_i3',texto:'Contratos temporários e prazos foram revisados'},
-    {id:'dp_s1_i4',texto:'Comunicados internos da semana foram enviados'}
+    {id:'dp_s1_i3',texto:'Contratos temporários e prazos foram revisados',cond:'contrato'},
+    {id:'dp_s1_i4',texto:'Comunicados internos da semana foram enviados',cond:'comunicado'}
   ]},
   {id:'dp_s2',titulo:'Acompanhamento de Equipe',itens:[
     {id:'dp_s2_i1',texto:'Ausências e atestados da semana foram registrados'},
     {id:'dp_s2_i2',texto:'Horas extras da semana foram apuradas e registradas'},
     {id:'dp_s2_i3',texto:'Feedbacks pendentes foram realizados ou agendados'},
-    {id:'dp_s2_i4',texto:'Situação de uniformes e EPI foi verificada'}
+    {id:'dp_s2_i4',texto:'Situação de uniformes e EPI foi verificada',cond:'uniforme'}
   ]},
   {id:'dp_s3',titulo:'Pendências e Encaminhamentos',itens:[
     {id:'dp_s3_i1',texto:'Pendências da semana anterior foram resolvidas ou reencaminhadas'},
@@ -419,8 +431,8 @@ var DP_BLOCOS_MENSAL=[
   ]},
   {id:'dp_m2',titulo:'Obrigações Legais e Documentos',itens:[
     {id:'dp_m2_i1',texto:'eSocial do mês foi conferido e transmitido'},
-    {id:'dp_m2_i2',texto:'Admissões e demissões do mês foram regularizadas'},
-    {id:'dp_m2_i3',texto:'Exames médicos periódicos foram verificados'},
+    {id:'dp_m2_i2',texto:'Admissões e demissões do mês foram regularizadas',cond:'admissao_mensal'},
+    {id:'dp_m2_i3',texto:'Exames médicos periódicos foram verificados',cond:'exame'},
     {id:'dp_m2_i4',texto:'FGTS e contribuições foram conferidos'}
   ]},
   {id:'dp_m3',titulo:'Planejamento do Próximo Mês',itens:[
@@ -620,6 +632,7 @@ function DPSummaryScreen(props){
   var freq=props.freq||'diario';var tempoTotal=props.tempoTotal||'';var sugestao=props.sugestao||null;
   var _copied=useState(false);var copied=_copied[0];var setCopied=_copied[1];
   var _conf=useState(false);var confirmando=_conf[0];var setConfirmando=_conf[1];
+  var _enc=useState(false);var encerrado=_enc[0];var setEncerrado=_enc[1];
   var freqCfg=DP_FREQ_MAP[freq]||DP_FREQ_MAP.diario;
   var blocos=freqCfg.blocos;
   var allItems=blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);
@@ -677,10 +690,9 @@ function DPSummaryScreen(props){
     var txt=buildTextGrupo();
     try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).catch(function(){});}else{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(ex){}document.body.removeChild(ta);}}catch(ex){}
     setCopied(true);
-    setTimeout(function(){window.location.href=WA_GROUP;},800);
   }
 
-  if(confirmando){
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={0} score={score} turnoLabel={'📋 DP — '+freqCfg.titulo} cor='#0891B2' onHub={onNovo} onBack={props.onBack} onLogout={props.onLogout} onRevisar={function(){setEncerrado(false);}}/>;}  if(confirmando){
     return(
       <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
         <div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}>
@@ -693,9 +705,10 @@ function DPSummaryScreen(props){
             {!copied&&(<div style={{display:'flex',flexDirection:'column',gap:8}}>{[{n:'1',txt:'Toque no botão verde abaixo'},{n:'2',txt:'O WhatsApp vai abrir'},{n:'3',txt:'Segure a caixa de texto e toque em Colar'}].map(function(step){return(<div key={step.n} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 12px',background:'#F8FAFC',borderRadius:'var(--r8)',border:'1px solid var(--line)'}}><div style={{width:26,height:26,borderRadius:'50%',background:'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,flexShrink:0}}>{step.n}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500}}>{step.txt}</div></div>);})}</div>)}
             {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>Abrindo o WhatsApp...</div></div></div>)}
           </div>
-          <button onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
-            <span style={{fontSize:22}}>📲</span>{copied?'Abrindo...':'Enviar para o grupo'}
-          </button>
+          <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10,textDecoration:'none',boxSizing:'border-box'}}>
+            <span style={{fontSize:22}}>📲</span>{copied?'Enviado ✓':'Abrir WhatsApp'}
+          </a>
+          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'#0891B2',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei minha rotina</button>}
           <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Revisar checklist</button>
         </div>
       </div>
@@ -741,6 +754,37 @@ function DPSugestaoForm(props){
   return(<div style={{margin:'10px 16px 0',borderRadius:'var(--r12)',border:'1.5px solid var(--brand)',background:'var(--brand-light)',overflow:'hidden'}}><div style={{background:'var(--brand)',padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20}}>💡</span><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>Sugestão de melhoria</div></div><button onClick={onFechar} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:'var(--r99)',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:700,cursor:'pointer'}}>×</button></div><div style={{padding:'16px'}}><div style={{marginBottom:12}}><div style={{fontSize:11,fontWeight:600,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>Atividade realizada *</div><textarea className="neg-obs" value={data.atividade||''} onChange={function(e){set('atividade',e.target.value);}} placeholder="Ex: Conferi escala..." style={{minHeight:72,width:'100%'}}/></div></div></div>);
 }
 
+
+function DPOcorrenciaForm(props){
+  var data=props.data||'';var onChange=props.onChange;
+  return(
+    <div style={{margin:'10px 16px 0',borderRadius:'var(--r12)',border:'1.5px solid var(--warn-line)',background:'var(--warn-bg)',padding:'14px 16px'}}>
+      <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'var(--warn)',marginBottom:8}}>📋 Ocorrências do dia</div>
+      <div style={{fontSize:12,color:'var(--ink2)',marginBottom:8}}>Descreva o que aconteceu de relevante hoje no DP.</div>
+      <textarea value={data} onChange={function(e){onChange(e.target.value);}} placeholder="Ex: Colaborador X solicitou atestado. Prazo Y foi renovado. Sistema Z ficou instável pela manhã..." style={{width:'100%',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r8)',padding:'10px 12px',fontSize:13,color:'var(--ink)',background:'#fff',resize:'none',minHeight:80,fontFamily:'inherit',lineHeight:1.5}}/>
+    </div>
+  );
+}
+
+/* Popup de sucesso global */
+function EnviadoPopup(props){
+  var show=props.show;var user=props.user;var score=props.score;var label=props.label||'Relatório';
+  if(!show)return null;
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.65)',zIndex:9999,display:'flex',alignItems:'center',justifyContent:'center',padding:20}}>
+      <div style={{background:'#fff',borderRadius:20,padding:'32px 24px',width:'100%',maxWidth:320,textAlign:'center',animation:'loginWrapIn .4s cubic-bezier(.34,1.4,.64,1) both'}}>
+        <div style={{fontSize:56,marginBottom:12,lineHeight:1}}>✅</div>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:'var(--ok)',marginBottom:6}}>Enviado com sucesso!</div>
+        <div style={{fontSize:13,color:'var(--ink2)',marginBottom:4}}>{label}</div>
+        <div style={{fontSize:13,color:'var(--ink2)',marginBottom:12}}>{user&&user.name} · {todayFmt()}</div>
+        {score!==undefined&&<div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:'var(--ok)',marginBottom:4}}>{score}</div>}
+        {score!==undefined&&<div style={{fontSize:11,color:'var(--ink3)',marginBottom:16}}>pontos</div>}
+        <div style={{fontSize:12,color:'var(--ink3)'}}>Aguarde...</div>
+      </div>
+    </div>
+  );
+}
+
 function DPChecklistScreen(props){
   var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
   var DP_SAVE_KEY='checkon_dp_'+user.login;
@@ -756,9 +800,12 @@ function DPChecklistScreen(props){
   var _sug=useState({});var sugestao=_sug[0];var setSugestao=_sug[1];
   var _sugOpen=useState(false);var sugestaoAberta=_sugOpen[0];var setSugestaoAberta=_sugOpen[1];
   var _tempoTotal=useState('');var tempoTotal=_tempoTotal[0];var setTempoTotal=_tempoTotal[1];
+  var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
+  var _enviadoScore=useState(0);var enviadoScore=_enviadoScore[0];var setEnviadoScore=_enviadoScore[1];
+  var _dpCtx=useState({admissao:'',assinatura:'',contrato:'',comunicado:'',uniforme:'',exame:'',ocorrencia:''});var dpCtx=_dpCtx[0];var setDpCtx=_dpCtx[1];
   var freqCfg=DP_FREQ_MAP[freq]||DP_FREQ_MAP.diario;
   var blocos=freqCfg.blocos;
-  var allItems=useMemo(function(){return blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);},[freq]);
+  var allItems=useMemo(function(){var raw=blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);return raw.filter(function(it){if(it.cond==='admissao'&&dpCtx.admissao!=='sim')return false;if(it.cond==='admissao_mensal'&&dpCtx.admissao!=='sim')return false;if(it.cond==='assinatura'&&dpCtx.assinatura!=='sim')return false;if(it.cond==='contrato'&&dpCtx.contrato!=='sim')return false;if(it.cond==='comunicado'&&dpCtx.comunicado!=='sim')return false;if(it.cond==='uniforme'&&dpCtx.uniforme!=='sim')return false;if(it.cond==='exame'&&dpCtx.exame!=='sim')return false;return true;});},[freq,dpCtx]);
 
   useEffect(function(){
     try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s&&s.resps){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);/* tela sempre começa em freq — banner de rascunho avisa o usuario */}}catch(e){}
@@ -783,25 +830,80 @@ function DPChecklistScreen(props){
     var statusGeral=falhas===0?'ok':falhas<=2?'atencao':'critico';
     var score=Math.max(0,Math.round(100-(falhas/total*60)));
     var blocosConcluidos=blocos.filter(function(b){return b.itens.every(function(i){return resps[i.id];});}).length;
-    await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
+    await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{}),ocorrencia:dpCtx.obsOcorrencia||''});
     if(sugestao&&sugestao.atividade){await sbInsert('dp_sugestoes',{login:user.login,nome:user.name,checklist:freqCfg.titulo,freq:freq,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),sugestao:sugestao});}
     await sendWebhook(SISTEMA+' — '+freqCfg.titulo+'\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON DP] '+statusGeral.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}
-    setSending(false);setScreen('summary');
+    setEnviadoScore(score);setEnviado(true);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
 
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setValErrs([]);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('freq');}
 
-  if(screen==='summary'){return<DPSummaryScreen resps={resps} negs={negs} user={user} freq={freq} tempoTotal={tempoTotal} sugestao={sugestao} onNovo={function(){setResps({});setNegs({});setShowErr(false);setValErrs([]);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('freq');}}/>;}
+  if(screen==='summary'){return<DPSummaryScreen resps={resps} negs={negs} user={user} freq={freq} tempoTotal={tempoTotal} sugestao={sugestao} onBack={onBack} onLogout={onLogout} onNovo={function(){setResps({});setNegs({});setShowErr(false);setValErrs([]);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('freq');}}/>;}
 
-  var dpHdr=(<div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}><div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · DP</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{freqCfg.titulo}</div></div><div style={{display:'flex',gap:6}}><div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={function(){if(screen==='checklist'){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}}onBack();}}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div>);
+  var dpHdr=(<div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}><div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · DP</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{freqCfg.titulo}</div></div><div style={{display:'flex',gap:6}}><div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={function(){if(screen==='checklist'){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}}onBack();}}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div>);
 
   if(screen==='freq'){
     var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));return s&&s.freq===freq&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
-    return(<div>{dpHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('checklist');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{(DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'Checklist'} <span style={{fontSize:18}}>→</span></button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar ao Hub</button></div>}</div>);
+    return(<div>{dpHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{(DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'Checklist'} <span style={{fontSize:18}}>→</span></button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button></div>}</div>);
   }
 
-  return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/>{dpHdr}<div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%',background:'var(--brand)'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{blocos.length}</div><div className="pl">Blocos</div></div></div><div style={{marginTop:8,fontSize:11,color:'var(--ink2)',textAlign:'center',fontWeight:600}}>{stats.pct===100?'✅ Todos respondidos. Revise e envie.':stats.pct===0?'Responda todos os itens.':'Continue preenchendo...'}</div></div>{showErr&&valErrs.length>0&&(<div className="val-wrap"><div className="val-title">🚫 Corrija antes de enviar ({valErrs.length})</div>{valErrs.slice(0,6).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>)}{blocos.map(function(bloco){return<DPBlocoAcc key={bloco.id} bloco={bloco} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}<DPSugestaoForm data={sugestao} onChange={setSugestao} aberto={sugestaoAberta} onAbrir={function(){setSugestaoAberta(true);}} onFechar={function(){setSugestaoAberta(false);}}/><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('💾 Salvo!');}} style={{whiteSpace:'nowrap'}}>💾 Salvar</button><button className="fab-send" onClick={handleEnviar} disabled={sending}>🚀 Finalizar</button><button onClick={function(){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('freq');},900);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button></div></div><div style={{height:20}}/></div>);
+
+  if(screen==='contexto'){
+    var ctxPerguntas=[];
+    if(freq==='diario'){
+      ctxPerguntas=[
+        {key:'admissao',q:'Tem admissão ou demissão hoje?',hint:'Se sim, o item de conferência vai aparecer no checklist.'},
+        {key:'assinatura',q:'Tem assinatura pendente para conferir hoje?',hint:''},
+        {key:'ocorrencia',q:'Aconteceu alguma ocorrência hoje no DP?',hint:'Se sim, um campo aparece no final para você descrever.'},
+      ];
+    } else if(freq==='semanal'){
+      ctxPerguntas=[
+        {key:'contrato',q:'Tem contrato temporário ativo para revisar?',hint:''},
+        {key:'comunicado',q:'Tem comunicado interno para enviar esta semana?',hint:''},
+        {key:'uniforme',q:'Tem novidade sobre uniformes ou EPI esta semana?',hint:''},
+      ];
+    } else if(freq==='mensal'){
+      ctxPerguntas=[
+        {key:'admissao',q:'Teve admissão ou demissão este mês?',hint:''},
+        {key:'exame',q:'Tem exame médico periódico vencendo este mês?',hint:''},
+      ];
+    }
+    var allAnswered=ctxPerguntas.every(function(p){return dpCtx[p.key]!=='';});
+    return(
+      <div>
+        {dpHdr}
+        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
+        <div className="card">
+          <div className="card-title">⚙️ Antes de começar — {freqCfg.label}</div>
+          <div style={{fontSize:13,color:'var(--ink2)',marginBottom:14,lineHeight:1.5}}>Responda rapidamente para o checklist se adaptar ao seu dia.</div>
+          {ctxPerguntas.map(function(p){return(
+            <div key={p.key} className="ctx-row">
+              <div style={{flex:1}}>
+                <div className="ctx-q">{p.q}</div>
+                {p.hint&&<div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{p.hint}</div>}
+              </div>
+              <div className="ctx-toggle">
+                <button className={'ctx-btn'+(dpCtx[p.key]==='sim'?' yes':'')} onClick={function(){setDpCtx(function(x){return Object.assign({},x,{[p.key]:'sim'});});}}>Sim</button>
+                <button className={'ctx-btn'+(dpCtx[p.key]==='nao'?' no':'')} onClick={function(){setDpCtx(function(x){return Object.assign({},x,{[p.key]:'nao'});});}}>Não</button>
+              </div>
+            </div>
+          );})}
+        </div>
+        {allAnswered&&(
+          <div style={{padding:'12px 16px 0'}}>
+            <button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar checklist →</button>
+          </div>
+        )}
+        <div style={{padding:'8px 16px 0'}}>
+          <button onClick={function(){setScreen('freq');}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button>
+        </div>
+      </div>
+    );
+  }
+
+  return(<div><EnviadoPopup show={enviado} user={user} score={enviadoScore} label={freqCfg.titulo}/>{sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/>{dpHdr}<div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%',background:'var(--brand)'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{blocos.length}</div><div className="pl">Blocos</div></div></div><div style={{marginTop:8,fontSize:11,color:'var(--ink2)',textAlign:'center',fontWeight:600}}>{stats.pct===100?'✅ Todos respondidos. Revise e envie.':stats.pct===0?'Responda todos os itens.':'Continue preenchendo...'}</div></div>{showErr&&valErrs.length>0&&(<div className="val-wrap"><div className="val-title">🚫 Corrija antes de enviar ({valErrs.length})</div>{valErrs.slice(0,6).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>)}{blocos.map(function(bloco){return<DPBlocoAcc key={bloco.id} bloco={bloco} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}<DPSugestaoForm data={sugestao} onChange={setSugestao} aberto={sugestaoAberta} onAbrir={function(){setSugestaoAberta(true);}} onFechar={function(){setSugestaoAberta(false);}}/>{dpCtx.ocorrencia==='sim'&&<DPOcorrenciaForm data={dpCtx.obsOcorrencia||''} onChange={function(v){setDpCtx(function(x){return Object.assign({},x,{obsOcorrencia:v});});}}/>}<div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('💾 Salvo!');}} style={{whiteSpace:'nowrap'}}>💾 Salvar</button><button className="fab-send" onClick={handleEnviar} disabled={sending}>🚀 Finalizar</button><button onClick={function(){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('freq');},900);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button></div></div><div style={{height:88}}/></div>);
 }
 
 function DPHub(props){
@@ -813,7 +915,7 @@ function DPHub(props){
       <div style={{background:'#0891B2',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · DP</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="dp_checklists" labelTurno={function(d){return({'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'})[d.freq]||'📋';}}/>
@@ -844,13 +946,15 @@ function GerBlocoAcc(props){
 
 function GerSummaryScreen(props){
   var resps=props.resps;var negs=props.negs;var user=props.user;var ident=props.ident;var onNovo=props.onNovo;var tempoTotal=props.tempoTotal||'';
+  var _enc=useState(false);var encerrado=_enc[0];var setEncerrado=_enc[1];
   var total=GER_ITEMS.length;var falhas=GER_ITEMS.filter(function(i){return resps[i.id]==='nao';}).length;
   var statusGeral=falhas===0?'OK':falhas<=2?'Atenção':'Crítico';var statusCor=falhas===0?'var(--ok)':falhas<=2?'var(--warn)':'var(--danger)';var statusBg=falhas===0?'var(--ok-bg)':falhas<=2?'var(--warn-bg)':'var(--danger-bg)';
   var score=Math.max(0,Math.round(100-(falhas/total*60)));
-  function buildText(){var lines=[SISTEMA+' — Gerência','━━━━━━━━━━',user.name+' · '+(ident&&ident.data||todayFmt()),'Status: '+statusGeral+' · Score: '+score+'/100'];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━');GER_BLOCOS.forEach(function(b){var fl=GER_ITEMS.filter(function(i){return i.bloco===b&&resps[i.id]==='nao';}).length;lines.push((fl>0?'❌ ':'✅ ')+b+(fl>0?' — '+fl+' falha'+(fl>1?'s':''):''));});lines.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');return lines.join('\n');}
-  function handleGrupo(){window.location.href=WA_GROUP;}
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={GER_ITEMS.filter(function(i){return i.n==='critico'&&resps[i.id]==='nao';}).length} score={score} turnoLabel={'🏢 Gerência · '+(ident&&ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde')} cor='#0F4C81' onHub={onNovo} onRevisar={function(){setEncerrado(false);}}/>;}  function buildText(){var lines=[SISTEMA+' — Gerência','━━━━━━━━━━',user.name+' · '+(ident&&ident.data||todayFmt()),'Status: '+statusGeral+' · Score: '+score+'/100'];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━');GER_BLOCOS.forEach(function(b){var fl=GER_ITEMS.filter(function(i){return i.bloco===b&&resps[i.id]==='nao';}).length;lines.push((fl>0?'❌ ':'✅ ')+b+(fl>0?' — '+fl+' falha'+(fl>1?'s':''):''));});lines.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');return lines.join('\n');}
+  var _envGrupo=useState(false);var enviouGrupo=_envGrupo[0];var setEnviouGrupo=_envGrupo[1];
+  function handleGrupo(){openWA();setEnviouGrupo(true);}
   function handleCopy(){var txt=buildText();if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);})}else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
-  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Visão do Turno — Concluído ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {ident&&ident.data||todayFmt()}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{statusGeral==='OK'?'✅':statusGeral==='Atenção'?'⚠️':'🚨'}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusGeral}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma falha.':falhas+' falha(s).'}</div></div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div><div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}><div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por bloco</div>{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});var fl=its.filter(function(i){return resps[i.id]==='nao';}).length;var ok=its.every(function(i){return resps[i.id];});return(<div key={b} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{b}</div><span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':'var(--ok)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):'OK'}</span></div>);})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><button onClick={handleGrupo} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div><button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo checklist</button></div></div>);
+  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Visão do Turno — Concluído ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {ident&&ident.data||todayFmt()}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{statusGeral==='OK'?'✅':statusGeral==='Atenção'?'⚠️':'🚨'}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusGeral}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma falha.':falhas+' falha(s).'}</div></div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div><div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}><div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por bloco</div>{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});var fl=its.filter(function(i){return resps[i.id]==='nao';}).length;var ok=its.every(function(i){return resps[i.id];});return(<div key={b} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{b}</div><span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':'var(--ok)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):'OK'}</span></div>);})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleGrupo} style={{flex:2,padding:13,background:enviouGrupo?'var(--ok)':'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none',textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>📲 {enviouGrupo?'Enviado ✓':'Enviar para o grupo'}</a><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div>{enviouGrupo&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:14,background:'#0F4C81',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,cursor:'pointer',border:'none',marginBottom:8}}>✓ Terminei meu turno</button>}<button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo checklist</button></div></div>);
 }
 
 function GerChecklistScreen(props){
@@ -866,6 +970,7 @@ function GerChecklistScreen(props){
   var _sn=useState(false);var sending=_sn[0];var setSending=_sn[1];
   var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
   var _tempo=useState('');var tempoTotal=_tempo[0];var setTempoTotal=_tempo[1];
+  var _envGer=useState(false);var enviadoGer=_envGer[0];var setEnviadoGer=_envGer[1];
   function calcTempo(inicio){if(!inicio)return '';try{var parts=inicio.split(':');var now=new Date();var then=new Date();then.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);var diff=Math.round((now-then)/60000);if(diff<0||diff>480)return '';var h=Math.floor(diff/60);var m=diff%60;return h>0?h+'h '+(m>0?m+'min':''):(m+'min');}catch(e){return '';}}
   useEffect(function(){try{var s=JSON.parse(localStorage.getItem(GER_SAVE_KEY));if(s&&s.ident){setIdent(s.ident);setTurno(s.ident.turno);setResps(s.resps||{});setNegs(s.negs||{});/* tela sempre começa em entry — nao restaura screen */}}catch(e){}},[]);
   useEffect(function(){if(!ident)return;try{localStorage.setItem(GER_SAVE_KEY,JSON.stringify({ident:ident,resps:resps,negs:negs}));}catch(e){}},[ident,resps,negs]);
@@ -886,14 +991,15 @@ function GerChecklistScreen(props){
     setIdent(function(prev){return Object.assign({},prev,{horaFim:hora});});
     await sendWebhook(SISTEMA+' — GERÊNCIA\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral+' · Score: '+score+'/100',{assunto:'[CheckON Gerência] '+statusGeral+' – '+user.name});
     try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}
-    setSending(false);setScreen('summary');
+    setEnviadoGer(true);
+    setTimeout(function(){setSending(false);setEnviadoGer(false);setScreen('summary');},2200);
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setScreen('entry');}
   var tLabel=turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
-  if(screen==='summary'){return<GerSummaryScreen resps={resps} negs={negs} user={user} ident={ident} tempoTotal={tempoTotal} onNovo={function(){setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}}/>;}
-  var gerHdr=(<div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}><div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{screen==='entry'?'Visão do Turno':tLabel}</div></div><div style={{display:'flex',gap:6}}><div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div>);
+  if(screen==='summary'){return<GerSummaryScreen resps={resps} negs={negs} user={user} ident={ident} tempoTotal={tempoTotal} onBack={onBack} onLogout={onLogout} onNovo={function(){setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}}/>;}
+  var gerHdr=(<div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}><div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{screen==='entry'?'Visão do Turno':tLabel}</div></div><div style={{display:'flex',gap:6}}><div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div>);
   if(screen==='entry'){return(<div>{gerHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">🕐 Turno</div><div className="turno-grid"><button className={'turno-btn'+(turno==='manha'?' active':'')} onClick={function(){setTurno('manha');setIdent({nome:user.name,turno:'manha',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌅</span><div className="turno-label">Manhã</div></button><button className={'turno-btn'+(turno==='tarde'?' active':'')} onClick={function(){setTurno('tarde');setIdent({nome:user.name,turno:'tarde',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌙</span><div className="turno-label">Tarde / Noite</div></button></div></div>{turno&&<div style={{padding:'10px 16px 0'}}><button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar Checklist ({GER_ITEMS.length} itens) →</button></div>}</div>);}
-  return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/>{gerHdr}<div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%',background:'var(--brand)'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{GER_BLOCOS.length}</div><div className="pl">Blocos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,6).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});if(!its.length)return null;return<GerBlocoAcc key={b} bloco={b} items={its} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}<div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={handleEnviar} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:20}}/></div>);
+  return(<div><EnviadoPopup show={enviadoGer} user={user} label='Visão do Turno'/>{sending&&!enviadoGer&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/>{gerHdr}<div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%',background:'var(--brand)'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{GER_BLOCOS.length}</div><div className="pl">Blocos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,6).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});if(!its.length)return null;return<GerBlocoAcc key={b} bloco={b} items={its} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}<div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={handleEnviar} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:88}}/></div>);
 }
 
 /* ═══ CHECKLIST OPERACIONAL ═══ */
@@ -931,7 +1037,7 @@ function LegacySummaryScreen(props){
   var score=Math.max(0,Math.round(100-(falhas/total*40)-(criticos*10)));
   var turnoLabel=ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   var feedback=score===100?{emoji:'🏆',titulo:'Perfeito! Zero falhas.',cor:'#16A34A',bg:'#F0FDF4',border:'#BBF7D0'}:score>=75?{emoji:'💪',titulo:'Bom turno!',cor:'#D97706',bg:'#FFFBEB',border:'#FDE68A'}:{emoji:'⚠️',titulo:'Turno com problemas.',cor:'#DC2626',bg:'#FEF2F2',border:'#FECACA'};
-  function handleGrupo(){window.location.href=WA_GROUP;}
+  function handleGrupo(){openWA();}
   function handleCopy(){var falhasItems=items.filter(function(i){return resps[i.id]==='nao';});var lines=[SISTEMA,'━━━━━━━━━━',feedback.emoji+' Score: '+score+'/100',nome+' · '+turnoLabel+' · '+ident.data];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━','✅ Feitos: '+items.filter(function(i){return resps[i.id]==='sim';}).length+'/'+total+'  ❌ Falhas: '+falhas);if(falhasItems.length>0){lines.push('','🔴 NÃO FEITO');falhasItems.forEach(function(item,i){lines.push((i+1)+'. '+item.ti);});}lines.push('━━━━━━━━━━','_'+SISTEMA+'_');var txt=lines.join('\n');if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}}
   return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'linear-gradient(135deg,#1A0005,#EA1D2C)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:11,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno finalizado ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{nome} · {turnoLabel} · {ident.data}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:feedback.bg,border:'1.5px solid '+feedback.border,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{feedback.emoji}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:feedback.cor}}>{feedback.titulo}</div>{tempoTotal&&<div style={{fontSize:11,color:feedback.cor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:feedback.cor}}>{score}</div><div style={{fontSize:9,color:feedback.cor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>{[{icon:'✅',val:items.filter(function(i){return resps[i.id]==='sim';}).length,lbl:'Feitos'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'🔴',val:criticos,lbl:'Críticos'}].map(function(x){return<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>;})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><button onClick={handleGrupo} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button></div></div>);
 }
@@ -977,10 +1083,10 @@ function ChecklistScreen(props){
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setIdent(null);setResps({});setNegs({});setFF({obsGerais:''});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}
   var tLabel=ident&&ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   var ctxReady=ctx.delivery!==''&&ctx.novato!==''&&ctx.falta!==''&&ctx.troco!=='';
-  if(screen==='entry'){return(<div><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Checklist</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">🕐 Turno</div><div className="turno-grid"><button className={'turno-btn'+(ident&&ident.turno==='manha'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'manha',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌅</span><div className="turno-label">Manhã</div></button><button className={'turno-btn'+(ident&&ident.turno==='tarde'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'tarde',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌙</span><div className="turno-label">Tarde / Noite</div></button></div></div>{ident&&(<div className="card"><div className="card-title">⚙️ Configuração</div>{[{key:'delivery',q:'Delivery ativo hoje?'},{key:'troco',q:'R$300 de troco no caixa?'},{key:'novato',q:'Tem novato no turno?'},{key:'falta',q:'Tem falta na equipe?'}].map(function(x){return(<div key={x.key} className="ctx-row"><div style={{flex:1}}><div className="ctx-q">{x.q}</div></div><div className="ctx-toggle"><button className={'ctx-btn'+(ctx[x.key]==='sim'?' yes':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'sim'});});}}>Sim</button><button className={'ctx-btn'+(ctx[x.key]==='nao'?' no':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'nao'});});}}>Não</button></div></div>);})}</div>)}{ident&&ctxReady&&<div style={{padding:'10px 16px 0'}}><button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar Checklist →</button></div>}</div>);}
+  if(screen==='entry'){return(<div><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Checklist</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">🕐 Turno</div><div className="turno-grid"><button className={'turno-btn'+(ident&&ident.turno==='manha'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'manha',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌅</span><div className="turno-label">Manhã</div></button><button className={'turno-btn'+(ident&&ident.turno==='tarde'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'tarde',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌙</span><div className="turno-label">Tarde / Noite</div></button></div></div>{ident&&(<div className="card"><div className="card-title">⚙️ Configuração</div>{[{key:'delivery',q:'Delivery ativo hoje?'},{key:'troco',q:'R$300 de troco no caixa?'},{key:'novato',q:'Tem novato no turno?'},{key:'falta',q:'Tem falta na equipe?'}].map(function(x){return(<div key={x.key} className="ctx-row"><div style={{flex:1}}><div className="ctx-q">{x.q}</div></div><div className="ctx-toggle"><button className={'ctx-btn'+(ctx[x.key]==='sim'?' yes':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'sim'});});}}>Sim</button><button className={'ctx-btn'+(ctx[x.key]==='nao'?' no':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'nao'});});}}>Não</button></div></div>);})}</div>)}{ident&&ctxReady&&<div style={{padding:'10px 16px 0'}}><button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar Checklist →</button></div>}</div>);}
   if(screen==='ocorrencias'){return<OcorrenciasScreen items={items} resps={resps} negs={{}} user={user} onConfirm={handleEnviar} onBack={function(){setScreen('checklist');}}/>;}
   if(screen==='summary'){return<LegacySummaryScreen ident={ident} resps={resps} items={items} tempoTotal={tempoTotal} nome={nomeDecl} onBack={function(){setScreen('checklist');}}/>;}
-  return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div></div>);
+  return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:88}}/></div>);
 }
 
 /* ── CEO: linha expandível de turno da subgerência ── */
@@ -1117,7 +1223,7 @@ function CEODashboard(props){
             <div className="ceo-badge">👑 {user.name} · Acesso Total</div>
           </div>
           <div style={{display:'flex',gap:5}}>
-            {onBack&&<button className="hdr-btn" style={{background:'rgba(255,255,255,.12)',border:'1.5px solid rgba(255,255,255,.25)',color:'#fff',borderRadius:99,padding:'6px 12px',fontSize:10,fontWeight:700}} onClick={onBack}>← Hub</button>}
+            {onBack&&<button className="hdr-btn" style={{background:'rgba(255,255,255,.12)',border:'1.5px solid rgba(255,255,255,.25)',color:'#fff',borderRadius:99,padding:'6px 12px',fontSize:10,fontWeight:700}} onClick={onBack}>← Voltar</button>}
             <button className="hdr-btn" style={{background:'rgba(255,255,255,.12)',border:'1.5px solid rgba(255,255,255,.25)',color:'#fff',borderRadius:99,padding:'6px 12px',fontSize:10,fontWeight:700}} onClick={onLogout}>Sair</button>
           </div>
         </div>
@@ -1257,7 +1363,7 @@ function CEODashboard(props){
       {!loading&&tab==='alertas'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🚨 Alertas Operacionais</div>{alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta ativo!</div>}{alertas.map(function(a,i){return(<div key={i} className="alert-row"><div className="a-dot a-r"/><div style={{flex:1}}><div className="a-title">{a.msg}</div><div className="a-sub">{a.sub}</div></div><div className="a-badge" style={{background:'#FEE2E2',color:'#991B1B'}}>🔴 Crítico</div></div>);})}</div>)}
 
       {!loading&&tab==='turnos'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">📋 Histórico de Turnos</div>{ckData.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum turno ainda.</div>}<div style={{overflowX:'auto'}}><table className="shift-table"><thead><tr><th>Responsável</th><th>Turno</th><th>Data</th><th>Score</th><th>Status</th><th>Falhas</th></tr></thead><tbody>{ckData.slice(0,25).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='conforme'?'Conforme':d.status==='critico'?'Crítico':'Ressalvas';return(<tr key={i}><td><div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12}}>{d.user_name}</div></td><td><span className="pill" style={{background:d.turno==='manha'?'#FEF3C7':'#EDE9FE',color:d.turno==='manha'?'#92400E':'#5B21B6'}}>{d.turno==='manha'?'🌅':'🌙'}</span></td><td style={{fontSize:11,color:'var(--ink2)'}}>{d.data_fmt||d.data}</td><td><span style={{fontFamily:"'Sora',sans-serif",fontWeight:800,color:c}}>{sc}</span></td><td><span className="pill" style={{background:st==='Conforme'?'#D1FAE5':st==='Crítico'?'#FEE2E2':'#FEF3C7',color:st==='Conforme'?'#065F46':st==='Crítico'?'#991B1B':'#92400E'}}>{st}</span></td><td style={{fontFamily:"'Sora',sans-serif",fontWeight:700,color:d.falhas>0?'var(--brand)':'var(--ok)'}}>{d.falhas}</td></tr>);})}</tbody></table></div></div>)}
-      <div style={{height:20}}/>
+      
     </div>
   );
 }
@@ -1286,7 +1392,7 @@ function GerenciaHub(props){
       <div style={{background:'#0F4C81',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="ger_checklists" labelTurno={function(d){return d.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';}}/>
@@ -1322,7 +1428,7 @@ function UserManager(props){
   function deleteUser(key){if(!window.confirm('Remover?'))return;var u=Object.assign({},users);delete u[key];saveAndRefresh(u);}
   function createUser(){if(!newUser.name.trim()||!newUser.login.trim()){showMsg('❌ Nome e login obrigatórios.');return;}var key=newUser.login.trim().toLowerCase().replace(/\s/g,'');if(users[key]){showMsg('❌ Login já existe.');return;}var u=Object.assign({},users);u[key]={name:newUser.name.trim(),login:key,role:newUser.role,pwd:PWD_2026,first:false,color:ROLE_COLORS[newUser.role]||'#555',active:true};saveAndRefresh(u);setNewUser({name:'',login:'',role:'subgerente'});setShowNew(false);showMsg('✅ Criado! Senha: 2026');}
   var userList=Object.entries(users);
-  return(<div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}><div className="um-hdr"><div className="um-hdr-inner"><div><div style={{fontSize:10,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase',color:'#fff'}}>CheckON · Suporte</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:800,color:'#fff'}}>👥 Gestão de Usuários</div></div><div style={{display:'flex',gap:6}}><button onClick={onBack} className="hdr-btn">← Hub</button><button onClick={onLogout} className="hdr-btn">Sair</button></div></div></div>{toast&&<div style={{position:'fixed',top:70,left:'50%',transform:'translateX(-50%)',background:'#1A1A1A',color:'#fff',padding:'9px 20px',borderRadius:99,fontSize:13,fontWeight:600,zIndex:9999,whiteSpace:'nowrap'}}>{toast}</div>}<div style={{margin:'14px 14px 0',background:'#fff',borderRadius:'var(--r12)',boxShadow:'var(--sh1)',overflow:'hidden'}}><div style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>Usuários do Sistema</div><button onClick={function(){setShowNew(function(s){return !s;});}} style={{background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',padding:'7px 14px',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>{showNew?'✕ Cancelar':'+ Novo'}</button></div>{showNew&&(<div style={{padding:'16px',background:'#F0F4FF',borderBottom:'1px solid var(--line)'}}><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}><div className="f-group"><label className="f-label">Nome *</label><input className="f-input" value={newUser.name} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{name:e.target.value});});}} placeholder="Nome completo"/></div><div className="f-group"><label className="f-label">Login *</label><input className="f-input" value={newUser.login} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{login:e.target.value.toLowerCase()});});}} placeholder="login"/></div></div><div className="f-group" style={{marginBottom:12}}><label className="f-label">Role</label><select className="f-input" value={newUser.role} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{role:e.target.value});});}}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div><button onClick={createUser} style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800}}>CRIAR USUÁRIO</button></div>)}{userList.map(function(entry){var key=entry[0];var u=entry[1];var isEdit=editKey===key;var inactive=u.active===false;return(<div key={key} style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',opacity:inactive?.5:1}}>{!isEdit?(<div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:10}}><div style={{width:36,height:36,borderRadius:'50%',background:u.color||'#555',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:14,flexShrink:0}}>{u.name.charAt(0)}</div><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>{u.name}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>@{u.login} · <span style={{background:(ROLE_COLORS[u.role]||'#555')+'22',color:ROLE_COLORS[u.role]||'#555',borderRadius:99,padding:'1px 7px',fontSize:10,fontWeight:700}}>{ROLES[u.role]||u.role}</span></div></div></div><div style={{display:'flex',gap:5,flexWrap:'wrap',justifyContent:'flex-end'}}><button onClick={function(){setEditKey(key);}} style={{background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>✏️</button><button onClick={function(){resetPwd(key);}} style={{background:'#FEF3C7',color:'#92400E',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🔑</button><button onClick={function(){toggleActive(key);}} style={{background:inactive?'#D1FAE5':'#FEE2E2',color:inactive?'#065F46':'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>{inactive?'✅':'⛔'}</button>{key!=='camila'&&key!=='bruna'&&<button onClick={function(){deleteUser(key);}} style={{background:'#FEE2E2',color:'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🗑</button>}</div></div></div>):(<div style={{background:'#F8F8F8',borderRadius:'var(--r8)',padding:'12px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--brand)',marginBottom:10,textTransform:'uppercase'}}>Editando: @{key}</div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}><div className="f-group" style={{marginBottom:0}}><label className="f-label">Nome</label><input className="f-input" defaultValue={u.name} id={'name_'+key}/></div><div className="f-group" style={{marginBottom:0}}><label className="f-label">Role</label><select className="f-input" defaultValue={u.role} id={'role_'+key}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div></div><div style={{display:'flex',gap:8}}><button onClick={function(){var n=document.getElementById('name_'+key).value;var r=document.getElementById('role_'+key).value;saveEdit(key,{name:n,role:r});}} style={{flex:1,padding:'10px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>💾 Salvar</button><button onClick={function(){setEditKey(null);}} style={{flex:1,padding:'10px',background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Cancelar</button></div></div>)}</div>);})}</div></div>);
+  return(<div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}><div className="um-hdr"><div className="um-hdr-inner"><div><div style={{fontSize:10,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase',color:'#fff'}}>CheckON · Suporte</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:800,color:'#fff'}}>👥 Gestão de Usuários</div></div><div style={{display:'flex',gap:6}}><button onClick={onBack} className="hdr-btn">← Voltar</button><button onClick={onLogout} className="hdr-btn">Sair</button></div></div></div>{toast&&<div style={{position:'fixed',top:70,left:'50%',transform:'translateX(-50%)',background:'#1A1A1A',color:'#fff',padding:'9px 20px',borderRadius:99,fontSize:13,fontWeight:600,zIndex:9999,whiteSpace:'nowrap'}}>{toast}</div>}<div style={{margin:'14px 14px 0',background:'#fff',borderRadius:'var(--r12)',boxShadow:'var(--sh1)',overflow:'hidden'}}><div style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>Usuários do Sistema</div><button onClick={function(){setShowNew(function(s){return !s;});}} style={{background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',padding:'7px 14px',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>{showNew?'✕ Cancelar':'+ Novo'}</button></div>{showNew&&(<div style={{padding:'16px',background:'#F0F4FF',borderBottom:'1px solid var(--line)'}}><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}><div className="f-group"><label className="f-label">Nome *</label><input className="f-input" value={newUser.name} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{name:e.target.value});});}} placeholder="Nome completo"/></div><div className="f-group"><label className="f-label">Login *</label><input className="f-input" value={newUser.login} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{login:e.target.value.toLowerCase()});});}} placeholder="login"/></div></div><div className="f-group" style={{marginBottom:12}}><label className="f-label">Role</label><select className="f-input" value={newUser.role} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{role:e.target.value});});}}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div><button onClick={createUser} style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800}}>CRIAR USUÁRIO</button></div>)}{userList.map(function(entry){var key=entry[0];var u=entry[1];var isEdit=editKey===key;var inactive=u.active===false;return(<div key={key} style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',opacity:inactive?.5:1}}>{!isEdit?(<div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:10}}><div style={{width:36,height:36,borderRadius:'50%',background:u.color||'#555',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:14,flexShrink:0}}>{u.name.charAt(0)}</div><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>{u.name}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>@{u.login} · <span style={{background:(ROLE_COLORS[u.role]||'#555')+'22',color:ROLE_COLORS[u.role]||'#555',borderRadius:99,padding:'1px 7px',fontSize:10,fontWeight:700}}>{ROLES[u.role]||u.role}</span></div></div></div><div style={{display:'flex',gap:5,flexWrap:'wrap',justifyContent:'flex-end'}}><button onClick={function(){setEditKey(key);}} style={{background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>✏️</button><button onClick={function(){resetPwd(key);}} style={{background:'#FEF3C7',color:'#92400E',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🔑</button><button onClick={function(){toggleActive(key);}} style={{background:inactive?'#D1FAE5':'#FEE2E2',color:inactive?'#065F46':'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>{inactive?'✅':'⛔'}</button>{key!=='camila'&&key!=='bruna'&&<button onClick={function(){deleteUser(key);}} style={{background:'#FEE2E2',color:'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🗑</button>}</div></div></div>):(<div style={{background:'#F8F8F8',borderRadius:'var(--r8)',padding:'12px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--brand)',marginBottom:10,textTransform:'uppercase'}}>Editando: @{key}</div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}><div className="f-group" style={{marginBottom:0}}><label className="f-label">Nome</label><input className="f-input" defaultValue={u.name} id={'name_'+key}/></div><div className="f-group" style={{marginBottom:0}}><label className="f-label">Role</label><select className="f-input" defaultValue={u.role} id={'role_'+key}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div></div><div style={{display:'flex',gap:8}}><button onClick={function(){var n=document.getElementById('name_'+key).value;var r=document.getElementById('role_'+key).value;saveEdit(key,{name:n,role:r});}} style={{flex:1,padding:'10px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>💾 Salvar</button><button onClick={function(){setEditKey(null);}} style={{flex:1,padding:'10px',background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Cancelar</button></div></div>)}</div>);})}</div></div>);
 }
 
 /* ══════════════════════════════════════════
@@ -1496,6 +1602,7 @@ function SubgerSummaryScreen(props){
   var resps=props.resps;var negs=props.negs;var user=props.user;var horaInicio=props.horaInicio;var onNovo=props.onNovo;
   var _copied=useState(false);var copied=_copied[0];var setCopied=_copied[1];
   var _conf=useState(false);var confirmando=_conf[0];var setConfirmando=_conf[1];
+  var _enc=useState(false);var encerrado=_enc[0];var setEncerrado=_enc[1];
   var allItems=SUBGER_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);
   var total=allItems.length;
   var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
@@ -1555,9 +1662,9 @@ function SubgerSummaryScreen(props){
     var txt=buildTextGrupo();
     try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).catch(function(){});}else{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(ex){}document.body.removeChild(ta);}}catch(ex){}
     setCopied(true);
-    setTimeout(function(){window.location.href=WA_GROUP;},800);
   }
 
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={criticos} score={score} turnoLabel={'🌅 Subgerência Manhã'} cor="var(--brand)" onHub={onNovo} onBack={props.onBack} onLogout={props.onLogout} onRevisar={function(){setEncerrado(false);}}/>;}
   if(confirmando){
     return(
       <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
@@ -1572,12 +1679,15 @@ function SubgerSummaryScreen(props){
           <div style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'16px',marginBottom:16}}>
             <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.7,marginBottom:14}}>{falhas===0?'Turno concluído com excelência! Clique para avisar o grupo.':'Clique abaixo — o texto é copiado e o WhatsApp abre. Cole e envie!'}</div>
             {!copied&&(<div style={{display:'flex',flexDirection:'column',gap:8}}>{[{n:'1',txt:'Toque no botão verde abaixo'},{n:'2',txt:'O WhatsApp vai abrir'},{n:'3',txt:'Segure a caixa de texto e toque em Colar'}].map(function(step){return(<div key={step.n} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 12px',background:'#F8FAFC',borderRadius:'var(--r8)',border:'1px solid var(--line)'}}><div style={{width:26,height:26,borderRadius:'50%',background:'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,flexShrink:0}}>{step.n}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500}}>{step.txt}</div></div>);})}  </div>)}
-            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>Abrindo o WhatsApp...</div></div></div>)}
+            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>WhatsApp aberto — cole e envie!</div></div></div>)}
           </div>
-          <button onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
-            <span style={{fontSize:22}}>📲</span>{copied?'Abrindo...':'Enviar para o grupo'}
-          </button>
-          <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar ao resumo</button>
+          <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10,textDecoration:'none',boxSizing:'border-box'}}>
+            <span style={{fontSize:22}}>📲</span>{copied?'Enviado ✓':'Abrir WhatsApp'}
+          </a>
+          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei meu turno</button>}
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={function(){setConfirmando(false);}} style={{flex:1,padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button>
+          </div>
         </div>
       </div>
     );
@@ -1626,6 +1736,76 @@ function SubgerSummaryScreen(props){
   );
 }
 
+
+/* ══════════════════════════════════════════
+   BANCO DE MENSAGENS DE ENCERRAMENTO
+   ══════════════════════════════════════════ */
+var MSGS_PERFEITO=[
+  {titulo:'Turno impecável.',texto:'Você deixou a operação em ordem para quem vem depois. Isso não é obrigação — é caráter. Vai descansar.',autor:''},
+  {titulo:'Zero falhas.',texto:'Registrar tudo certo é mais difícil do que parece. Poucos fazem isso com consistência. Você está no caminho certo.',autor:''},
+  {titulo:'Responsabilidade real.',texto:'Você entregou o turno com responsabilidade. A equipe seguinte vai trabalhar melhor por causa disso.',autor:''},
+  {titulo:'Operação controlada.',texto:'Controlar um turno sem falhas exige atenção constante. Você fez isso hoje. Reconheça isso antes de dormir.',autor:''},
+  {titulo:'Bem feito.',texto:'Liderança não é cargo — é o que você faz quando ninguém está olhando. Você provou hoje que sabe disso.',autor:''},
+  {titulo:'Turno fechado com excelência.',texto:'A equipe que vem depois vai trabalhar melhor por causa do que você fez hoje. Isso tem valor real.',autor:''},
+];
+var MSGS_BOM=[
+  {titulo:'Turno com ocorrências — registradas.',texto:'Você não escondeu nada. Registrou o que não funcionou e tomou ação. Isso é maturidade profissional.',autor:''},
+  {titulo:'Imperfeito e honesto.',texto:'O erro que você registra hoje é o problema que não vai se repetir amanhã. Continue assim.',autor:''},
+  {titulo:'Primeiro passo da melhoria.',texto:'Reconhecer o que não funcionou é o primeiro passo de quem quer melhorar. Poucos têm essa coragem.',autor:''},
+  {titulo:'Registrou, tratou, entregou.',texto:'Ninguém tem turnos perfeitos todo dia. O que diferencia quem evolui é o que faz com os erros. Você fez certo.',autor:''},
+  {titulo:'Progresso, não perfeição.',texto:'Cada falha registrada é dados para melhorar o sistema. Você está contribuindo para algo maior que o seu turno.',autor:''},
+];
+var MSGS_CRITICO=[
+  {titulo:'Turno difícil. Você chegou até o fim.',texto:'Dias assim existem. O que importa é que você não abandonou o processo. Descanso agora, análise amanhã.',autor:''},
+  {titulo:'Honestidade acima de tudo.',texto:'Registrar um turno crítico é mais corajoso do que fingir que está tudo bem. Você fez a coisa certa.',autor:''},
+  {titulo:'Todo turno difícil ensina algo.',texto:'Reflita com calma depois do descanso. O que você aprendeu hoje vai servir para proteger o próximo turno.',autor:''},
+];
+
+function getMensagem(falhas,criticos){
+  var pool=criticos>0?MSGS_CRITICO:falhas===0?MSGS_PERFEITO:MSGS_BOM;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+/* ══════════════════════════════════════════
+   TELA TERMINEI MEU TURNO
+   ══════════════════════════════════════════ */
+function TurnoEncerrado(props){
+  var user=props.user;var onHub=props.onHub;var onBack=props.onBack;var onLogout=props.onLogout;var falhas=props.falhas||0;var criticos=props.criticos||0;var score=props.score||100;var turnoLabel=props.turnoLabel||'Turno';var cor=props.cor||'var(--brand)';
+  var msg=useMemo(function(){return getMensagem(falhas,criticos);},[]);
+  var hora=useMemo(function(){return nowTime();},[]);
+  var statusCor=criticos>0?'var(--danger)':falhas===0?'var(--ok)':'var(--warn)';
+  var statusEmoji=criticos>0?'🚨':falhas===0?'🏆':'💪';
+  return(
+    <div style={{minHeight:'100vh',background:'linear-gradient(160deg,#0D0D0D 0%,#1A0003 50%,#2D0008 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'24px 20px',textAlign:'center'}}>
+      <div style={{width:'100%',maxWidth:400}}>
+        <div style={{fontSize:64,marginBottom:16,lineHeight:1}}>{statusEmoji}</div>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:28,fontWeight:900,color:'#fff',marginBottom:6,lineHeight:1.2}}>{msg.titulo}</div>
+        <div style={{fontSize:13,color:'rgba(255,255,255,.6)',marginBottom:28,lineHeight:1.6}}>{turnoLabel} · {hora} · Score {score}</div>
+        <div style={{background:'rgba(255,255,255,.07)',border:'1px solid rgba(255,255,255,.12)',borderRadius:16,padding:'20px 20px',marginBottom:28,backdropFilter:'blur(8px)'}}>
+          <div style={{fontSize:15,color:'rgba(255,255,255,.9)',lineHeight:1.7,fontStyle:'italic'}}>"{msg.texto}"</div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:10}}>
+          <button onClick={function(){if(onLogout)onLogout();else if(onBack)onBack();else if(onHub)onHub();}} style={{width:'100%',padding:'16px',background:cor,color:'#fff',borderRadius:14,fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,border:'none',cursor:'pointer',boxShadow:'0 4px 20px rgba(234,29,44,.4)',letterSpacing:'.3px',marginBottom:10}}>
+            ✓ Terminei meu turno
+          </button>
+          <button onClick={props.onRevisar} style={{width:'100%',padding:'12px',background:'transparent',color:'rgba(255,255,255,.5)',borderRadius:14,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:600,border:'1px solid rgba(255,255,255,.15)',cursor:'pointer',marginBottom:8}}>
+            ← Revisar relatório
+          </button>
+        </div>
+        <div style={{marginTop:20,fontSize:11,color:'rgba(255,255,255,.25)',letterSpacing:.5}}>CheckON · Pastel da Camilla</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Campo "Faltou alguma tarefa?" reutilizável ── */
+function SugestaoForm(props){
+  var data=props.data||{};var aberto=props.aberto;var onAbrir=props.onAbrir;var onFechar=props.onFechar;var cor=props.cor||'var(--brand)';
+  function set(k,v){props.onChange(Object.assign({},data,{[k]:v}));}
+  if(!aberto){return(<div style={{margin:'10px 16px 0',borderRadius:'var(--r12)',border:'1.5px dashed var(--line)',background:'var(--surface)',padding:'14px 16px',display:'flex',alignItems:'center',gap:12,cursor:'pointer'}} onClick={onAbrir}><div style={{width:36,height:36,borderRadius:'50%',background:'#E0F2FE',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:18}}>💡</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ink)',marginBottom:1}}>Faltou alguma tarefa?</div><div style={{fontSize:11,color:'var(--ink3)'}}>Clique para sugerir uma inclusão.</div></div><div style={{flexShrink:0,background:cor,color:'#fff',borderRadius:'var(--r8)',padding:'6px 12px',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700}}>+ Sugerir</div></div>);}
+  return(<div style={{margin:'10px 16px 0',borderRadius:'var(--r12)',border:'1.5px solid '+cor,background:'#FFFDF0',overflow:'hidden'}}><div style={{background:cor,padding:'12px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:18}}>💡</span><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>Sugestão de melhoria</div></div><button onClick={onFechar} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:'var(--r99)',width:28,height:28,display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:700,cursor:'pointer'}}>×</button></div><div style={{padding:'14px 16px'}}><div style={{fontSize:11,fontWeight:600,color:'var(--ink2)',marginBottom:6,textTransform:'uppercase',letterSpacing:.4}}>Qual tarefa faltou? *</div><textarea className="neg-obs" value={data.atividade||''} onChange={function(e){set('atividade',e.target.value);}} placeholder="Ex: Verificar temperatura dos recheios antes do pico..." style={{minHeight:64,width:'100%'}}/></div></div>);
+}
+
 /* ── Etapa por etapa (paginação de blocos) ── */
 function SubgerChecklistScreen(props){
   var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
@@ -1638,21 +1818,26 @@ function SubgerChecklistScreen(props){
   var _sending=useState(false);var sending=_sending[0];var setSending=_sending[1];
   var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
   var _inicio=useState(null);var horaInicio=_inicio[0];var setHoraInicio=_inicio[1];
+  var _sug=useState({});var sugestao=_sug[0];var setSugestao=_sug[1];
+  var _sugOpen=useState(false);var sugestaoAberta=_sugOpen[0];var setSugestaoAberta=_sugOpen[1];
+  var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
+  var _envScore=useState(0);var envScore=_envScore[0];var setEnvScore=_envScore[1];
 
   useEffect(function(){
     try{
       var s=JSON.parse(localStorage.getItem(SAVE_KEY));
       if(s&&s.resps&&Object.keys(s.resps).length>0){
         setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);
+        if(s.sugestao)setSugestao(s.sugestao);
       }
     }catch(e){}
   },[]);
 
   useEffect(function(){
     if(screen==='checklist'){
-      try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}
+      try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,sugestao:sugestao}));}catch(e){}
     }
-  },[resps,negs,screen,horaInicio]);
+  },[resps,negs,screen,horaInicio,sugestao]);
 
   function onAns(id,val){
     setResps(function(r){return Object.assign({},r,{[id]:val});});
@@ -1707,17 +1892,17 @@ function SubgerChecklistScreen(props){
     var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
     var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
     var etapasConcluidas=SUBGER_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
-    await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||''});
+    await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     await sendWebhook(SISTEMA+' — SUBGERÊNCIA MANHÃ\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Subgerência] '+statusKey.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
-    setSending(false);
-    setScreen('summary');
+    setEnvScore(score);setEnviado(true);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
 
   function handleLimpar(){
     if(!window.confirm('Limpar checklist atual?'))return;
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
-    setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');
+    setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('inicio');
   }
 
   var subgerHdr=(
@@ -1729,7 +1914,7 @@ function SubgerChecklistScreen(props){
         </div>
         <div style={{display:'flex',gap:6}}>
           <div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>
-          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Hub</button>}
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Voltar</button>}
           <button className="hdr-btn" onClick={onLogout}>Sair</button>
         </div>
       </div>
@@ -1737,7 +1922,7 @@ function SubgerChecklistScreen(props){
   );
 
   if(screen==='summary'){
-    return<SubgerSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
+    return<SubgerSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onBack={onBack} onLogout={onLogout} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
   }
 
   if(screen==='ocorrencias'){
@@ -1802,7 +1987,8 @@ function SubgerChecklistScreen(props){
   /* ── Checklist por etapa ── */
   return(
     <div>
-      {sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
+      <EnviadoPopup show={enviado} user={user} score={envScore} label='Subgerência Manhã'/>
+      {sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
       <Toast msg={toast.msg} show={toast.show}/>
       {subgerHdr}
       <div className="prog-card">
@@ -1825,6 +2011,7 @@ function SubgerChecklistScreen(props){
         </div>
       </div>
       <SubgerEtapaAcc etapa={etapaAtual} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>
+      <SugestaoForm data={sugestao} onChange={setSugestao} aberto={sugestaoAberta} onAbrir={function(){setSugestaoAberta(true);}} onFechar={function(){setSugestaoAberta(false);}} cor="var(--brand)"/>
       {(function(){
         var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateSubgerNeg(negs[i.id]))return true;return false;}).length;
         var etapaOk=pendentesEtapa===0;
@@ -2115,6 +2302,7 @@ function NoiteSummaryScreen(props){
   var resps=props.resps;var negs=props.negs;var user=props.user;var horaInicio=props.horaInicio;var onNovo=props.onNovo;
   var _copied=useState(false);var copied=_copied[0];var setCopied=_copied[1];
   var _conf=useState(false);var confirmando=_conf[0];var setConfirmando=_conf[1];
+  var _enc=useState(false);var encerrado=_enc[0];var setEncerrado=_enc[1];
   var allItems=NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);
   var total=allItems.length;var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
   var falhas=falhasItems.length;var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
@@ -2166,9 +2354,9 @@ function NoiteSummaryScreen(props){
     var txt=buildTextGrupo();
     try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).catch(function(){});}else{var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(ex){}document.body.removeChild(ta);}}catch(ex){}
     setCopied(true);
-    setTimeout(function(){window.location.href=WA_GROUP;},800);
   }
 
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={criticos} score={score} turnoLabel={'🌙 Subgerência Noite'} cor="#7C3AED" onHub={onNovo} onBack={props.onBack} onLogout={props.onLogout} onRevisar={function(){setEncerrado(false);}}/>;}
   if(confirmando){
     return(
       <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
@@ -2183,12 +2371,15 @@ function NoiteSummaryScreen(props){
           <div style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'16px',marginBottom:16}}>
             <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.7,marginBottom:14}}>{falhas===0?'Loja fechada com excelência! Clique para avisar o grupo.':'Clique abaixo — o texto é copiado e o WhatsApp abre. Cole e envie!'}</div>
             {!copied&&(<div style={{display:'flex',flexDirection:'column',gap:8}}>{[{n:'1',txt:'Toque no botão verde abaixo'},{n:'2',txt:'O WhatsApp vai abrir'},{n:'3',txt:'Segure a caixa de texto e toque em Colar'}].map(function(step){return(<div key={step.n} style={{display:'flex',alignItems:'center',gap:12,padding:'10px 12px',background:'#F8FAFC',borderRadius:'var(--r8)',border:'1px solid var(--line)'}}><div style={{width:26,height:26,borderRadius:'50%',background:'#7C3AED',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,flexShrink:0}}>{step.n}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500}}>{step.txt}</div></div>);})}  </div>)}
-            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>Abrindo o WhatsApp...</div></div></div>)}
+            {copied&&(<div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:'var(--r8)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:22}}>✅</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ok)'}}>Texto copiado!</div><div style={{fontSize:12,color:'#166534',marginTop:2}}>WhatsApp aberto — cole e envie!</div></div></div>)}
           </div>
-          <button onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10}}>
-            <span style={{fontSize:22}}>📲</span>{copied?'Abrindo...':'Enviar para o grupo'}
-          </button>
-          <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar ao resumo</button>
+          <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10,textDecoration:'none',boxSizing:'border-box'}}>
+            <span style={{fontSize:22}}>📲</span>{copied?'Enviado ✓':'Abrir WhatsApp'}
+          </a>
+          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei meu turno</button>}
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={function(){setConfirmando(false);}} style={{flex:1,padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button>
+          </div>
         </div>
       </div>
     );
@@ -2249,8 +2440,12 @@ function NoiteChecklistScreen(props){
   var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
   var _inicio=useState(null);var horaInicio=_inicio[0];var setHoraInicio=_inicio[1];
   var _relato=useState('');var relato=_relato[0];var setRelato=_relato[1];
-  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&s.resps&&Object.keys(s.resps).length>0){setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);}}catch(e){}},[]);
-  useEffect(function(){if(screen==='checklist'){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}}},[resps,negs,screen,horaInicio]);
+  var _sug=useState({});var sugestao=_sug[0];var setSugestao=_sug[1];
+  var _sugOpen=useState(false);var sugestaoAberta=_sugOpen[0];var setSugestaoAberta=_sugOpen[1];
+  var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
+  var _envScore=useState(0);var envScore=_envScore[0];var setEnvScore=_envScore[1];
+  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&s.resps&&Object.keys(s.resps).length>0){setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);if(s.sugestao)setSugestao(s.sugestao);}}catch(e){}},[]);
+  useEffect(function(){if(screen==='checklist'){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,sugestao:sugestao}));}catch(e){}}},[resps,negs,screen,horaInicio,sugestao]);
   function onAns(id,val){setResps(function(r){return Object.assign({},r,{[id]:val});});if(val==='sim'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}}
   function onNeg(id,updater){setNegs(function(n){var current=n[id]||{};var next=typeof updater==='function'?updater(current):updater;return Object.assign({},n,{[id]:next});});}
   var allItems=useMemo(function(){return NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);},[]);
@@ -2270,26 +2465,27 @@ function NoiteChecklistScreen(props){
     var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
     var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
     var etapasConcluidas=NOITE_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
-    await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||''});
+    await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     await salvarPendencias(allItems,negs,resps,user,'noite','subger_noite_checklists');
     await sendWebhook(SISTEMA+' — SUBGERÊNCIA NOITE\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Noite] '+statusKey.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
-    setSending(false);setScreen('summary');
+    setEnvScore(score);setEnviado(true);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
-  function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}
+  function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('inicio');}
   var noiteHdr=(
     <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
       <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
         <div style={{display:'flex',gap:6}}>
           <div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>
-          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Hub</button>}
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Voltar</button>}
           <button className="hdr-btn" onClick={onLogout}>Sair</button>
         </div>
       </div>
     </div>
   );
-  if(screen==='summary')return<NoiteSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
+  if(screen==='summary')return<NoiteSummaryScreen resps={resps} negs={negs} user={user} horaInicio={horaInicio} onBack={onBack} onLogout={onLogout} onNovo={function(){setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setScreen('inicio');}}/>;
   if(screen==='resumo'){
     var falhasItems=allItems.filter(function(i){return resps[i.id]==='nao';});
     return(
@@ -2329,7 +2525,8 @@ function NoiteChecklistScreen(props){
   }
   return(
     <div>
-      {sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
+      <EnviadoPopup show={enviado} user={user} score={envScore} label='Subgerência Noite'/>
+      {sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
       <Toast msg={toast.msg} show={toast.show}/>
       {noiteHdr}
       <div className="prog-card">
@@ -2347,6 +2544,7 @@ function NoiteChecklistScreen(props){
         <div style={{display:'flex',gap:4}}>{NOITE_ETAPAS.map(function(e,i){var done=e.itens.every(function(it){return resps[it.id];});return(<div key={e.id} style={{width:28,height:6,borderRadius:3,background:i===etapaIdx?'#7C3AED':done?'var(--ok)':'var(--line)',transition:'background .2s'}}/>);})}</div>
       </div>
       <NoiteEtapaAcc etapa={etapaAtual} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>
+      <SugestaoForm data={sugestao} onChange={setSugestao} aberto={sugestaoAberta} onAbrir={function(){setSugestaoAberta(true);}} onFechar={function(){setSugestaoAberta(false);}} cor="#7C3AED"/>
       {(function(){
         var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateNoiteNeg(negs[i.id]))return true;return false;}).length;
         var etapaOk=pendentesEtapa===0;
@@ -2378,7 +2576,7 @@ function SubgerenteNoiteHub(props){
       <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="subger_noite_checklists" labelTurno={function(){return'🌙 Noite';}}/>
@@ -2417,7 +2615,7 @@ function SubgerenteHub(props){
       <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Hub</button>
+          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="subger_checklists" labelTurno={function(){return'🌅 Manhã';}}/>
