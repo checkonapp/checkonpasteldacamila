@@ -386,13 +386,13 @@ var DP_BLOCOS_DATA=[
     {id:'dp_b2_i1',texto:'Documentos físicos e digitais estão devidamente organizados'},
     {id:'dp_b2_i2',texto:'Arquivos recentes foram atualizados no sistema'},
     {id:'dp_b2_i3',texto:'Pendências documentais foram identificadas e registradas'},
-    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada',cond:'assinatura'}
+    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada',cond:'assinatura',cond:'assinatura'}
   ]},
   {id:'dp_b3',titulo:'Apoio à Operação e Equipe',itens:[
     {id:'dp_b3_i1',texto:'Solicitações dos colaboradores foram verificadas e encaminhadas'},
     {id:'dp_b3_i2',texto:'Dúvidas internas foram tratadas ou direcionadas'},
     {id:'dp_b3_i3',texto:'Demandas urgentes foram identificadas e priorizadas'},
-    {id:'dp_b3_i4',texto:'Comunicação com a gestão foi atualizada'}
+    {id:'dp_b3_i4',texto:'Algum colaborador trouxe algo pessoal ou operacional para o DP hoje? O responsável foi informado?',cond:'colaborador_trouxe'}
   ]},
   {id:'dp_b4',titulo:'Fechamento e Continuidade',itens:[
     {id:'dp_b4_i1',texto:'Pendências para o próximo turno/dia foram registradas'},
@@ -405,27 +405,24 @@ var DP_BLOCOS_DATA=[
 var DP_BLOCOS_SEMANAL=[
   {id:'dp_s1',titulo:'Revisão Semanal de Documentos',itens:[
     {id:'dp_s1_i1',texto:'Ponto da semana foi conferido e lançado corretamente'},
-    {id:'dp_s1_i2',texto:'Escalas da próxima semana foram verificadas e comunicadas'},
-    {id:'dp_s1_i3',texto:'Contratos temporários e prazos foram revisados',cond:'contrato'},
     {id:'dp_s1_i4',texto:'Comunicados internos da semana foram enviados',cond:'comunicado'}
   ]},
   {id:'dp_s2',titulo:'Acompanhamento de Equipe',itens:[
     {id:'dp_s2_i1',texto:'Ausências e atestados da semana foram registrados'},
-    {id:'dp_s2_i2',texto:'Horas extras da semana foram apuradas e registradas'},
+    {id:'dp_s2_i2',texto:'Banco de horas da semana foi apurado e registrado'},
     {id:'dp_s2_i3',texto:'Feedbacks pendentes foram realizados ou agendados'},
     {id:'dp_s2_i4',texto:'Situação de uniformes e EPI foi verificada',cond:'uniforme'}
   ]},
   {id:'dp_s3',titulo:'Pendências e Encaminhamentos',itens:[
     {id:'dp_s3_i1',texto:'Pendências da semana anterior foram resolvidas ou reencaminhadas'},
     {id:'dp_s3_i2',texto:'Relatório semanal de DP foi preparado'},
-    {id:'dp_s3_i3',texto:'Prazos legais da próxima semana foram mapeados'},
-    {id:'dp_s3_i4',texto:'Gestão foi atualizada sobre situação da equipe'}
+    {id:'dp_s3_i4',texto:'Algum colaborador trouxe algo para o DP esta semana? O responsável foi informado?',cond:'colaborador_trouxe'}
   ]}
 ];
 var DP_BLOCOS_MENSAL=[
   {id:'dp_m1',titulo:'Fechamento Mensal de Folha',itens:[
     {id:'dp_m1_i1',texto:'Ponto mensal foi apurado e conferido'},
-    {id:'dp_m1_i2',texto:'Horas extras e banco de horas foram calculados'},
+    {id:'dp_m1_i2',texto:'Banco de horas do mês foi calculado e conferido por colaborador'},
     {id:'dp_m1_i3',texto:'Descontos e benefícios foram verificados'},
     {id:'dp_m1_i4',texto:'Folha de pagamento foi fechada e enviada para aprovação'}
   ]},
@@ -439,11 +436,12 @@ var DP_BLOCOS_MENSAL=[
     {id:'dp_m3_i1',texto:'Férias e licenças do próximo mês foram mapeadas'},
     {id:'dp_m3_i2',texto:'Necessidades de contratação foram levantadas'},
     {id:'dp_m3_i3',texto:'Treinamentos obrigatórios foram agendados'},
-    {id:'dp_m3_i4',texto:'Relatório mensal de DP foi elaborado e entregue'}
+    {id:'dp_m3_i5',texto:'Escalas do mês foram conferidas e estão alinhadas com os contratos'}
   ]},
-  {id:'dp_m4',titulo:'Benefícios — VR e VT',itens:[
-    {id:'dp_m4_i1',texto:'VT calculado e processado corretamente — Dia 15',vr_vt:'vt'},
-    {id:'dp_m4_i2',texto:'VR calculado e processado corretamente — Dia 30',vr_vt:'vr'}
+  {id:'dp_m4',titulo:'Pagamentos — VR, VT e Combustível',itens:[
+    {id:'dp_m4_i1',texto:'VT processado e pago corretamente — Dia 15',vr_vt:'vt'},
+    {id:'dp_m4_i3',texto:'Vale combustível do gerente calculado e pago — Dia 15',vr_vt:'vt'},
+    {id:'dp_m4_i2',texto:'VR processado e pago corretamente — Dia 30',vr_vt:'vr'}
   ]}
 ];
 var DP_FREQ_MAP={
@@ -802,10 +800,10 @@ function DPChecklistScreen(props){
   var _tempoTotal=useState('');var tempoTotal=_tempoTotal[0];var setTempoTotal=_tempoTotal[1];
   var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
   var _enviadoScore=useState(0);var enviadoScore=_enviadoScore[0];var setEnviadoScore=_enviadoScore[1];
-  var _dpCtx=useState({admissao:'',assinatura:'',contrato:'',comunicado:'',uniforme:'',exame:'',ocorrencia:''});var dpCtx=_dpCtx[0];var setDpCtx=_dpCtx[1];
+  var _dpCtx=useState({admissao:'',assinatura:'',comunicado:'',uniforme:'',exame:'',ocorrencia:'',colaborador_trouxe:''});var dpCtx=_dpCtx[0];var setDpCtx=_dpCtx[1];
   var freqCfg=DP_FREQ_MAP[freq]||DP_FREQ_MAP.diario;
   var blocos=freqCfg.blocos;
-  var allItems=useMemo(function(){var raw=blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);return raw.filter(function(it){if(it.cond==='admissao'&&dpCtx.admissao!=='sim')return false;if(it.cond==='admissao_mensal'&&dpCtx.admissao!=='sim')return false;if(it.cond==='assinatura'&&dpCtx.assinatura!=='sim')return false;if(it.cond==='contrato'&&dpCtx.contrato!=='sim')return false;if(it.cond==='comunicado'&&dpCtx.comunicado!=='sim')return false;if(it.cond==='uniforme'&&dpCtx.uniforme!=='sim')return false;if(it.cond==='exame'&&dpCtx.exame!=='sim')return false;return true;});},[freq,dpCtx]);
+    var allItems=useMemo(function(){var raw=blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);return raw.filter(function(it){if(it.cond==='admissao'&&dpCtx.admissao!=='sim')return false;if(it.cond==='assinatura'&&dpCtx.assinatura!=='sim')return false;if(it.cond==='comunicado'&&dpCtx.comunicado!=='sim')return false;if(it.cond==='uniforme'&&dpCtx.uniforme!=='sim')return false;if(it.cond==='exame'&&dpCtx.exame!=='sim')return false;if(it.cond==='colaborador_trouxe'&&dpCtx.colaborador_trouxe!=='sim')return false;return true;});},[freq,dpCtx]);
 
   useEffect(function(){
     try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s&&s.resps){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);/* tela sempre começa em freq — banner de rascunho avisa o usuario */}}catch(e){}
@@ -846,7 +844,8 @@ function DPChecklistScreen(props){
 
   if(screen==='freq'){
     var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));return s&&s.freq===freq&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
-    return(<div>{dpHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{(DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'Checklist'} <span style={{fontSize:18}}>→</span></button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button></div>}</div>);
+    return(<div>{dpHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><BoasVindasInteligente user={user} tabela="dp_checklists" turnoLabel="DP" cor="#0891B2" emoji="📋" itensCriticos={DP_BLOCOS_DATA.reduce(function(a,b){return a.concat(b.itens);},[])} pendencias={0} onIniciar={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}}/>
+        <div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{(DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'Checklist'} <span style={{fontSize:18}}>→</span></button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button></div>}</div>);
   }
 
 
@@ -894,6 +893,59 @@ function DPChecklistScreen(props){
         {allAnswered&&(
           <div style={{padding:'12px 16px 0'}}>
             <button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar checklist →</button>
+          </div>
+        )}
+        <div style={{padding:'8px 16px 0'}}>
+          <button onClick={function(){setScreen('freq');}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button>
+        </div>
+      </div>
+    );
+  }
+
+
+  if(screen==='contexto'){
+    var ctxPerguntasMap={
+      diario:[
+        {key:'admissao',q:'Tem admissão ou demissão hoje?'},
+        {key:'assinatura',q:'Tem assinatura pendente para conferir hoje?'},
+        {key:'ocorrencia',q:'Aconteceu alguma ocorrência hoje no DP?'},
+        {key:'colaborador_trouxe',q:'Algum colaborador trouxe algo para o DP hoje?'},
+      ],
+      semanal:[
+        {key:'comunicado',q:'Tem comunicado interno para enviar esta semana?'},
+        {key:'uniforme',q:'Tem novidade sobre uniformes ou EPI esta semana?'},
+        {key:'colaborador_trouxe',q:'Algum colaborador trouxe algo para o DP esta semana?'},
+      ],
+      mensal:[
+        {key:'admissao',q:'Teve admissão ou demissão este mês?'},
+        {key:'exame',q:'Tem exame médico periódico vencendo este mês?'},
+      ],
+    };
+    var perguntas=ctxPerguntasMap[freq]||[];
+    var allAnswered=perguntas.every(function(p){return dpCtx[p.key]!=='';});
+    return(
+      <div>
+        {dpHdr}
+        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
+        <div className="card">
+          <div className="card-title">⚙️ Antes de começar</div>
+          <div style={{fontSize:13,color:'var(--ink2)',marginBottom:14,lineHeight:1.5}}>Responda para o checklist se adaptar ao seu dia.</div>
+          {perguntas.map(function(p){
+            var val=dpCtx[p.key];
+            return(
+              <div key={p.key} style={{display:'flex',alignItems:'center',gap:12,padding:'12px 0',borderBottom:'1px solid var(--line)'}}>
+                <div style={{flex:1,fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.4}}>{p.q}</div>
+                <div style={{display:'flex',gap:6,flexShrink:0}}>
+                  <button onClick={function(){setDpCtx(function(x){return Object.assign({},x,{[p.key]:'sim'});});}} style={{padding:'8px 14px',borderRadius:'var(--r8)',border:'1.5px solid '+(val==='sim'?'var(--ok)':'var(--line)'),background:val==='sim'?'var(--ok-bg)':'var(--surface)',color:val==='sim'?'var(--ok)':'var(--ink2)',fontSize:12,fontWeight:700,cursor:'pointer'}}>Sim</button>
+                  <button onClick={function(){setDpCtx(function(x){return Object.assign({},x,{[p.key]:'nao'});});}} style={{padding:'8px 14px',borderRadius:'var(--r8)',border:'1.5px solid '+(val==='nao'?'var(--danger)':'var(--line)'),background:val==='nao'?'var(--danger-bg)':'var(--surface)',color:val==='nao'?'var(--danger)':'var(--ink2)',fontSize:12,fontWeight:700,cursor:'pointer'}}>Não</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {allAnswered&&(
+          <div style={{padding:'12px 16px 0'}}>
+            <button onClick={function(){setScreen('checklist');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none'}}>Iniciar checklist →</button>
           </div>
         )}
         <div style={{padding:'8px 16px 0'}}>
@@ -998,7 +1050,14 @@ function GerChecklistScreen(props){
   var tLabel=turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   if(screen==='summary'){return<GerSummaryScreen resps={resps} negs={negs} user={user} ident={ident} tempoTotal={tempoTotal} onBack={onBack} onLogout={onLogout} onNovo={function(){setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}}/>;}
   var gerHdr=(<div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}><div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{screen==='entry'?'Visão do Turno':tLabel}</div></div><div style={{display:'flex',gap:6}}><div style={{background:'rgba(255,255,255,.15)',borderRadius:99,padding:'4px 11px',fontSize:11,fontWeight:600}}>👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div>);
-  if(screen==='entry'){return(<div>{gerHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">🕐 Turno</div><div className="turno-grid"><button className={'turno-btn'+(turno==='manha'?' active':'')} onClick={function(){setTurno('manha');setIdent({nome:user.name,turno:'manha',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌅</span><div className="turno-label">Manhã</div></button><button className={'turno-btn'+(turno==='tarde'?' active':'')} onClick={function(){setTurno('tarde');setIdent({nome:user.name,turno:'tarde',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌙</span><div className="turno-label">Tarde / Noite</div></button></div></div>{turno&&<div style={{padding:'10px 16px 0'}}><button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar Checklist ({GER_ITEMS.length} itens) →</button></div>}</div>);}
+  if(screen==='entry'){
+    return(
+      <div>
+        {gerHdr}
+        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
+        <BoasVindasInteligente user={user} tabela="ger_checklists" turnoLabel="Gerência" cor="#0F4C81" emoji="🏢" itensCriticos={GER_ITEMS} pendencias={0} onIniciar={function(){var t=new Date().getHours()<15?'manha':'tarde';setTurno(t);setIdent({turno:t,data:todayFmt(),hora:nowTime()});setScreen('checklist');}}/>
+      </div>
+    );}
   return(<div><EnviadoPopup show={enviadoGer} user={user} label='Visão do Turno'/>{sending&&!enviadoGer&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/>{gerHdr}<div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%',background:'var(--brand)'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{GER_BLOCOS.length}</div><div className="pl">Blocos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,6).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});if(!its.length)return null;return<GerBlocoAcc key={b} bloco={b} items={its} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>;})}<div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={handleEnviar} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:88}}/></div>);
 }
 
@@ -1086,7 +1145,7 @@ function ChecklistScreen(props){
   if(screen==='entry'){return(<div><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Checklist</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><div className="card"><div className="card-title">🕐 Turno</div><div className="turno-grid"><button className={'turno-btn'+(ident&&ident.turno==='manha'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'manha',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌅</span><div className="turno-label">Manhã</div></button><button className={'turno-btn'+(ident&&ident.turno==='tarde'?' active':'')} onClick={function(){setIdent({nome:user.name,turno:'tarde',data:todayFmt(),horaInicio:nowTime()});}}><span className="turno-icon">🌙</span><div className="turno-label">Tarde / Noite</div></button></div></div>{ident&&(<div className="card"><div className="card-title">⚙️ Configuração</div>{[{key:'delivery',q:'Delivery ativo hoje?'},{key:'troco',q:'R$300 de troco no caixa?'},{key:'novato',q:'Tem novato no turno?'},{key:'falta',q:'Tem falta na equipe?'}].map(function(x){return(<div key={x.key} className="ctx-row"><div style={{flex:1}}><div className="ctx-q">{x.q}</div></div><div className="ctx-toggle"><button className={'ctx-btn'+(ctx[x.key]==='sim'?' yes':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'sim'});});}}>Sim</button><button className={'ctx-btn'+(ctx[x.key]==='nao'?' no':'')} onClick={function(){setCtx(function(c){return Object.assign({},c,{[x.key]:'nao'});});}}>Não</button></div></div>);})}</div>)}{ident&&ctxReady&&<div style={{padding:'10px 16px 0'}}><button onClick={function(){setScreen('checklist');}} className="start-btn">Iniciar Checklist →</button></div>}</div>);}
   if(screen==='ocorrencias'){return<OcorrenciasScreen items={items} resps={resps} negs={{}} user={user} onConfirm={handleEnviar} onBack={function(){setScreen('checklist');}}/>;}
   if(screen==='summary'){return<LegacySummaryScreen ident={ident} resps={resps} items={items} tempoTotal={tempoTotal} nome={nomeDecl} onBack={function(){setScreen('checklist');}}/>;}
-  return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:88}}/></div>);
+  return(<div><EnviadoPopup show={enviado} user={user} score={envScore} label={freqCfg.titulo}/>{sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Voltar</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div><div style={{height:88}}/></div>);
 }
 
 /* ── CEO: linha expandível de turno da subgerência ── */
@@ -1182,8 +1241,8 @@ function CEODashboard(props){
       if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){var d=await sbSelect('checklists');setCkData(d);}
       if(tab==='overview'||tab==='gerencia'){var g=await sbSelect('ger_checklists');setGerData(g);}
       if(tab==='overview'||tab==='dp'){var dp=await sbSelect('dp_checklists');setDpData(dp);var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
-      if(tab==='overview'||tab==='subgerencia'){var sg=await sbSelect('subger_checklists');setSubgerData(sg);}
-      if(tab==='overview'||tab==='vitoria'){var nt=await sbSelect('subger_noite_checklists');setNoiteData(nt);}
+      if(tab==='overview'||tab==='subgerencia'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var sg=await sbSelect('subger_checklists');setSubgerData(sg);}
+      if(tab==='overview'||tab==='vitoria'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var nt=await sbSelect('subger_noite_checklists');setNoiteData(nt);}
       if(tab==='overview'||tab==='pendencias'){var pd=await sbSelect('checkon_pendencias');setPendData(pd.filter(function(r){return r.status==='aberta';}));}
       setLoading(false);
     }
@@ -1195,8 +1254,39 @@ function CEODashboard(props){
   var dpKpi=useMemo(function(){var tot=dpData.length;var avg=tot>0?Math.round(dpData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=dpData.reduce(function(a,b){return a+b.falhas;},0);var ok=dpData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,ok:ok};},[dpData]);
   var subgerKpi=useMemo(function(){var tot=subgerData.length;var avg=tot>0?Math.round(subgerData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=subgerData.reduce(function(a,b){return a+b.falhas;},0);var pend=subgerData.reduce(function(a,b){return a+(b.pendencias||0);},0);var ok=subgerData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,pend:pend,ok:ok};},[subgerData]);
   var noiteKpi=useMemo(function(){var tot=noiteData.length;var avg=tot>0?Math.round(noiteData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=noiteData.reduce(function(a,b){return a+b.falhas;},0);var pend=noiteData.reduce(function(a,b){return a+(b.pendencias||0);},0);var ok=noiteData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,pend:pend,ok:ok};},[noiteData]);
-  var ranking=useMemo(function(){var names=[];ckData.forEach(function(d){if(names.indexOf(d.user_name)<0)names.push(d.user_name);});return names.map(function(name){var d=ckData.filter(function(x){return x.user_name===name;});return{name:name,avg:Math.round(d.reduce(function(a,b){return a+b.score;},0)/d.length),turnos:d.length,falhas:d.reduce(function(a,b){return a+b.falhas;},0)};}).sort(function(a,b){return b.avg-a.avg;});},[ckData]);
-  var alertas=useMemo(function(){return ckData.filter(function(d){return d.criticos>0;}).slice(0,8).map(function(d){return{msg:d.user_name+' · '+(d.turno==='manha'?'Manhã':'Tarde')+' · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score};});},[ckData]);
+  var ranking=useMemo(function(){
+    /* Unifica todas as fontes de turnos para o ranking */
+    var allTurnos=[].concat(
+      ckData.map(function(d){return Object.assign({},d,{_origem:'checklist'});}),
+      subgerData.map(function(d){return Object.assign({},d,{_origem:'subger'});}),
+      noiteData.map(function(d){return Object.assign({},d,{_origem:'noite'});})
+    );
+    var names=[];allTurnos.forEach(function(d){if(names.indexOf(d.user_name)<0)names.push(d.user_name);});
+    return names.map(function(name){
+      var d=allTurnos.filter(function(x){return x.user_name===name;});
+      return{name:name,avg:Math.round(d.reduce(function(a,b){return a+b.score;},0)/d.length),turnos:d.length,falhas:d.reduce(function(a,b){return a+b.falhas;},0)};
+    }).sort(function(a,b){return b.avg-a.avg;});
+  },[ckData,subgerData,noiteData]);
+  var alertas=useMemo(function(){
+    /* Agrega críticos de todas as tabelas */
+    var hoje=todayISO();
+    var allCriticos=[].concat(
+      ckData.filter(function(d){return d.criticos>0;}).map(function(d){return{msg:d.user_name+' · '+(d.turno==='manha'?'Manhã':'Tarde')+' · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};}),
+      subgerData.filter(function(d){return d.criticos>0;}).map(function(d){return{msg:d.user_name+' · Subger. Manhã · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};}),
+      noiteData.filter(function(d){return d.criticos>0;}).map(function(d){return{msg:d.user_name+' · Noite · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};})
+    );
+    /* Hoje primeiro, depois por data */
+    return allCriticos.sort(function(a,b){return b.hoje-a.hoje;}).slice(0,12);
+  },[ckData,subgerData,noiteData]);
+  var hojeKpi=useMemo(function(){
+    var hoje=todayISO();
+    var sgHoje=subgerData.find(function(d){return d.data===hoje;})||null;
+    var ntHoje=noiteData.find(function(d){return d.data===hoje;})||null;
+    var ckHoje=ckData.filter(function(d){return d.data===hoje;});
+    var dpHoje=dpData.filter(function(d){return d.data===hoje;});
+    var gerHoje=gerData.filter(function(d){return d.data===hoje;});
+    return{sg:sgHoje,nt:ntHoje,ck:ckHoje,dp:dpHoje,ger:gerHoje};
+  },[subgerData,noiteData,ckData,dpData,gerData]);
   var aColors=['#E8001C','#7C3AED','#2563EB','#F97316'];
 
   var ausentes=useMemo(function(){
@@ -1260,6 +1350,39 @@ function CEODashboard(props){
               {pendData.length>0&&<div className="kpi-card kc-r" style={{gridColumn:'span 2'}}><div className="kpi-ico">⚠️</div><div className="kpi-lbl">Pendências abertas</div><div className="kpi-val" style={{color:'var(--danger)'}}>{pendData.length}</div><div className="kpi-sub">de toda a equipe</div></div>}
             </div>
           )}
+          {/* Painel de hoje */}
+          <div style={{margin:'10px 16px 0',background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',overflow:'hidden'}}>
+            <div style={{padding:'11px 14px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:8}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:'var(--ok)',flexShrink:0}}/>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Hoje — {todayFmt()}</div>
+            </div>
+            {[
+              {label:'🌅 Gabriela — Manhã',data:hojeKpi.sg,origem:'subger'},
+              {label:'🌙 Vitória — Noite',data:hojeKpi.nt,origem:'noite'},
+              {label:'🏢 Gerência (Derik)',data:hojeKpi.ger.length>0?hojeKpi.ger[0]:null,origem:'ger'},
+              {label:'🗂️ DP (Viviane)',data:hojeKpi.dp.length>0?hojeKpi.dp[0]:null,origem:'dp'},
+            ].map(function(row){
+              var d=row.data;
+              var sc=d?d.score:null;
+              var st=d?(d.status==='ok'||d.status==='conforme'?'ok':d.status==='atencao'||d.status==='ressalvas'?'atencao':'critico'):null;
+              var stCor=st==='ok'?'var(--ok)':st==='atencao'?'var(--warn)':st==='critico'?'var(--danger)':'var(--ink4)';
+              var stLabel=st==='ok'?'✅ OK':st==='atencao'?'⚠️ Atenção':st==='critico'?'🚨 Crítico':'–';
+              return(
+                <div key={row.label} style={{padding:'11px 14px',borderBottom:'1px solid var(--line2)',display:'flex',alignItems:'center',gap:10}}>
+                  <div style={{flex:1,fontSize:13,fontWeight:600,color:'var(--ink)'}}>{row.label}</div>
+                  {d?(
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <span style={{fontSize:11,color:'var(--ink3)'}}>{d.hora||''}</span>
+                      <span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:stCor}}>{sc}</span>
+                      <span style={{fontSize:10,fontWeight:700,borderRadius:99,padding:'2px 8px',background:st==='ok'?'var(--ok-bg)':st==='atencao'?'var(--warn-bg)':'var(--danger-bg)',color:stCor}}>{stLabel}</span>
+                    </div>
+                  ):(
+                    <span style={{fontSize:11,color:'var(--ink4)',fontStyle:'italic'}}>Não enviado</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -1336,7 +1459,7 @@ function CEODashboard(props){
           {subgerData.length>0&&subgerData.slice(0,30).map(function(d,i){return<SubgerCEORow key={d.id||i} d={d}/>;})}</div>
       )}
 
-      {!loading&&tab==='ranking'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🏆 Ranking de Subgerentes</div>{ranking.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum dado ainda.</div>}{ranking.map(function(u,i){return(<div key={u.name} className="rank-row"><div className="rank-pos" style={{color:i===0?'#F59E0B':i===1?'#9CA3AF':'#B45309'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div className="rank-avatar" style={{background:aColors[i%aColors.length]}}>{u.name.charAt(0)}</div><div style={{flex:1}}><div className="rank-name">{u.name}</div><div className="rank-sub">{u.turnos} turnos · {u.falhas} falhas</div><div style={{marginTop:5,background:'#F0F0F0',borderRadius:99,height:5,overflow:'hidden'}}><div style={{height:'100%',borderRadius:99,background:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)',width:u.avg+'%',transition:'width .5s'}}/></div></div><div className="rank-score" style={{color:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)'}}>{u.avg}</div></div>);})}</div>)}
+      {!loading&&tab==='ranking'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🏆 Ranking Geral da Equipe</div>{ranking.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum dado ainda.</div>}{ranking.map(function(u,i){return(<div key={u.name} className="rank-row"><div className="rank-pos" style={{color:i===0?'#F59E0B':i===1?'#9CA3AF':'#B45309'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div className="rank-avatar" style={{background:aColors[i%aColors.length]}}>{u.name.charAt(0)}</div><div style={{flex:1}}><div className="rank-name">{u.name}</div><div className="rank-sub">{u.turnos} turnos · {u.falhas} falhas</div><div style={{marginTop:5,background:'#F0F0F0',borderRadius:99,height:5,overflow:'hidden'}}><div style={{height:'100%',borderRadius:99,background:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)',width:u.avg+'%',transition:'width .5s'}}/></div></div><div className="rank-score" style={{color:u.avg>=80?'var(--ok)':u.avg>=60?'#F59E0B':'var(--brand)'}}>{u.avg}</div></div>);})}</div>)}
 
       {!loading&&tab==='vitoria'&&(
         <div>
@@ -1360,9 +1483,52 @@ function CEODashboard(props){
         </div>
       )}
 
-      {!loading&&tab==='alertas'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🚨 Alertas Operacionais</div>{alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta ativo!</div>}{alertas.map(function(a,i){return(<div key={i} className="alert-row"><div className="a-dot a-r"/><div style={{flex:1}}><div className="a-title">{a.msg}</div><div className="a-sub">{a.sub}</div></div><div className="a-badge" style={{background:'#FEE2E2',color:'#991B1B'}}>🔴 Crítico</div></div>);})}</div>)}
+      {!loading&&tab==='alertas'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🚨 Alertas Operacionais<span style={{fontSize:10,fontWeight:600,color:'var(--ink3)',marginLeft:8}}>{alertas.length} crítico{alertas.length!==1?'s':''}</span></div>{alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta ativo!</div>}{alertas.map(function(a,i){return(<div key={i} className="alert-row"><div className="a-dot a-r"/><div style={{flex:1}}><div className="a-title">{a.msg}{a.hoje&&<span style={{marginLeft:6,background:'var(--warn)',color:'#fff',borderRadius:99,padding:'1px 7px',fontSize:9,fontWeight:800}}>HOJE</span>}</div><div className="a-sub">{a.sub}</div></div><div className="a-badge" style={{background:'#FEE2E2',color:'#991B1B'}}>🔴 Crítico</div></div>);})}</div>)}
 
-      {!loading&&tab==='turnos'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">📋 Histórico de Turnos</div>{ckData.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum turno ainda.</div>}<div style={{overflowX:'auto'}}><table className="shift-table"><thead><tr><th>Responsável</th><th>Turno</th><th>Data</th><th>Score</th><th>Status</th><th>Falhas</th></tr></thead><tbody>{ckData.slice(0,25).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='conforme'?'Conforme':d.status==='critico'?'Crítico':'Ressalvas';return(<tr key={i}><td><div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12}}>{d.user_name}</div></td><td><span className="pill" style={{background:d.turno==='manha'?'#FEF3C7':'#EDE9FE',color:d.turno==='manha'?'#92400E':'#5B21B6'}}>{d.turno==='manha'?'🌅':'🌙'}</span></td><td style={{fontSize:11,color:'var(--ink2)'}}>{d.data_fmt||d.data}</td><td><span style={{fontFamily:"'Sora',sans-serif",fontWeight:800,color:c}}>{sc}</span></td><td><span className="pill" style={{background:st==='Conforme'?'#D1FAE5':st==='Crítico'?'#FEE2E2':'#FEF3C7',color:st==='Conforme'?'#065F46':st==='Crítico'?'#991B1B':'#92400E'}}>{st}</span></td><td style={{fontFamily:"'Sora',sans-serif",fontWeight:700,color:d.falhas>0?'var(--brand)':'var(--ok)'}}>{d.falhas}</td></tr>);})}</tbody></table></div></div>)}
+      {!loading&&tab==='turnos'&&(function(){
+  var hoje=todayISO();
+  var allTurnos=[].concat(
+    ckData.map(function(d){return Object.assign({},d,{_tipo:'Gerente/Suporte',_cor:'#92400E',_bg:'#FEF3C7'});}),
+    subgerData.map(function(d){return Object.assign({},d,{_tipo:'Subger. Manhã',_cor:'#92400E',_bg:'#FEF3C7'});}),
+    noiteData.map(function(d){return Object.assign({},d,{_tipo:'Noite',_cor:'#5B21B6',_bg:'#EDE9FE'});}),
+    gerData.map(function(d){return Object.assign({},d,{_tipo:'Gerência',_cor:'#0F4C81',_bg:'#EFF6FF'});}),
+    dpData.map(function(d){return Object.assign({},d,{_tipo:'DP '+(d.freq||''),_cor:'#0891B2',_bg:'#E0F2FE'});})
+  ).sort(function(a,b){
+    /* Hoje primeiro, depois por created_at desc */
+    if(a.data===hoje&&b.data!==hoje)return -1;
+    if(b.data===hoje&&a.data!==hoje)return 1;
+    return (b.created_at||'').localeCompare(a.created_at||'');
+  }).slice(0,40);
+  return(
+    <div className="chart-card" style={{margin:'12px 12px 0'}}>
+      <div className="chart-t">📋 Todos os Turnos — Unificado</div>
+      {allTurnos.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum turno ainda.</div>}
+      <div style={{overflowX:'auto'}}>
+        <table className="shift-table">
+          <thead><tr><th>Responsável</th><th>Tipo</th><th>Data</th><th>Score</th><th>Status</th><th>Falhas</th></tr></thead>
+          <tbody>{allTurnos.map(function(d,i){
+            var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';
+            var stRaw=d.status==='conforme'||d.status==='ok'?'OK':d.status==='critico'?'Crítico':d.status==='atencao'?'Atenção':'Ressalvas';
+            var isHoje=d.data===hoje;
+            return(
+              <tr key={i} style={{background:isHoje?'#FFFBEB':''}}>
+                <td>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12}}>{d.user_name}</div>
+                  {isHoje&&<div style={{fontSize:9,color:'var(--warn)',fontWeight:700}}>HOJE</div>}
+                </td>
+                <td><span className="pill" style={{background:d._bg,color:d._cor}}>{d._tipo}</span></td>
+                <td style={{fontSize:11,color:'var(--ink2)'}}>{d.data_fmt||d.data}<br/><span style={{fontSize:10,color:'var(--ink3)'}}>{d.hora||''}</span></td>
+                <td><span style={{fontFamily:"'Sora',sans-serif",fontWeight:800,color:c}}>{sc}</span></td>
+                <td><span className="pill" style={{background:stRaw==='OK'?'#D1FAE5':stRaw==='Crítico'?'#FEE2E2':'#FEF3C7',color:stRaw==='OK'?'#065F46':stRaw==='Crítico'?'#991B1B':'#92400E'}}>{stRaw}</span></td>
+                <td style={{fontFamily:"'Sora',sans-serif",fontWeight:700,color:d.falhas>0?'var(--brand)':'var(--ok)'}}>{d.falhas}</td>
+              </tr>
+            );
+          })}</tbody>
+        </table>
+      </div>
+    </div>
+  );
+})()}
       
     </div>
   );
@@ -1378,27 +1544,99 @@ function CEOHub(props){
 function GerenteHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+  var CK_KEY='checkon_draft_'+user.login;
+
   if(mode==='checklist')return<ChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='painel')return<CEODashboard user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#0D0D0D,#1A0003,#3D0007)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>🗂️</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Acesso Gerente · CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('checklist');}} className="hub-opt"><span className="hub-opt-icon">📋</span><div><div className="hub-opt-title">Preencher Checklist</div><div className="hub-opt-sub">Registrar execução do turno</div></div></button><button onClick={function(){setMode('painel');}} className="hub-opt"><span style={{fontSize:28}}>📊</span><div><div className="hub-opt-title">Ver Painel</div></div></button></div><button onClick={onLogout} style={{width:'100%',marginTop:14,padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+
+  var items=typeof ITEMS!=='undefined'?ITEMS:(typeof GER_ITEMS!=='undefined'?GER_ITEMS:[]);
+  var rascunhoPct=(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(CK_KEY));
+      if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
+      var total=items.length||1;
+      var respondidos=Object.keys(s.resps).length;
+      return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
+    }catch(e){return null;}
+  })();
+
+  return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'linear-gradient(145deg,#0D0D0D,#1A0003,#3D0007)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerente</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Checklist do Turno</div></div>
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={function(){setMode('painel');}} className="hdr-btn">📊 Painel</button>
+            <button className="hdr-btn" onClick={onLogout}>Sair</button>
+          </div>
+        </div>
+      </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="checklists"
+        turnoLabel="Gerente"
+        cor="linear-gradient(145deg,#0D0D0D,#1A0003,#3D0007)"
+        emoji="🗂️"
+        itensCriticos={items}
+        rascunhoPct={rascunhoPct}
+        onIniciar={function(){setMode('checklist');}}
+      />
+    </div>
+  );
 }
 
 function GerenciaHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+
   if(mode==='checklist')return<GerChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
       <div style={{background:'#0F4C81',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
+          <div style={{display:'flex',gap:6}}><button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button><button className="hdr-btn" onClick={onLogout}>Sair</button></div>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="ger_checklists" labelTurno={function(d){return d.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';}}/>
     </div>
   );
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>🏢</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Gerência — CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer'}}><span style={{fontSize:30}}>📊</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Visão do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>{GER_BLOCOS.length} blocos · {GER_ITEMS.length} itens</div></div></button><button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer'}}><span style={{fontSize:28}}>📈</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico e falhas frequentes</div></div></button></div><button onClick={onLogout} style={{width:'100%',marginTop:12,padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+
+  var gerItems=typeof GER_ITEMS!=='undefined'?GER_ITEMS:[];
+  var GER_SAVE_KEY='ger_draft_'+user.login;
+  var rascunhoPct=(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(GER_SAVE_KEY));
+      if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
+      var total=gerItems.length||1;
+      var respondidos=Object.keys(s.resps).length;
+      return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
+    }catch(e){return null;}
+  })();
+
+  return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'#0F4C81',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Visão do Turno</div></div>
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={function(){setMode('historico');}} className="hdr-btn">📈 Evolução</button>
+            <button className="hdr-btn" onClick={onLogout}>Sair</button>
+          </div>
+        </div>
+      </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="ger_checklists"
+        turnoLabel="Gerência"
+        cor="#0F4C81"
+        emoji="🏢"
+        itensCriticos={gerItems}
+        rascunhoPct={rascunhoPct}
+        onIniciar={function(){setMode('checklist');}}
+      />
+    </div>
+  );
 }
 
 function SuporteHub(props){
@@ -1407,7 +1645,43 @@ function SuporteHub(props){
   if(mode==='ceo')return<CEODashboard user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='checklist')return<ChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='usuarios')return<UserManager user={user} onBack={function(){setMode(null);}} onLogout={onLogout}/>;
-  return(<div className="hub-bg"><div className="hub-card"><div style={{textAlign:'center',marginBottom:20}}><span style={{fontSize:40,display:'block',marginBottom:8}}>🛡️</span><div className="hub-title">Olá, {user.name}!</div><div className="hub-sub">Suporte · CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('usuarios');}} style={{padding:'16px',borderRadius:'var(--r12)',background:'var(--brand)',color:'#fff',textAlign:'left',display:'flex',alignItems:'center',gap:12,border:'none',cursor:'pointer'}}><span className="hub-opt-icon">👥</span><div><div className="hub-opt-title">Gestão de Usuários</div></div></button><button onClick={function(){setMode('ceo');}} className="hub-opt"><span className="hub-opt-icon">👁️</span><div><div className="hub-opt-title">Painel Gerencial</div></div></button><button onClick={function(){setMode('checklist');}} className="hub-opt"><span className="hub-opt-icon">📋</span><div><div className="hub-opt-title">Preencher Checklist</div></div></button></div><button onClick={onLogout} className="hub-logout">Sair</button></div></div>);
+
+  var items=typeof ITEMS!=='undefined'?ITEMS:[];
+  var CK_KEY='checkon_draft_'+user.login;
+  var rascunhoPct=(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(CK_KEY));
+      if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
+      var total=items.length||1;
+      var respondidos=Object.keys(s.resps).length;
+      return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
+    }catch(e){return null;}
+  })();
+
+  return(
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'#1D4ED8',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Suporte</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Painel</div></div>
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={function(){setMode('usuarios');}} className="hdr-btn">👥 Usuários</button>
+            <button onClick={function(){setMode('ceo');}} className="hdr-btn">📊 Painel</button>
+            <button className="hdr-btn" onClick={onLogout}>Sair</button>
+          </div>
+        </div>
+      </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="checklists"
+        turnoLabel="Suporte"
+        cor="#1D4ED8"
+        emoji="🛡️"
+        itensCriticos={items}
+        rascunhoPct={rascunhoPct}
+        onIniciar={function(){setMode('checklist');}}
+      />
+    </div>
+  );
 }
 
 function UserManager(props){
@@ -1713,6 +1987,7 @@ function SubgerSummaryScreen(props){
             <div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div>
           </div>
         </div>
+        <FeedbackCrescimento score={score} tabela="subger_checklists" user={user}/>
         <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:12}}>
           {[{icon:'📋',val:total,lbl:'Total itens'},{icon:'✅',val:total-falhas,lbl:'OK'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'⏳',val:pendencias,lbl:'Pendências'}].map(function(x){return(<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>);})}
         </div>
@@ -1794,6 +2069,433 @@ function TurnoEncerrado(props){
         </div>
         <div style={{marginTop:20,fontSize:11,color:'rgba(255,255,255,.25)',letterSpacing:.5}}>CheckON · Pastel da Camilla</div>
       </div>
+    </div>
+  );
+}
+
+
+/* ══ INTELIGÊNCIA ══ */
+function getCacheKey(login){return 'checkon_ctx_'+login;}
+
+/* Verifica se já há registro enviado hoje para este usuário/tabela */
+async function verificarTurnoHoje(user, tabela){
+  try{
+    var hoje=todayISO();
+    var q=sb.from(tabela).select('*').eq('login',user.login).order('created_at',{ascending:false}).limit(3);
+    var res=await q;
+    if(res.error||!res.data||res.data.length===0)return null;
+    return res.data.find(function(r){return r.data===hoje;})||null;
+  }catch(e){return null;}
+}
+
+/* Busca pendências da manhã (subger_checklists) para a Vitória */
+async function buscarPendenciasManhaParaNoite(){
+  try{
+    var hoje=todayISO();
+    /* Busca só registros de hoje da manhã — com filtro de data no client sobre resultado limitado */
+    var q=sb.from('subger_checklists').select('*').eq('data',hoje).order('created_at',{ascending:false}).limit(5);
+    var res=await q;
+    if(res.error||!res.data||res.data.length===0)return null;
+    var turnoHoje=res.data[0];
+    var negs=turnoHoje.negs||{};
+    var resps=turnoHoje.resps||{};
+    var pendentes=Object.keys(resps).filter(function(id){
+      return resps[id]==='nao'&&negs[id]&&(negs[id].prox==='Sim, fica pendente'||negs[id].prox==='Sim');
+    });
+    return{
+      responsavel:turnoHoje.user_name||'Manhã',
+      score:turnoHoje.score||0,
+      pendencias:pendentes.length,
+      horario:turnoHoje.hora||'',
+    };
+  }catch(e){return null;}
+}
+
+async function analisarHistorico(user, tabela, itensCriticos){
+  var CACHE_KEY=getCacheKey(user.login);
+  var hoje=todayISO();
+  
+  // Tenta cache local primeiro (válido por 4h)
+  try{
+    var cached=JSON.parse(localStorage.getItem(CACHE_KEY));
+    if(cached&&cached.tabela===tabela&&cached.data===hoje&&cached.hora){
+      var diff=(new Date()-new Date(hoje+'T'+cached.hora))/3600000;
+      if(diff<4)return cached.resultado;
+    }
+  }catch(e){}
+
+  // Busca Supabase
+  var resultado={
+    scoresMedio:0,
+    streak:0,
+    falhasFrequentes:[],
+    alertas:[],
+    ultimoTurno:null,
+    totalRegistros:0,
+  };
+
+  try{
+    var rows=await sbSelect(tabela,{login:user.login});
+    if(!rows||rows.length===0){
+      // Salva cache vazio
+      try{localStorage.setItem(CACHE_KEY,JSON.stringify({tabela,data:hoje,hora:nowTime(),resultado}));}catch(e){}
+      return resultado;
+    }
+
+    resultado.totalRegistros=rows.length;
+    resultado.ultimoTurno=rows[0];
+
+    // Score médio últimos 7
+    var ultimos7=rows.slice(0,7);
+    var scores=ultimos7.map(function(r){return r.score||0;});
+    resultado.scoresMedio=Math.round(scores.reduce(function(a,b){return a+b;},0)/scores.length);
+
+    // Streak sem crítico
+    var streak=0;
+    for(var i=0;i<rows.length;i++){
+      if((rows[i].criticos||0)===0)streak++;
+      else break;
+    }
+    resultado.streak=streak;
+
+    // Falhas frequentes: contar quais ids aparecem como 'nao' nos últimos 5 turnos
+    var falhaCount={};
+    rows.slice(0,5).forEach(function(row){
+      var rs=row.resps||{};
+      Object.keys(rs).forEach(function(id){
+        if(rs[id]==='nao'){
+          falhaCount[id]=(falhaCount[id]||0)+1;
+        }
+      });
+    });
+
+    // Items que falharam 2+ vezes nos últimos 5
+    var frequentes=Object.entries(falhaCount)
+      .filter(function(e){return e[1]>=2;})
+      .sort(function(a,b){return b[1]-a[1];})
+      .slice(0,3);
+    
+    // Mapear ids para textos
+    resultado.falhasFrequentes=frequentes.map(function(entry){
+      var id=entry[0];var count=entry[1];
+      var item=itensCriticos&&itensCriticos.find(function(it){return it.id===id;});
+      return{id:id,texto:item?item.texto:id,vezes:count};
+    });
+
+    // Alertas baseados em padrão
+    resultado.alertas=[];
+    if(resultado.falhasFrequentes.length>0){
+      resultado.falhasFrequentes.forEach(function(f){
+        resultado.alertas.push({
+          tipo:'falha_frequente',
+          msg:'"'+f.texto+'" falhou '+f.vezes+'x nos últimos 5 turnos.',
+          icone:'🔁'
+        });
+      });
+    }
+    if(resultado.streak>=5){
+      resultado.alertas.push({tipo:'conquista',msg:resultado.streak+' turnos seguidos sem item crítico! 🔥',icone:'🏆'});
+    }
+    if(resultado.scoresMedio<70&&resultado.totalRegistros>=3){
+      resultado.alertas.push({tipo:'atencao',msg:'Score médio abaixo de 70 nos últimos 7 turnos.',icone:'⚠️'});
+    }
+
+    // Salva cache
+    try{localStorage.setItem(CACHE_KEY,JSON.stringify({tabela,data:hoje,hora:nowTime(),resultado}));}catch(e){}
+
+  }catch(err){
+    // Fallback: usa localStorage de registros locais se disponível
+    try{
+      var localKey='checkon_hist_'+user.login+'_'+tabela;
+      var local=JSON.parse(localStorage.getItem(localKey)||'[]');
+      if(local.length>0){
+        resultado.totalRegistros=local.length;
+        resultado.ultimoTurno=local[0];
+        var sc=local.slice(0,7).map(function(r){return r.score||0;});
+        resultado.scoresMedio=Math.round(sc.reduce(function(a,b){return a+b;},0)/sc.length);
+      }
+    }catch(e2){}
+  }
+
+  return resultado;
+}
+
+function BoasVindasInteligente(props){
+  var user=props.user;
+  var tabela=props.tabela;
+  var turnoLabel=props.turnoLabel;
+  var cor=props.cor||'var(--brand)';
+  var emoji=props.emoji||'👋';
+  var itensCriticos=props.itensCriticos||[];
+  var onIniciar=props.onIniciar;
+  /* rascunhoPct: {pct, respondidos, total} quando há rascunho salvo */
+  var rascunhoPct=props.rascunhoPct||null;
+  /* pendenciasManhaInfo: {responsavel, score, pendencias, horario} — exclusivo para turno noite */
+  var pendenciasManhaInfo=props.pendenciasManhaInfo||null;
+  /* etapas: [{titulo, horario}] para mostrar preview das etapas */
+  var etapas=props.etapas||[];
+
+  var hora=new Date().getHours();
+  var saudacao=hora<12?'Bom dia':hora<18?'Boa tarde':'Boa noite';
+
+  /* Estado 1: turno já enviado hoje */
+  var _turnoHoje=useState(null);var turnoHoje=_turnoHoje[0];var setTurnoHoje=_turnoHoje[1];
+  /* Estado 2: análise de histórico — carrega em background */
+  var _analise=useState(null);var analise=_analise[0];var setAnalise=_analise[1];
+  /* Controla visibilidade da análise separada do botão */
+  var _analiseOk=useState(false);var analiseOk=_analiseOk[0];var setAnaliseOk=_analiseOk[1];
+
+  useEffect(function(){
+    /* Verifica turno hoje em paralelo com análise de histórico */
+    verificarTurnoHoje(user, tabela).then(function(t){ setTurnoHoje(t); }).catch(function(){});
+    analisarHistorico(user, tabela, itensCriticos).then(function(r){
+      setAnalise(r); setAnaliseOk(true);
+    }).catch(function(){
+      setAnalise({scoresMedio:0,streak:0,falhasFrequentes:[],alertas:[],totalRegistros:0});
+      setAnaliseOk(true);
+    });
+  },[]);
+
+  /* Calcula comparativo do último turno */
+  var ultimoScore=analise&&analise.ultimoTurno?analise.ultimoTurno.score:null;
+  var scoreDiff=ultimoScore!=null?(analise.scoresMedio-ultimoScore):null;
+  var scoreCorAtual=ultimoScore!=null?(ultimoScore>=80?'var(--ok)':ultimoScore>=60?'var(--warn)':'var(--brand)'):'var(--ink3)';
+
+  /* Linha de contexto do score */
+  function renderScoreLine(){
+    if(!analise||!analiseOk||analise.totalRegistros===0)return null;
+    var diff=scoreDiff;
+    var txt='';
+    if(ultimoScore!=null){
+      txt='Último turno: '+ultimoScore;
+      if(diff>0)txt+=' · ↑ '+diff+' ponto'+(diff>1?'s':'')+' acima da média';
+      else if(diff<0)txt+=' · ↓ '+Math.abs(diff)+' ponto'+(Math.abs(diff)>1?'s':'')+' abaixo da média';
+      else txt+=' · Na média';
+    }
+    return txt;
+  }
+
+  /* === ESTADO: TURNO JÁ ENVIADO HOJE === */
+  if(turnoHoje!==null&&turnoHoje!==undefined&&turnoHoje.data===todayISO()){
+    var sc=turnoHoje.score||0;
+    var st=turnoHoje.status;
+    var stCor=st==='ok'?'var(--ok)':st==='atencao'?'var(--warn)':'var(--danger)';
+    var stBg=st==='ok'?'var(--ok-bg)':st==='atencao'?'var(--warn-bg)':'var(--danger-bg)';
+    var stEmoji=st==='ok'?'✅':st==='atencao'?'⚠️':'🚨';
+    var stLabel=st==='ok'?'Operação controlada':st==='atencao'?'Atenção':st==='critico'?'Crítico':'Concluído';
+    return(
+      <div>
+        <div style={{background:cor,padding:'16px 16px 20px'}}>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,opacity:.7,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · {turnoLabel}</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:'#fff',marginBottom:2}}>{emoji} {saudacao}, {user.name}!</div>
+          <div style={{fontSize:12,color:'rgba(255,255,255,.7)'}}>{todayFmt()}</div>
+        </div>
+        <div style={{margin:'12px 16px 0',background:'#fff',borderRadius:'var(--r12)',border:'1.5px solid var(--ok-line)',padding:'16px',display:'flex',alignItems:'center',gap:14}}>
+          <div style={{flexShrink:0,width:52,height:52,borderRadius:'50%',background:stBg,display:'flex',alignItems:'center',justifyContent:'center',fontSize:24}}>{stEmoji}</div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:stCor}}>{stLabel}</div>
+            <div style={{fontSize:12,color:'var(--ink2)',marginTop:2}}>Turno enviado às {turnoHoje.hora||'–'}</div>
+            {turnoHoje.falhas>0&&<div style={{fontSize:11,color:'var(--danger)',marginTop:2,fontWeight:600}}>{turnoHoje.falhas} falha{turnoHoje.falhas>1?'s':''} registrada{turnoHoje.falhas>1?'s':''}</div>}
+          </div>
+          <div style={{textAlign:'center',flexShrink:0}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:28,fontWeight:900,color:stCor}}>{sc}</div>
+            <div style={{fontSize:9,color:'var(--ink3)',fontWeight:700}}>/ 100</div>
+          </div>
+        </div>
+        {analiseOk&&analise&&analise.totalRegistros>1&&(
+          <div style={{margin:'8px 16px 0',background:'var(--surface)',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'12px 14px',display:'flex',gap:16}}>
+            <div style={{flex:1,textAlign:'center'}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900,color:analise.scoresMedio>=80?'var(--ok)':analise.scoresMedio>=60?'var(--warn)':'var(--brand)'}}>{analise.scoresMedio}</div>
+              <div style={{fontSize:10,color:'var(--ink3)',fontWeight:600,marginTop:1}}>MÉDIA 7 TURNOS</div>
+            </div>
+            <div style={{width:1,background:'var(--line)'}}/>
+            <div style={{flex:1,textAlign:'center'}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900,color:'var(--ok)'}}>{analise.streak}</div>
+              <div style={{fontSize:10,color:'var(--ink3)',fontWeight:600,marginTop:1}}>SEM CRÍTICO 🔥</div>
+            </div>
+          </div>
+        )}
+        <div style={{margin:'10px 16px 0',fontSize:12,color:'var(--ink3)',textAlign:'center',padding:'0 16px'}}>Turno de hoje já foi enviado.</div>
+        <div style={{padding:'10px 16px 4px'}}>
+          <button onClick={onIniciar} style={{width:'100%',padding:13,background:'var(--surface)',color:'var(--ink2)',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1.5px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+            Iniciar novo turno mesmo assim →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* Texto do botão baseado no estado */
+  var btnTexto=rascunhoPct?'Continuar turno →':('Iniciar '+turnoLabel+' →');
+
+  return(
+    <div>
+      {/* Header — sempre renderiza imediatamente */}
+      <div style={{background:cor,padding:'16px 16px 20px'}}>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,opacity:.7,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · {turnoLabel}</div>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:'#fff',marginBottom:2}}>{emoji} {saudacao}, {user.name}!</div>
+        <div style={{fontSize:12,color:'rgba(255,255,255,.7)'}}>
+          {todayFmt()}
+          {analiseOk&&analise&&analise.totalRegistros>0?' · '+analise.totalRegistros+' turnos registrados':analiseOk?' · Primeiro turno':''}
+        </div>
+      </div>
+
+      {/* CAMADA 1: Contexto do turno — aparece progressivamente */}
+      {analiseOk&&analise&&analise.totalRegistros>0&&(
+        <div style={{margin:'10px 16px 0',background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',overflow:'hidden'}}>
+          {/* Score comparativo */}
+          <div style={{padding:'12px 14px',borderBottom:'1px solid var(--line2)',display:'flex',alignItems:'center',gap:12}}>
+            <div style={{flex:1}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink3)',textTransform:'uppercase',letterSpacing:.5,marginBottom:4}}>Último turno</div>
+              {renderScoreLine()&&<div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.4}}>{renderScoreLine()}</div>}
+            </div>
+            <div style={{textAlign:'center',flexShrink:0}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900,color:scoreCorAtual}}>{ultimoScore!=null?ultimoScore:'–'}</div>
+              <div style={{fontSize:9,color:'var(--ink3)',fontWeight:700}}>/ 100</div>
+            </div>
+          </div>
+          {/* Streak + média */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',padding:'10px 14px',gap:8}}>
+            <div style={{textAlign:'center'}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:'var(--ok)'}}>{analise.streak}</div>
+              <div style={{fontSize:10,color:'var(--ink3)',fontWeight:600,marginTop:1}}>TURNOS SEM CRÍTICO 🔥</div>
+            </div>
+            <div style={{textAlign:'center'}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:analise.scoresMedio>=80?'var(--ok)':analise.scoresMedio>=60?'var(--warn)':'var(--brand)'}}>{analise.scoresMedio}</div>
+              <div style={{fontSize:10,color:'var(--ink3)',fontWeight:600,marginTop:1}}>MÉDIA 7 TURNOS</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Alertas de padrão (falhas frequentes) */}
+      {analiseOk&&analise&&analise.alertas&&analise.alertas.filter(function(a){return a.tipo==='falha_frequente';}).slice(0,1).map(function(alerta,i){
+        return(
+          <div key={i} style={{margin:'8px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'12px 14px',display:'flex',alignItems:'flex-start',gap:10}}>
+            <span style={{fontSize:16,flexShrink:0}}>🔁</span>
+            <div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)',marginBottom:2}}>Atenção: ponto recorrente</div>
+              <div style={{fontSize:13,color:'var(--warn)',lineHeight:1.4}}>{alerta.msg}</div>
+            </div>
+          </div>
+        );
+      })}
+
+      {/* Conquista de streak */}
+      {analiseOk&&analise&&analise.alertas&&analise.alertas.filter(function(a){return a.tipo==='conquista';}).map(function(alerta,i){
+        return(
+          <div key={i} style={{margin:'8px 16px 0',background:'var(--ok-bg)',border:'1.5px solid var(--ok-line)',borderRadius:'var(--r12)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}>
+            <span style={{fontSize:18}}>🏆</span>
+            <div style={{fontSize:13,color:'var(--ok)',fontWeight:600}}>{alerta.msg}</div>
+          </div>
+        );
+      })}
+
+      {/* PENDÊNCIAS DA MANHÃ — exclusivo turno noite */}
+      {pendenciasManhaInfo&&pendenciasManhaInfo.pendencias>0&&(
+        <div style={{margin:'8px 16px 0',background:'var(--danger-bg)',border:'1.5px solid var(--danger-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:12}}>
+          <span style={{fontSize:20,flexShrink:0}}>⚠️</span>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'var(--danger)'}}>
+              {pendenciasManhaInfo.pendencias} pendência{pendenciasManhaInfo.pendencias>1?'s':''} da manhã — {pendenciasManhaInfo.responsavel}
+            </div>
+            <div style={{fontSize:11,color:'var(--danger)',opacity:.8,marginTop:2}}>
+              Turno da manhã: score {pendenciasManhaInfo.score} · {pendenciasManhaInfo.horario||''}
+            </div>
+          </div>
+        </div>
+      )}
+      {pendenciasManhaInfo&&pendenciasManhaInfo.pendencias===0&&pendenciasManhaInfo.responsavel&&(
+        <div style={{margin:'8px 16px 0',background:'var(--ok-bg)',border:'1.5px solid var(--ok-line)',borderRadius:'var(--r12)',padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}>
+          <span style={{fontSize:16}}>✅</span>
+          <div style={{fontSize:13,color:'var(--ok)',fontWeight:600}}>Manhã sem pendências — {pendenciasManhaInfo.responsavel} · score {pendenciasManhaInfo.score}</div>
+        </div>
+      )}
+
+      {/* CAMADA 2: Estado do checklist */}
+      {rascunhoPct?(
+        <div style={{margin:'8px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'var(--warn)'}}>📝 Rascunho em andamento</div>
+            <div style={{fontSize:12,fontWeight:700,color:'var(--warn)'}}>{rascunhoPct.pct}%</div>
+          </div>
+          <div style={{background:'var(--warn-line)',borderRadius:'var(--r99)',height:5,overflow:'hidden'}}>
+            <div style={{height:'100%',borderRadius:'var(--r99)',background:'var(--warn)',width:rascunhoPct.pct+'%',transition:'width .4s'}}/>
+          </div>
+          <div style={{fontSize:11,color:'var(--warn)',marginTop:6}}>{rascunhoPct.respondidos} de {rascunhoPct.total} itens respondidos</div>
+        </div>
+      ):(
+        etapas.length>0&&(
+          <div style={{margin:'8px 16px 0',background:'var(--surface)',borderRadius:'var(--r12)',border:'1px solid var(--line)',padding:'12px 14px'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink3)',textTransform:'uppercase',letterSpacing:.5,marginBottom:8}}>Etapas de hoje</div>
+            {etapas.map(function(e,i){return(
+              <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'5px 0',borderBottom:i<etapas.length-1?'1px solid var(--line2)':'none'}}>
+                <div style={{width:22,height:22,borderRadius:'50%',background:'var(--line2)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:11,fontWeight:700,color:'var(--ink3)'}}>{i+1}</div>
+                <div style={{flex:1,fontSize:13,fontWeight:600,color:'var(--ink)'}}>{e.titulo}</div>
+                {e.horario&&<div style={{fontSize:11,color:'var(--brand)',fontWeight:700,flexShrink:0}}>{e.horario}</div>}
+              </div>
+            );})}
+          </div>
+        )
+      )}
+
+      {/* CAMADA 3: Botão único principal — sempre visível imediatamente */}
+      <div style={{padding:'12px 16px 4px'}}>
+        <button onClick={onIniciar} style={{width:'100%',padding:16,background:cor,color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8,boxShadow:'0 4px 14px rgba(0,0,0,.18)',transition:'transform .15s'}}
+          onMouseOver={function(e){e.currentTarget.style.transform='translateY(-2px)';}}
+          onMouseOut={function(e){e.currentTarget.style.transform='translateY(0)';}}
+        >
+          {btnTexto}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FeedbackCrescimento(props){
+  var score=props.score;var tabela=props.tabela;var user=props.user;
+  var _dados=useState(null);var dados=_dados[0];var setDados=_dados[1];
+  useEffect(function(){
+    try{sbSelect(tabela,{login:user.login}).then(function(rows){
+      if(!rows||rows.length<2){setDados({tipo:'primeiro'});return;}
+      var anterior=rows[0];var scoreAnt=anterior.score||0;
+      var diff=score-scoreAnt;
+      var streak=0;
+      for(var i=0;i<rows.length;i++){if((rows[i].criticos||0)===0)streak++;else break;}
+      // item mais problemático da semana
+      var contagem={};
+      rows.slice(0,7).forEach(function(r){
+        var rs=r.resps||{};
+        Object.keys(rs).forEach(function(id){if(rs[id]==='nao')contagem[id]=(contagem[id]||0)+1;});
+      });
+      var topItem=Object.entries(contagem).sort(function(a,b){return b[1]-a[1];})[0];
+      setDados({tipo:'normal',diff:diff,scoreAnt:scoreAnt,streak:streak,topItem:topItem});
+    }).catch(function(){setDados(null);});}catch(e){setDados(null);}
+  },[]);
+  if(!dados)return null;
+  if(dados.tipo==='primeiro')return(
+    <div style={{margin:'0 0 12px',background:'var(--ok-bg)',border:'1.5px solid var(--ok-line)',borderRadius:12,padding:'12px 14px',display:'flex',alignItems:'center',gap:10}}>
+      <span style={{fontSize:20}}>🌟</span>
+      <div style={{fontSize:13,color:'var(--ok)',fontWeight:600}}>Primeiro turno registrado! Agora o sistema vai acompanhar sua evolução.</div>
+    </div>
+  );
+  var melhorou=dados.diff>0;var igualou=dados.diff===0;
+  return(
+    <div style={{margin:'0 0 12px',background:melhorou?'var(--ok-bg)':igualou?'var(--surface)':'var(--warn-bg)',border:'1.5px solid '+(melhorou?'var(--ok-line)':igualou?'var(--line)':'var(--warn-line)'),borderRadius:12,padding:'12px 14px'}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:dados.topItem?6:0}}>
+        <span style={{fontSize:20}}>{melhorou?'📈':igualou?'➡️':'📉'}</span>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:700,color:melhorou?'var(--ok)':igualou?'var(--ink2)':'var(--warn)'}}>
+            {melhorou?'Subiu '+dados.diff+' pontos em relação ao turno anterior!':igualou?'Mesmo score do turno anterior.':'Caiu '+Math.abs(dados.diff)+' pontos em relação ao turno anterior.'}
+          </div>
+          {dados.streak>1&&<div style={{fontSize:11,color:'var(--ok)',marginTop:2}}>🔥 {dados.streak} turnos seguidos sem item crítico</div>}
+        </div>
+        <div style={{textAlign:'right'}}>
+          <div style={{fontSize:11,color:'var(--ink3)',marginBottom:2}}>Anterior</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900,color:'var(--ink2)'}}>{dados.scoreAnt}</div>
+        </div>
+      </div>
+      {dados.topItem&&<div style={{fontSize:11,color:'var(--ink2)',background:'rgba(0,0,0,.04)',borderRadius:6,padding:'6px 8px',marginTop:4}}>⚠️ Item mais problemático da semana: apareceu {dados.topItem[1]}x como falha</div>}
     </div>
   );
 }
@@ -1893,6 +2595,7 @@ function SubgerChecklistScreen(props){
     var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
     var etapasConcluidas=SUBGER_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
     await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
+    await salvarPendencias(allItems,negs,resps,user,'manha','subger_checklists');
     await sendWebhook(SISTEMA+' — SUBGERÊNCIA MANHÃ\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Subgerência] '+statusKey.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
     setEnvScore(score);setEnviado(true);
@@ -1948,41 +2651,16 @@ function SubgerChecklistScreen(props){
     );
   }
 
-  /* ── Início ── */
+  /* ── Início ── (estado de entrada, imediatamente vai para checklist) */
   var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));return s&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
 
   if(screen==='inicio'){
-    return(
-      <div>
-        {subgerHdr}
-        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
-        <div className="card">
-          <div className="card-title">🌅 Subgerência — Turno da Manhã</div>
-          <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:14}}>
-            Checklist completo do turno da manhã. Dividido em <strong>3 etapas</strong> com {totalItems} itens no total.
-          </div>
-          <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            {SUBGER_ETAPAS.map(function(e){var done=e.itens.every(function(i){return resps[i.id];});var hasData=e.itens.some(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderRadius:'var(--r8)',border:'1.5px solid var(--line)',background:done?'var(--ok-bg)':'var(--surface)'}}><span style={{fontSize:22}}>{done?'✅':e.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:done?'var(--ok)':'var(--ink)'}}>{e.titulo}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>{e.itens.length} itens</div></div>{done&&<span style={{fontSize:11,fontWeight:700,color:'var(--ok)'}}>✓ OK</span>}{!done&&hasData&&<span style={{fontSize:11,fontWeight:700,color:'var(--warn)'}}>Em andamento</span>}</div>);})}
-          </div>
-        </div>
-        {rascunhoSalvo&&(
-          <div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}>
-            <span style={{fontSize:20,flexShrink:0}}>📝</span>
-            <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div>
-            <div style={{display:'flex',gap:6,flexShrink:0}}>
-              <button onClick={function(){setScreen('checklist');setEtapaIdx(0);}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button>
-              <button onClick={handleLimpar} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button>
-            </div>
-          </div>
-        )}
-        <div style={{padding:'12px 16px 0'}}>
-          <button onClick={function(){setHoraInicio(nowTime());setScreen('checklist');setEtapaIdx(0);setShowErr(false);}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8,boxShadow:'var(--sh-brand)'}}>
-            🌅 Iniciar Turno da Manhã →
-          </button>
-        </div>
-      </div>
-    );
+    /* Auto-avança para o checklist com a hora de início definida */
+    if(!horaInicio)setHoraInicio(nowTime());
+    setEtapaIdx(0);setShowErr(false);setScreen('checklist');
+    return null;
   }
+
 
   /* ── Checklist por etapa ── */
   return(
@@ -2019,13 +2697,13 @@ function SubgerChecklistScreen(props){
           <div className="fab">
             <div className="fab-inner">
               {etapaIdx>0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Voltar</button>}
-              {etapaIdx===0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
+              {etapaIdx===0&&<button onClick={function(){if(onBack)onBack();else handleVoltar();}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
               <button className="fab-send" onClick={handleAvancar} disabled={sending} style={{opacity:etapaOk?1:.45,background:etapaOk?'var(--brand)':'var(--ink3)',boxShadow:etapaOk?'var(--sh-brand)':'none',transition:'all .2s'}}>
                 {etapaOk
                   ?(etapaIdx<SUBGER_ETAPAS.length-1?'Próxima etapa →':'Finalizar turno 🚀')
                   :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
               </button>
-              <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('inicio');},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+              <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
             </div>
           </div>
         );
@@ -2405,6 +3083,7 @@ function NoiteSummaryScreen(props){
             <div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div>
           </div>
         </div>
+        <FeedbackCrescimento score={score} tabela="subger_noite_checklists" user={user}/>
         <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8,marginBottom:12}}>
           {[{icon:'📋',val:total,lbl:'Total'},{icon:'✅',val:total-falhas,lbl:'OK'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'⏳',val:pendencias,lbl:'Pendências'}].map(function(x){return(<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>);})}
         </div>
@@ -2472,7 +3151,7 @@ function NoiteChecklistScreen(props){
     setEnvScore(score);setEnviado(true);
     setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
-  function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('inicio');}
+  function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);if(onBack)onBack();}
   var noiteHdr=(
     <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
       <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
@@ -2503,26 +3182,13 @@ function NoiteChecklistScreen(props){
       </div>
     );
   }
-  var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));return s&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
   if(screen==='inicio'){
-    return(
-      <div>{noiteHdr}
-        <div className="day-badge"><div className="day-dot"/>{todayFmt()}</div>
-        <PendenciasBlock user={user}/>
-        <div className="card">
-          <div className="card-title">🌙 Subgerência — Turno da Noite</div>
-          <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:14}}>{NOITE_ETAPAS.length} etapas · {totalItems} itens · 17h–21h+</div>
-          <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            {NOITE_ETAPAS.map(function(e){var done=e.itens.every(function(i){return resps[i.id];});var hasData=e.itens.some(function(i){return resps[i.id];});return(<div key={e.id} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderRadius:'var(--r8)',border:'1.5px solid var(--line)',background:done?'var(--ok-bg)':'var(--surface)'}}><span style={{fontSize:22}}>{done?'✅':e.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:done?'var(--ok)':'var(--ink)'}}>{e.titulo}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>{e.horario} · {e.itens.length} itens</div></div>{done&&<span style={{fontSize:11,fontWeight:700,color:'var(--ok)'}}>✓ OK</span>}</div>);})}
-          </div>
-        </div>
-        {rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){setScreen('checklist');setEtapaIdx(0);}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={handleLimpar} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}
-        <div style={{padding:'12px 16px 0'}}>
-          <button onClick={function(){setHoraInicio(nowTime());setScreen('checklist');setEtapaIdx(0);setShowErr(false);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>🌙 Iniciar Turno da Noite →</button>
-        </div>
-      </div>
-    );
+    /* Hub já fez o briefing — avança direto para o checklist */
+    if(!horaInicio)setHoraInicio(nowTime());
+    setEtapaIdx(0);setShowErr(false);setScreen('checklist');
+    return null;
   }
+
   return(
     <div>
       <EnviadoPopup show={enviado} user={user} score={envScore} label='Subgerência Noite'/>
@@ -2552,13 +3218,13 @@ function NoiteChecklistScreen(props){
         return(
           <div className="fab"><div className="fab-inner">
             {etapaIdx>0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Voltar</button>}
-            {etapaIdx===0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
+            {etapaIdx===0&&<button onClick={function(){if(onBack)onBack();else handleVoltar();}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Início</button>}
             <button className="fab-send" onClick={handleAvancar} disabled={sending} style={{background:etapaOk?bgOk:'var(--ink3)',opacity:etapaOk?1:.45,boxShadow:etapaOk?'none':'none',transition:'all .2s'}}>
               {etapaOk
                 ?(etapaIdx<NOITE_ETAPAS.length-1?'Próxima etapa →':'Resumo final 🔒')
                 :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
             </button>
-            <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){setScreen('inicio');},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+            <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
           </div></div>
         );
       })()}
@@ -2570,36 +3236,63 @@ function NoiteChecklistScreen(props){
 function SubgerenteNoiteHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+  var _pendManha=useState(null);var pendManhaInfo=_pendManha[0];var setPendManhaInfo=_pendManha[1];
+  var SAVE_KEY=NOITE_SAVE_KEY_PREFIX+user.login;
+
+  useEffect(function(){
+    buscarPendenciasManhaParaNoite().then(function(info){setPendManhaInfo(info||{responsavel:'',score:0,pendencias:0,horario:''});}).catch(function(){});
+  },[]);
+
   if(mode==='checklist')return<NoiteChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
       <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
+          <div style={{display:'flex',gap:6}}><button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button><button className="hdr-btn" onClick={onLogout}>Sair</button></div>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="subger_noite_checklists" labelTurno={function(){return'🌙 Noite';}}/>
     </div>
   );
+
+  /* Rascunho */
+  var rascunhoPct=(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(SAVE_KEY));
+      if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
+      var total=NOITE_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0);
+      var respondidos=Object.keys(s.resps).length;
+      return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
+    }catch(e){return null;}
+  })();
+
+  var allNoiteItems=NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]); 
+  var etapasPreview=NOITE_ETAPAS.map(function(e){return{titulo:e.titulo,horario:e.horario||''};});
+
   return(
-    <div style={{minHeight:'100vh',background:'linear-gradient(145deg,#0a0020,#1a0050,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}>
-      <div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}>
-        <div style={{textAlign:'center',marginBottom:24}}>
-          <div style={{fontSize:46,marginBottom:8}}>🌙</div>
-          <div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div>
-          <div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Subgerência — Turno da Noite · CheckON</div>
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={function(){setMode('historico');}} className="hdr-btn">📈 Evolução</button>
+            <button className="hdr-btn" onClick={onLogout}>Sair</button>
+          </div>
         </div>
-        <button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid #7C3AED',background:'#F5F3FF',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
-          <span style={{fontSize:32}}>📋</span>
-          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'#7C3AED'}}>Checklist do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Noite · {NOITE_ETAPAS.length} etapas · {NOITE_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0)} itens · 17h–21h+</div></div>
-        </button>
-        <button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
-          <span style={{fontSize:28}}>📈</span>
-          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico, score e falhas frequentes</div></div>
-        </button>
-        <button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button>
       </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="subger_noite_checklists"
+        turnoLabel="Subgerência Noite"
+        cor="linear-gradient(135deg,#0a0020,#7C3AED)"
+        emoji="🌙"
+        itensCriticos={allNoiteItems}
+        etapas={etapasPreview}
+        rascunhoPct={rascunhoPct}
+        pendenciasManhaInfo={pendManhaInfo}
+        onIniciar={function(){setMode('checklist');}}
+      />
     </div>
   );
 }
@@ -2609,36 +3302,57 @@ function SubgerenteNoiteHub(props){
 function SubgerenteHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
+  var SAVE_KEY='subger_draft_'+user.login;
+
   if(mode==='checklist')return<SubgerChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
       <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
-          <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
+          <div style={{display:'flex',gap:6}}><button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button><button className="hdr-btn" onClick={onLogout}>Sair</button></div>
         </div>
       </div>
       <HistoricoPanel user={user} tabela="subger_checklists" labelTurno={function(){return'🌅 Manhã';}}/>
     </div>
   );
+
+  /* Calcula rascunho */
+  var rascunhoPct=(function(){
+    try{
+      var s=JSON.parse(localStorage.getItem(SAVE_KEY));
+      if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
+      var total=SUBGER_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0);
+      var respondidos=Object.keys(s.resps).length;
+      return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
+    }catch(e){return null;}
+  })();
+
+  var etapasPreview=SUBGER_ETAPAS.map(function(e){return{titulo:e.titulo,horario:e.horario||''};});
+  var allSubgerItems=SUBGER_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]); 
+
   return(
-    <div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}>
-      <div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}>
-        <div style={{textAlign:'center',marginBottom:24}}>
-          <div style={{fontSize:46,marginBottom:8}}>🌅</div>
-          <div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div>
-          <div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>Subgerência — Turno da Manhã · CheckON</div>
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Manhã</div></div>
+          <div style={{display:'flex',gap:6}}>
+            <button onClick={function(){setMode('historico');}} className="hdr-btn">📈 Evolução</button>
+            <button className="hdr-btn" onClick={onLogout}>Sair</button>
+          </div>
         </div>
-        <button onClick={function(){setMode('checklist');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
-          <span style={{fontSize:32}}>📋</span>
-          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Checklist do Turno</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Manhã · {SUBGER_ETAPAS.length} etapas · {SUBGER_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0)} itens · 9h–13h</div></div>
-        </button>
-        <button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}>
-          <span style={{fontSize:28}}>📈</span>
-          <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico, score e falhas frequentes</div></div>
-        </button>
-        <button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button>
       </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="subger_checklists"
+        turnoLabel="Subgerência Manhã"
+        cor="var(--brand)"
+        emoji="🌅"
+        itensCriticos={allSubgerItems}
+        etapas={etapasPreview}
+        rascunhoPct={rascunhoPct}
+        onIniciar={function(){setMode('checklist');}}
+      />
     </div>
   );
 }
