@@ -554,16 +554,32 @@ function DPNaoForm(props){
 function DPBlocoItem(props){
   var item=props.item;var resp=props.resp;var neg=props.neg;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
   var _f=useState(false);var flash=_f[0];var setFlash=_f[1];
-  function handleNao(){if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}onAns(item.id,'nao');}
+  var _open=useState(resp==='nao');var negOpen=_open[0];var setNegOpen=_open[1];
+
+  function handleSim(){
+    onAns(item.id,'sim');
+    /* auto-recolhe após marcar sim */
+    setNegOpen(false);
+  }
+  function handleNao(){
+    if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}
+    onAns(item.id,'nao');
+    setNegOpen(true);
+  }
   return(
     <div className={'chk-item lc'+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}>
       <div className="chk-title">{item.texto}</div>
       <div className="ans-row">
-        <button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={function(){onAns(item.id,'sim');}}><span>{resp==='sim'?'✓':'○'}</span> Sim</button>
+        <button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={handleSim}><span>{resp==='sim'?'✓':'○'}</span> Sim</button>
         <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
       </div>
       {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
-      {resp==='nao'&&<DPNaoForm data={neg} textoItem={item.texto} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>}
+      {resp==='nao'&&negOpen&&<DPNaoForm data={neg} textoItem={item.texto} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>}
+      {resp==='nao'&&!negOpen&&(
+        <div onClick={function(){setNegOpen(true);}} style={{marginTop:8,padding:'8px 12px',background:'var(--danger-bg)',borderRadius:'var(--r8)',fontSize:12,color:'var(--danger)',fontWeight:600,cursor:'pointer',display:'flex',alignItems:'center',gap:6}}>
+          <span>🔴</span> Motivo registrado — toque para editar
+        </div>
+      )}
     </div>
   );
 }
