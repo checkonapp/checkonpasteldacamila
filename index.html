@@ -39,8 +39,6 @@ button{cursor:pointer;border:none;outline:none;background:transparent;-webkit-ta
 textarea,select,input{font-family:inherit}
 a{color:inherit}
 img{display:block;max-width:100%}
-
-/* LOGIN */
 .login-bg{min-height:100vh;background:#EA1D2C;display:flex;align-items:center;justify-content:center;padding:20px;}
 .login-wrapper{width:100%;max-width:340px;animation:loginWrapIn .7s cubic-bezier(.34,1.4,.64,1) both;}
 @keyframes loginWrapIn{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
@@ -68,8 +66,6 @@ img{display:block;max-width:100%}
 .login-alert{background:#FEE2E2;border:1px solid #FECACA;color:#B91C1C;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600;margin-bottom:11px;text-align:center;}
 .login-footer-txt{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.3px;}
 @media(min-width:640px){.login-wrapper{max-width:320px}.login-card{border-radius:22px}}
-
-/* SISTEMA */
 .hdr{background:var(--brand);color:#fff;height:56px;padding:0 16px;display:flex;align-items:center;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(180,0,20,.28)}
 .hdr-inner{width:100%;max-width:var(--content-max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .hdr-right{display:flex;align-items:center;gap:6px}
@@ -188,11 +184,6 @@ img{display:block;max-width:100%}
 .kpi-ico{position:absolute;right:12px;top:12px;font-size:20px;opacity:.12}
 .chart-card{background:var(--surface);border-radius:var(--r12);border:1px solid var(--line);box-shadow:var(--sh1);padding:16px;margin:0 16px 12px}
 .chart-t{font-family:'Sora',sans-serif;font-size:13px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;color:var(--ink)}
-.bar-chart{display:flex;align-items:flex-end;gap:4px;height:90px;padding-top:6px}
-.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%}
-.bar-lbl{font-size:8px;font-weight:600;color:var(--ink3);text-align:center}
-.bar-val{font-size:8px;font-weight:700;color:var(--ink2)}
-.bar-fill{border-radius:4px 4px 0 0;min-height:2px;width:100%}
 .rank-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
 .rank-row:last-child{border-bottom:none}
 .rank-pos{font-family:'Sora',sans-serif;font-size:15px;font-weight:900;width:24px;text-align:center}
@@ -249,18 +240,16 @@ img{display:block;max-width:100%}
 <script type="text/babel">
 const {useState,useEffect,useMemo,useRef}=React;
 
-/* ═══ SUPABASE ═══ */
 const SUPABASE_URL='https://crmeztihgrwnpoovzpqk.supabase.co';
 const SUPABASE_KEY='sb_publishable_zHkABW_ODWxYqIDbcon1kQ_7P5G86ej';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-/* ═══ CONSTANTS ═══ */
 const SISTEMA='CheckON Pastel da Camilla';
 const WEBHOOK='https://hook.us2.make.com/pz24jw68dgh7c3realu1locfwlq1ny67';
 const WA_GROUP='https://chat.whatsapp.com/G0erwUW5npX4ejKNcU3lT5';
 const USERS_KEY='konclui_users';
 const SESSION_KEY='konclui_session';
-const VERSION='2026.11';
+const VERSION='2026.12';
 const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab';
 
 (function(){
@@ -268,7 +257,6 @@ const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab
   if(sv!==VERSION){localStorage.removeItem(SESSION_KEY);localStorage.setItem('konclui_version',VERSION);}
 })();
 
-/* ═══ USERS (ainda local — simples e seguro) ═══ */
 const DEFAULT_USERS={
   gabriela:{name:'Gabriela',login:'gabriela',role:'subgerente',pwd:PWD_2026,first:false,color:'#E8001C'},
   vitoria:{name:'Vitória',login:'vitoria',role:'subgerente',pwd:PWD_2026,first:false,color:'#7C3AED'},
@@ -287,7 +275,6 @@ function nowTime(){return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',
 function todayFmt(){return new Date().toLocaleDateString('pt-BR');}
 function todayISO(){return new Date().toISOString().slice(0,10);}
 
-/* ═══ SUPABASE HELPERS ═══ */
 async function sbInsert(table,data){
   try{const{error}=await sb.from(table).insert(data);if(error)console.error('SB insert error:',error);return !error;}catch(e){console.error('SB error:',e);return false;}
 }
@@ -301,7 +288,6 @@ async function sbSelect(table,filters){
   }catch(e){console.error('SB error:',e);return[];}
 }
 
-/* ═══ WEBHOOK ═══ */
 async function sendWebhook(txt,ep){
   try{
     var body={texto:txt,timestamp:new Date().toISOString(),sistema:SISTEMA,email_destino:'pasteldacamilasuporte@gmail.com',email_assunto:(ep&&ep.assunto)||SISTEMA+' – Relatório',email_html:(ep&&ep.html)||txt.replace(/\n/g,'<br>'),email_texto:txt};
@@ -310,15 +296,13 @@ async function sendWebhook(txt,ep){
   }catch(e){return false;}
 }
 
-/* ═══ TOAST ═══ */
 function Toast(props){return React.createElement('div',{className:'toast'+(props.show?' on':'')},props.msg);}
 function useToast(){
   var _s=useState({show:false,msg:''});var t=_s[0],sT=_s[1];var r=useRef();
-  function show(msg){sT({show:true,msg:msg});clearTimeout(r.current);r.current=setTimeout(function(){sT({show:false,msg:''}); },2500);}
+  function show(msg){sT({show:true,msg:msg});clearTimeout(r.current);r.current=setTimeout(function(){sT({show:false,msg:''});},2500);}
   return[t,show];
 }
 
-/* ═══ DADOS CHECKLIST OPERACIONAL ═══ */
 var GER_ITEMS=[
   {id:'g1',bloco:'Visão Geral do Turno',e:'📊',n:'critico',ti:'Fluxo de caixa do turno está dentro do esperado',d:'Conferir entradas e saídas. Qualquer divergência deve ser registrada imediatamente.'},
   {id:'g2',bloco:'Visão Geral do Turno',e:'📊',n:'critico',ti:'Metas de venda do turno estão sendo atingidas',d:'Comparar ticket médio e volume de pedidos com a meta diária.'},
@@ -369,7 +353,6 @@ var ITEMS=[
 
 var SEC_MANHA=['Abertura','Produção','Operação','Passagem'];
 var SEC_TARDE=['Abertura','Produção','Operação','Fechamento'];
-var DAYS=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
 
 function resolveDesc(item,ctx){if(typeof item.d==='function')return item.d(ctx||{});return item.d||'';}
 function filterItems(allItems,turno,ctx){
@@ -381,7 +364,6 @@ function filterItems(allItems,turno,ctx){
   }).map(function(item){return Object.assign({},item,{d:resolveDesc(item,ctx)});});
 }
 
-/* ═══ DADOS DP ═══ */
 var DP_BLOCOS_DATA=[
   {id:'dp_b1',titulo:'Controle Diário do DP',itens:[
     {id:'dp_b1_i1',texto:'Pendências do dia foram verificadas e priorizadas'},
@@ -486,11 +468,9 @@ function validateDPNeg(neg){
   return true;
 }
 
-/* ═══ AUSÊNCIAS ═══ */
 var NUMEROS_WHATSAPP={viviane:'5511945461633'};
 function buildMsgCobranca(nome,checklist){var tipo=checklist.toLowerCase();var ref=tipo.indexOf('semanal')>=0?'dessa semana':tipo.indexOf('mensal')>=0?'desse mês':'de hoje';return encodeURIComponent('Oi '+nome+'! A Gloria ainda nao recebeu seu checklist '+ref+'. Consegue preencher? -- CheckON Pastel da Camilla');}
 
-/* ═══ COMPONENTES SHARED ═══ */
 function SharedNaoForm(props){
   var data=props.data||{};var showErr=props.showErr;
   var RESPONSAVEIS=props.responsaveis||['Bruna','Camila','Derik','Viviane','Gestão','Eu mesmo'];
@@ -550,22 +530,39 @@ function DPNaoForm(props){
   );
 }
 
-/* ═══ DP CHECKLIST COMPONENTS ═══ */
+/* ═══ DP CHECKLIST COMPONENTS — COM AUTO-RECOLHIMENTO ═══ */
 function DPBlocoItem(props){
   var item=props.item;var resp=props.resp;var neg=props.neg;var onAns=props.onAns;var onNeg=props.onNeg;var showErr=props.showErr;
   var _f=useState(false);var flash=_f[0];var setFlash=_f[1];
-  var _open=useState(resp==='nao');var negOpen=_open[0];var setNegOpen=_open[1];
+  var _open=useState(false);var open=_open[0];var setOpen=_open[1];
 
-  function handleSim(){
-    onAns(item.id,'sim');
-    /* auto-recolhe após marcar sim */
-    setNegOpen(false);
-  }
+  function handleSim(){onAns(item.id,'sim');setOpen(false);}
   function handleNao(){
     if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}
-    onAns(item.id,'nao');
-    setNegOpen(true);
+    onAns(item.id,'nao');setOpen(true);
   }
+
+  /* Estado recolhido */
+  if(resp&&!open){
+    var isSim=resp==='sim';
+    var negLabel=!isSim&&neg?(neg.ocorrencia||'')+(neg.acao?' · '+({'resolvi':'✅ Resolvido','escalei':'📲 Escalado','pendente':'🕐 Pendente'})[neg.acao]:''):'';
+    return(
+      <div className="chk-item lc" style={{cursor:'pointer',padding:'10px 16px'}} onClick={function(){setOpen(true);}}>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={{flexShrink:0,width:28,height:28,borderRadius:'50%',background:isSim?'var(--ok)':'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>{isSim?'✓':'✕'}</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:13,color:'var(--ink)',lineHeight:1.4}}>{item.texto}</div>
+            {!isSim&&negLabel&&<div style={{fontSize:11,color:'var(--danger)',marginTop:2,fontWeight:600}}>{negLabel}</div>}
+            {!isSim&&!validateDPNeg(neg)&&showErr&&<div style={{fontSize:10,color:'var(--danger)',marginTop:2,fontWeight:700}}>⚠ Complete o registro</div>}
+          </div>
+          <span style={{flexShrink:0,fontSize:10,fontWeight:700,borderRadius:99,padding:'2px 9px',background:isSim?'var(--ok-bg)':'var(--danger-bg)',color:isSim?'var(--ok)':'var(--danger)'}}>{isSim?'SIM':'NÃO'}</span>
+          <span style={{fontSize:11,color:'var(--ink4)'}}>✎</span>
+        </div>
+      </div>
+    );
+  }
+
+  /* Estado expandido */
   return(
     <div className={'chk-item lc'+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}>
       <div className="chk-title">{item.texto}</div>
@@ -574,10 +571,14 @@ function DPBlocoItem(props){
         <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
       </div>
       {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
-      {resp==='nao'&&negOpen&&<DPNaoForm data={neg} textoItem={item.texto} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>}
-      {resp==='nao'&&!negOpen&&(
-        <div onClick={function(){setNegOpen(true);}} style={{marginTop:8,padding:'8px 12px',background:'var(--danger-bg)',borderRadius:'var(--r8)',fontSize:12,color:'var(--danger)',fontWeight:600,cursor:'pointer',display:'flex',alignItems:'center',gap:6}}>
-          <span>🔴</span> Motivo registrado — toque para editar
+      {resp==='nao'&&(
+        <div>
+          <DPNaoForm data={neg} textoItem={item.texto} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>
+          {validateDPNeg(neg)&&(
+            <button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>
+              ✓ Confirmar e recolher
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -603,7 +604,6 @@ function DPBlocoAcc(props){
   );
 }
 
-/* ═══ DP SUMMARY ═══ */
 function DPSummaryScreen(props){
   var resps=props.resps;var negs=props.negs;var user=props.user;var onNovo=props.onNovo;
   var freq=props.freq||'diario';var tempoTotal=props.tempoTotal||'';var sugestao=props.sugestao||null;
@@ -623,7 +623,7 @@ function DPSummaryScreen(props){
   var bloqueiosSistema=falhasItens.filter(function(i){return detectarCategoriaDP(i.texto)==='sistema';});
 
   function buildTextGrupo(){
-    var data=todayFmt();var titulo=freqCfg.titulo;var nome=user.name;var linhas=[];
+    var data=todayFmt();var nome=user.name;var linhas=[];
     var paraCAMILA=[];var paraOUTREM=[];var pendentes=[];var resolvidosNaHora=0;
     falhasItens.forEach(function(it){
       var n=negs[it.id]||{};
@@ -632,7 +632,7 @@ function DPSummaryScreen(props){
       else if(n.acao==='pendente'){pendentes.push({motivo:n.ocorrencia||'',detalhe:n.detalhe||''});}
     });
     var caso=paraCAMILA.length>0?1:(falhas>0?2:3);
-    linhas.push('🤖 Glória · '+data+' · '+titulo);linhas.push('');
+    linhas.push('🤖 Glória · '+data+' · '+freqCfg.titulo);linhas.push('');
     if(caso===3){linhas.push(nome+' fechou a rotina. Tudo em ordem,');linhas.push(total+' de '+total+' itens. Score '+score+'.');linhas.push('');linhas.push('Nada pra fazer aqui. ✅');}
     else if(caso===1){
       linhas.push(nome+' fechou. Score '+score+', '+falhas+' aberto'+(falhas>1?'s':'')+'.');linhas.push('');linhas.push('Tem algo que precisa de você:');
@@ -723,7 +723,6 @@ function DPSummaryScreen(props){
   );
 }
 
-/* ═══ DP CHECKLIST SCREEN ═══ */
 function DPSugestaoForm(props){
   var data=props.data||{};var aberto=props.aberto;var onAbrir=props.onAbrir;var onFechar=props.onFechar;
   function set(k,v){props.onChange(Object.assign({},data,{[k]:v}));}
@@ -751,7 +750,7 @@ function DPChecklistScreen(props){
   var allItems=useMemo(function(){return blocos.reduce(function(acc,b){return acc.concat(b.itens);},[]);},[freq]);
 
   useEffect(function(){
-    try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s&&s.resps){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);setScreen('checklist');}}catch(e){}
+    try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s&&s.resps){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);/* tela sempre começa em freq — banner de rascunho avisa o usuario */}}catch(e){}
   },[]);
   useEffect(function(){
     if(screen==='checklist'){try{localStorage.setItem(DP_SAVE_KEY,JSON.stringify({freq:freq,resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}}
@@ -773,21 +772,8 @@ function DPChecklistScreen(props){
     var statusGeral=falhas===0?'ok':falhas<=2?'atencao':'critico';
     var score=Math.max(0,Math.round(100-(falhas/total*60)));
     var blocosConcluidos=blocos.filter(function(b){return b.itens.every(function(i){return resps[i.id];});}).length;
-
-    /* ── SALVA NO SUPABASE ── */
-    await sbInsert('dp_checklists',{
-      login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,
-      data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,
-      score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,
-      status:statusGeral,resps:resps,negs:negs,
-      sugestao:(sugestao&&sugestao.atividade?sugestao:{})
-    });
-
-    /* Sugestão separada */
-    if(sugestao&&sugestao.atividade){
-      await sbInsert('dp_sugestoes',{login:user.login,nome:user.name,checklist:freqCfg.titulo,freq:freq,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),sugestao:sugestao});
-    }
-
+    await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
+    if(sugestao&&sugestao.atividade){await sbInsert('dp_sugestoes',{login:user.login,nome:user.name,checklist:freqCfg.titulo,freq:freq,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),sugestao:sugestao});}
     await sendWebhook(SISTEMA+' — '+freqCfg.titulo+'\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON DP] '+statusGeral.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}
     setSending(false);setScreen('summary');
@@ -814,7 +800,6 @@ function DPHub(props){
   return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>📋</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>DP — Departamento Pessoal · CheckON</div></div><button onClick={function(){setMode('dp');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:32}}>📋</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Preencher Checklist</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Diário · Semanal · Mensal</div></div></button><button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
 }
 
-/* ═══ GER CHECKLIST ═══ */
 function GerNaoForm(props){return<SharedNaoForm data={props.data} onChange={props.onChange} showErr={props.showErr} responsaveis={['Bruna','Camila','Derik','Vinicius','Débora','Cíntia','Viviane','Manutenção','Eu mesmo']}/>;}
 
 function GerChkItem(props){
@@ -860,7 +845,7 @@ function GerChecklistScreen(props){
   var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
   var _tempo=useState('');var tempoTotal=_tempo[0];var setTempoTotal=_tempo[1];
   function calcTempo(inicio){if(!inicio)return '';try{var parts=inicio.split(':');var now=new Date();var then=new Date();then.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);var diff=Math.round((now-then)/60000);if(diff<0||diff>480)return '';var h=Math.floor(diff/60);var m=diff%60;return h>0?h+'h '+(m>0?m+'min':''):(m+'min');}catch(e){return '';}}
-  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(GER_SAVE_KEY));if(s&&s.ident){setIdent(s.ident);setTurno(s.ident.turno);setResps(s.resps||{});setNegs(s.negs||{});setScreen('checklist');}}catch(e){}},[]);
+  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(GER_SAVE_KEY));if(s&&s.ident){setIdent(s.ident);setTurno(s.ident.turno);setResps(s.resps||{});setNegs(s.negs||{});/* tela sempre começa em entry — nao restaura screen */}}catch(e){}},[]);
   useEffect(function(){if(!ident)return;try{localStorage.setItem(GER_SAVE_KEY,JSON.stringify({ident:ident,resps:resps,negs:negs}));}catch(e){}},[ident,resps,negs]);
   function onAns(id,val){setResps(function(r){return Object.assign({},r,{[id]:val});});if(val==='sim'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}}
   function onNeg(id,d){setNegs(function(n){return Object.assign({},n,{[id]:d});});}
@@ -875,15 +860,7 @@ function GerChecklistScreen(props){
     var statusGeral=falhas===0?'OK':falhas<=2?'Atenção':'Crítico';
     var score=Math.max(0,Math.round(100-(falhas/total*60)));
     var tempo=calcTempo(ident&&ident.horaInicio);setTempoTotal(tempo);
-
-    /* ── SALVA NO SUPABASE ── */
-    await sbInsert('ger_checklists',{
-      login:user.login,user_name:user.name,turno:ident&&ident.turno,
-      data:todayISO(),data_fmt:todayFmt(),hora:hora,tempo_total:tempo,
-      score:score,total:total,falhas:falhas,criticos:criticos,
-      status:statusGeral.toLowerCase(),resps:resps,negs:negs
-    });
-
+    await sbInsert('ger_checklists',{login:user.login,user_name:user.name,turno:ident&&ident.turno,data:todayISO(),data_fmt:todayFmt(),hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:statusGeral.toLowerCase(),resps:resps,negs:negs});
     setIdent(function(prev){return Object.assign({},prev,{horaFim:hora});});
     await sendWebhook(SISTEMA+' — GERÊNCIA\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral+' · Score: '+score+'/100',{assunto:'[CheckON Gerência] '+statusGeral+' – '+user.name});
     try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}
@@ -903,8 +880,11 @@ function LegacyChkItem(props){
   var lvlCls={critico:'lv-c',importante:'lv-i',rotina:'lv-r'}[item.n]||'lv-r';
   var itemCls={critico:'lc',importante:'li',rotina:'lr'}[item.n]||'lr';
   var _f=useState(false);var flash=_f[0];var setFlash=_f[1];
-  function handleNao(){if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}onAns(item.id,'nao');}
-  return(<div className={'chk-item '+itemCls+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}><span className={'lvl '+lvlCls}>{item.n}</span><div className="chk-title">{item.ti}</div>{item.d&&<div className="chk-desc">{item.d}</div>}<div className="ans-row"><button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={function(){onAns(item.id,'sim');}}><span>{resp==='sim'?'✓':'○'}</span> Sim</button><button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button></div>{!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}</div>);
+  var _open=useState(false);var open=_open[0];var setOpen=_open[1];
+  function handleSim(){onAns(item.id,'sim');setOpen(false);}
+  function handleNao(){if(resp!=='nao'){setFlash(true);setTimeout(function(){setFlash(false);},500);if(navigator.vibrate)navigator.vibrate([60,30,60]);}onAns(item.id,'nao');setOpen(false);}
+  if(resp&&!open){var isSim=resp==='sim';return(<div className={'chk-item '+itemCls} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',padding:'10px 16px'}} onClick={function(){setOpen(true);}}><span style={{flexShrink:0,width:28,height:28,borderRadius:'50%',background:isSim?'var(--ok)':'var(--brand)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:800}}>{isSim?'✓':'✕'}</span><div style={{flex:1,fontSize:13,color:'var(--ink)',lineHeight:1.4}}>{item.ti}</div><span style={{flexShrink:0,fontSize:10,fontWeight:700,borderRadius:99,padding:'2px 9px',background:isSim?'var(--ok-bg)':'var(--danger-bg)',color:isSim?'var(--ok)':'var(--danger)'}}>{isSim?'SIM':'NÃO'}</span><span style={{fontSize:11,color:'var(--ink4)'}}>✎</span></div>);}
+  return(<div className={'chk-item '+itemCls+(resp==='nao'?' nao-sel':'')+(flash?' nao-flash':'')}><span className={'lvl '+lvlCls}>{item.n}</span><div className="chk-title">{item.ti}</div>{item.d&&<div className="chk-desc">{item.d}</div>}<div className="ans-row"><button className={'ans-sim'+(resp==='sim'?' sel':'')} onClick={handleSim}><span>{resp==='sim'?'✓':'○'}</span> Sim</button><button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button></div>{!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}</div>);
 }
 
 function LegacySecAcc(props){
@@ -930,16 +910,7 @@ function LegacySummaryScreen(props){
   var turnoLabel=ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   var feedback=score===100?{emoji:'🏆',titulo:'Perfeito! Zero falhas.',cor:'#16A34A',bg:'#F0FDF4',border:'#BBF7D0'}:score>=75?{emoji:'💪',titulo:'Bom turno!',cor:'#D97706',bg:'#FFFBEB',border:'#FDE68A'}:{emoji:'⚠️',titulo:'Turno com problemas.',cor:'#DC2626',bg:'#FEF2F2',border:'#FECACA'};
   function handleGrupo(){window.location.href=WA_GROUP;}
-  function handleCopy(){
-    var falhasItems=items.filter(function(i){return resps[i.id]==='nao';});
-    var lines=[SISTEMA,'━━━━━━━━━━',feedback.emoji+' Score: '+score+'/100',nome+' · '+turnoLabel+' · '+ident.data];
-    if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);
-    lines.push('━━━━━━━━━━','✅ Feitos: '+items.filter(function(i){return resps[i.id]==='sim';}).length+'/'+total+'  ❌ Falhas: '+falhas);
-    if(falhasItems.length>0){lines.push('','🔴 NÃO FEITO');falhasItems.forEach(function(item,i){lines.push((i+1)+'. '+item.ti);});}
-    lines.push('━━━━━━━━━━','_'+SISTEMA+'_');
-    var txt=lines.join('\n');
-    if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}
-  }
+  function handleCopy(){var falhasItems=items.filter(function(i){return resps[i.id]==='nao';});var lines=[SISTEMA,'━━━━━━━━━━',feedback.emoji+' Score: '+score+'/100',nome+' · '+turnoLabel+' · '+ident.data];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━','✅ Feitos: '+items.filter(function(i){return resps[i.id]==='sim';}).length+'/'+total+'  ❌ Falhas: '+falhas);if(falhasItems.length>0){lines.push('','🔴 NÃO FEITO');falhasItems.forEach(function(item,i){lines.push((i+1)+'. '+item.ti);});}lines.push('━━━━━━━━━━','_'+SISTEMA+'_');var txt=lines.join('\n');if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}}
   return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'linear-gradient(135deg,#1A0005,#EA1D2C)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:11,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno finalizado ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{nome} · {turnoLabel} · {ident.data}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:feedback.bg,border:'1.5px solid '+feedback.border,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{feedback.emoji}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:feedback.cor}}>{feedback.titulo}</div>{tempoTotal&&<div style={{fontSize:11,color:feedback.cor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:feedback.cor}}>{score}</div><div style={{fontSize:9,color:feedback.cor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>{[{icon:'✅',val:items.filter(function(i){return resps[i.id]==='sim';}).length,lbl:'Feitos'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'🔴',val:criticos,lbl:'Críticos'}].map(function(x){return<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>;})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><button onClick={handleGrupo} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button></div></div>);
 }
 
@@ -959,7 +930,7 @@ function ChecklistScreen(props){
   var _toast=useToast();var toast=_toast[0];var showToast=_toast[1];
   var _tempo=useState('');var tempoTotal=_tempo[0];var setTempoTotal=_tempo[1];
   function calcTempo(inicio){if(!inicio)return '';try{var parts=inicio.split(':');var now=new Date();var then=new Date();then.setHours(parseInt(parts[0]),parseInt(parts[1]),0,0);var diff=Math.round((now-then)/60000);if(diff<0||diff>480)return '';var h=Math.floor(diff/60);var m=diff%60;return h>0?h+'h '+(m>0?m+'min':''):(m+'min');}catch(e){return '';}}
-  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(CK_USER_KEY));if(s&&s.ident){setIdent(s.ident);setResps(s.resps||{});setNegs(s.negs||{});setFF(s.ff||{obsGerais:''});setScreen('checklist');}}catch(e){}},[]);
+  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(CK_USER_KEY));if(s&&s.ident){setIdent(s.ident);setResps(s.resps||{});setNegs(s.negs||{});setFF(s.ff||{obsGerais:''});/* tela sempre começa em entry — nao restaura screen */}}catch(e){}},[]);
   useEffect(function(){if(!ident)return;try{localStorage.setItem(CK_USER_KEY,JSON.stringify({ident:ident,resps:resps,negs:negs,ff:ff}));}catch(e){}},[ident,resps,negs,ff]);
   var items=useMemo(function(){return ident?filterItems(ITEMS,ident.turno==='manha'?'manha':'tarde',ctx):[];},[ident,ctx]);
   var secs=useMemo(function(){return ident&&ident.turno==='manha'?SEC_MANHA:SEC_TARDE;},[ident]);
@@ -967,7 +938,6 @@ function ChecklistScreen(props){
   var statusInfo=useMemo(function(){if(stats.cr>0)return{txt:'Crítico',cls:'s-err'};if(stats.fl>0)return{txt:'Com Ressalvas',cls:'s-warn'};if(stats.pend>0)return{txt:'Em Andamento',cls:'s-warn'};return{txt:'Conforme',cls:'s-ok'};},[stats]);
   function onAns(id,val){setResps(function(r){return Object.assign({},r,{[id]:val});});if(val!=='nao'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}}
   function validate(){var errs=[];items.forEach(function(item){if(!resps[item.id])errs.push('"'+item.ti+'" — sem resposta');});return errs;}
-
   async function handleEnviar(nomeFromOcc,relato){
     var nome=nomeFromOcc||user.name;setNomeDecl(nome);
     var errs=validate();setValErrs(errs);if(errs.length>0){setScreen('checklist');setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});return;}
@@ -977,20 +947,11 @@ function ChecklistScreen(props){
     var score=Math.max(0,Math.round(100-(falhas/total*40)-(criticos*10)));
     var status=criticos>0?'critico':falhas>0?'ressalvas':'conforme';
     setSending(true);
-
-    /* ── SALVA NO SUPABASE ── */
-    await sbInsert('checklists',{
-      login:user.login,user_name:nome,turno:ident.turno,
-      data:todayISO(),data_fmt:ident.data,hora:hora,tempo_total:tempo,
-      score:score,total:total,falhas:falhas,criticos:criticos,
-      status:status,resps:resps,negs:negs,ff:{obsGerais:ff.obsGerais,relato:relato||''}
-    });
-
+    await sbInsert('checklists',{login:user.login,user_name:nome,turno:ident.turno,data:todayISO(),data_fmt:ident.data,hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:status,resps:resps,negs:negs,ff:{obsGerais:ff.obsGerais,relato:relato||''}});
     var tLabel=ident.turno==='manha'?'Manhã':'Tarde/Noite';
     await sendWebhook(SISTEMA+'\n'+nome+' · '+tLabel+' · '+ident.data+(tempo?' · ⏱ '+tempo:'')+'\nScore: '+score+'/100',{assunto:'[CheckON] '+status+' – '+nome});
     setSending(false);try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setScreen('summary');
   }
-
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setIdent(null);setResps({});setNegs({});setFF({obsGerais:''});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}
   var tLabel=ident&&ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   var ctxReady=ctx.delivery!==''&&ctx.novato!==''&&ctx.falta!==''&&ctx.troco!=='';
@@ -1000,7 +961,7 @@ function ChecklistScreen(props){
   return(<div>{sending&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando no Supabase...</div></div></div>}<Toast msg={toast.msg} show={toast.show}/><div className="hdr"><div className="hdr-inner"><div><div style={{fontSize:9,fontWeight:600,letterSpacing:2,opacity:.6,textTransform:'uppercase'}}>CheckON</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>{tLabel}</div></div><div className="hdr-right"><div className="hdr-chip">👤 {user.name}</div>{onBack&&<button className="hdr-btn" onClick={onBack}>← Hub</button>}<button className="hdr-btn" onClick={onLogout}>Sair</button></div></div></div><div className="status-panel"><div><span className={'s-badge '+statusInfo.cls}>{statusInfo.txt}</span></div><div style={{display:'flex',gap:16}}><div><div className="sv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="sl">Falhas</div></div><div><div className="sv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="sl">Críticos</div></div><div><div className="sv" style={{color:'#aaa'}}>{stats.pend}</div><div className="sl">Pendentes</div></div></div></div><div className="prog-card"><div className="prog-top"><div className="prog-lbl">Progresso</div><div className="prog-pct">{stats.pct}%</div></div><div className="prog-track"><div className="prog-fill" style={{width:stats.pct+'%'}}/></div><div className="prog-stats"><div><div className="pv" style={{color:'var(--ok)'}}>{stats.resp}</div><div className="pl">Resp.</div></div><div><div className="pv" style={{color:'var(--ink3)'}}>{stats.pend}</div><div className="pl">Pend.</div></div><div><div className="pv" style={{color:'var(--brand)'}}>{stats.fl}</div><div className="pl">Falhas</div></div><div><div className="pv" style={{color:'var(--warn)'}}>{stats.cr}</div><div className="pl">Críticos</div></div></div></div>{showErr&&valErrs.length>0&&<div className="val-wrap"><div className="val-title">🚫 Corrija ({valErrs.length})</div>{valErrs.slice(0,5).map(function(e,i){return<div key={i} className="val-item">{e}</div>;})}</div>}{secs.map(function(s){var its=items.filter(function(i){return i.s===s;});if(!its.length)return null;return<LegacySecAcc key={s} secao={s} emoji={its[0]&&its[0].e||'📋'} items={its} resps={resps} onAns={onAns} showErr={showErr}/>;})}<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,marginBottom:10}}>📝 Ocorrências do turno</div><textarea value={ff.obsGerais||''} onChange={function(e){setFF(function(f){return Object.assign({},f,{obsGerais:e.target.value});});}} placeholder="Descreva ocorrências relevantes... (opcional)" style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:8,padding:'9px 11px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:72,lineHeight:1.5,fontFamily:'inherit'}}/></div><div className="fab"><div className="fab-inner"><button className="fab-save" onClick={function(){showToast('✅ Salvo!');}}>💾 Salvar</button><button className="fab-send" onClick={function(){var errs=items.filter(function(i){return !resps[i.id];});if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Responda todos os itens');return;}setScreen('ocorrencias');}} disabled={sending}>🚀 Finalizar</button><button className="fab-del" onClick={handleLimpar}>🗑</button></div></div></div>);
 }
 
-/* ═══ CEO DASHBOARD — LÊ DO SUPABASE ═══ */
+/* ═══ CEO DASHBOARD ═══ */
 function CEODashboard(props){
   var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
   var _t=useState('overview');var tab=_t[0];var setTab=_t[1];
@@ -1011,40 +972,33 @@ function CEODashboard(props){
   var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
   var _dpDetail=useState(null);var dpDetail=_dpDetail[0];var setDpDetail=_dpDetail[1];
 
-  /* Carrega dados do Supabase ao abrir cada aba */
   useEffect(function(){
     async function load(){
       setLoading(true);
-      if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){
-        var d=await sbSelect('checklists');setCkData(d);}
-      if(tab==='overview'||tab==='gerencia'){
-        var g=await sbSelect('ger_checklists');setGerData(g);}
-      if(tab==='overview'||tab==='dp'){
-        var dp=await sbSelect('dp_checklists');setDpData(dp);
-        var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
+      if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){var d=await sbSelect('checklists');setCkData(d);}
+      if(tab==='overview'||tab==='gerencia'){var g=await sbSelect('ger_checklists');setGerData(g);}
+      if(tab==='overview'||tab==='dp'){var dp=await sbSelect('dp_checklists');setDpData(dp);var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
       setLoading(false);
     }
     load();
   },[tab]);
 
-  var kpi=useMemo(function(){var r=ckData;var tot=r.length;var avg=Math.round(r.reduce(function(a,b){return a+b.score;},0)/Math.max(tot,1));var fl=r.reduce(function(a,b){return a+b.falhas;},0);var cr=r.reduce(function(a,b){return a+b.criticos;},0);var conf=r.filter(function(d){return d.status==='conforme';}).length;return{tot:tot,avg:avg,fl:fl,cr:cr,conf:conf,taxa:Math.round(conf/Math.max(tot,1)*100)};},[ckData]);
-  var gerKpi=useMemo(function(){var tot=gerData.length;var avg=Math.round(gerData.reduce(function(a,b){return a+b.score;},0)/Math.max(tot,1));var fl=gerData.reduce(function(a,b){return a+b.falhas;},0);var ok=gerData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,ok:ok};},[gerData]);
-  var dpKpi=useMemo(function(){var tot=dpData.length;var avg=Math.round(dpData.reduce(function(a,b){return a+b.score;},0)/Math.max(tot,1));var fl=dpData.reduce(function(a,b){return a+b.falhas;},0);var ok=dpData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,ok:ok};},[dpData]);
-  var ranking=useMemo(function(){var names=[];ckData.forEach(function(d){var n=d.user_name;if(names.indexOf(n)<0)names.push(n);});return names.map(function(name){var d=ckData.filter(function(x){return x.user_name===name;});return{name:name,avg:Math.round(d.reduce(function(a,b){return a+b.score;},0)/Math.max(d.length,1)),turnos:d.length,falhas:d.reduce(function(a,b){return a+b.falhas;},0)};}).sort(function(a,b){return b.avg-a.avg;});},[ckData]);
-  var alertas=useMemo(function(){var a=[];ckData.filter(function(d){return d.criticos>0;}).slice(0,8).forEach(function(d){a.push({msg:d.user_name+' · '+(d.turno==='manha'?'Manhã':'Tarde')+' · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score});});return a;},[ckData]);
+  var kpi=useMemo(function(){var r=ckData;var tot=r.length;var avg=tot>0?Math.round(r.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=r.reduce(function(a,b){return a+b.falhas;},0);var cr=r.reduce(function(a,b){return a+b.criticos;},0);var conf=r.filter(function(d){return d.status==='conforme';}).length;return{tot:tot,avg:avg,fl:fl,cr:cr,conf:conf,taxa:tot>0?Math.round(conf/tot*100):0};},[ckData]);
+  var gerKpi=useMemo(function(){var tot=gerData.length;var avg=tot>0?Math.round(gerData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=gerData.reduce(function(a,b){return a+b.falhas;},0);return{tot:tot,avg:avg,fl:fl};},[gerData]);
+  var dpKpi=useMemo(function(){var tot=dpData.length;var avg=tot>0?Math.round(dpData.reduce(function(a,b){return a+b.score;},0)/tot):0;var fl=dpData.reduce(function(a,b){return a+b.falhas;},0);var ok=dpData.filter(function(d){return d.status==='ok';}).length;return{tot:tot,avg:avg,fl:fl,ok:ok};},[dpData]);
+  var ranking=useMemo(function(){var names=[];ckData.forEach(function(d){if(names.indexOf(d.user_name)<0)names.push(d.user_name);});return names.map(function(name){var d=ckData.filter(function(x){return x.user_name===name;});return{name:name,avg:Math.round(d.reduce(function(a,b){return a+b.score;},0)/d.length),turnos:d.length,falhas:d.reduce(function(a,b){return a+b.falhas;},0)};}).sort(function(a,b){return b.avg-a.avg;});},[ckData]);
+  var alertas=useMemo(function(){return ckData.filter(function(d){return d.criticos>0;}).slice(0,8).map(function(d){return{msg:d.user_name+' · '+(d.turno==='manha'?'Manhã':'Tarde')+' · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score};});},[ckData]);
   var aColors=['#E8001C','#7C3AED','#2563EB','#F97316'];
 
-  /* Ausências — verifica dp_checklists do Supabase */
   var ausentes=useMemo(function(){
     var agora=new Date();var hora=agora.getHours();var minuto=agora.getMinutes();
     if(!((hora>17)||(hora===17&&minuto>=55)))return[];
-    var hojeISO=todayISO();
-    var users=getUsers();var aus=[];
+    var hojeISO=todayISO();var users=getUsers();var aus=[];
     Object.entries(users).forEach(function(entry){
       var key=entry[0];var u=entry[1];
       if(u.active===false||u.role!=='dp')return;
-      var temDiario=dpData.some(function(r){return r.login===key&&r.freq==='diario'&&r.data===hojeISO;});
-      if(!temDiario)aus.push({nome:u.name,login:key,checklist:'DP Diário',tel:NUMEROS_WHATSAPP[key]||null});
+      var tem=dpData.some(function(r){return r.login===key&&r.freq==='diario'&&r.data===hojeISO;});
+      if(!tem)aus.push({nome:u.name,login:key,checklist:'DP Diário',tel:NUMEROS_WHATSAPP[key]||null});
     });
     return aus;
   },[dpData]);
@@ -1078,14 +1032,22 @@ function CEODashboard(props){
       {!loading&&tab==='overview'&&(
         <div>
           {ausentes.length>0&&(<div style={{margin:'10px 16px 0',background:'var(--danger-bg)',border:'1.5px solid var(--danger-line)',borderRadius:'var(--r12)',padding:'14px 16px'}}><div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}><span style={{fontSize:18}}>⚠️</span><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'var(--danger)'}}>Ainda não recebido hoje ({ausentes.length})</div></div>{ausentes.map(function(a,i){return(<div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0',borderTop:'1px solid var(--danger-line)'}}><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'var(--ink)'}}>{a.nome}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{a.checklist}</div></div>{a.tel?(<a href={'https://wa.me/'+a.tel+'?text='+buildMsgCobranca(a.nome,a.checklist)} target="_blank" style={{display:'flex',alignItems:'center',gap:6,padding:'8px 14px',background:'#25D366',color:'#fff',borderRadius:'var(--r99)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,textDecoration:'none',flexShrink:0}}>📲 Cobrar</a>):(<span style={{fontSize:11,color:'var(--ink3)',fontStyle:'italic'}}>sem número</span>)}</div>);})}</div>)}
-          <div className="kpi-grid">
-            <div className="kpi-card kc-r"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{kpi.avg||'–'}</div><div className="kpi-sub">turnos operacionais</div></div>
-            <div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">Conformidade</div><div className="kpi-val">{kpi.taxa}%</div><div className="kpi-sub">{kpi.conf}/{kpi.tot} ok</div></div>
-            <div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Total Falhas</div><div className="kpi-val">{kpi.fl}</div><div className="kpi-sub">em {kpi.tot} turnos</div></div>
-            <div className="kpi-card kc-o"><div className="kpi-ico">🔴</div><div className="kpi-lbl">Críticos</div><div className="kpi-val">{kpi.cr}</div></div>
-            <div className="kpi-card kc-b"><div className="kpi-ico">🏢</div><div className="kpi-lbl">Rel. Gerenciais</div><div className="kpi-val">{gerData.length}</div><div className="kpi-sub">Derik</div></div>
-            <div className="kpi-card kc-t"><div className="kpi-ico">🗂️</div><div className="kpi-lbl">Rotinas DP</div><div className="kpi-val">{dpData.length}</div><div className="kpi-sub">Viviane</div></div>
-          </div>
+          {kpi.tot===0&&gerKpi.tot===0&&dpKpi.tot===0?(
+            <div style={{margin:'20px 16px',padding:'32px 20px',background:'#fff',borderRadius:'var(--r12)',border:'1px solid var(--line)',textAlign:'center'}}>
+              <div style={{fontSize:36,marginBottom:10}}>📊</div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,color:'var(--ink)',marginBottom:6}}>Painel zerado</div>
+              <div style={{fontSize:13,color:'var(--ink3)',lineHeight:1.6}}>Nenhum dado ainda. Os números aparecerão aqui conforme a equipe for preenchendo os checklists.</div>
+            </div>
+          ):(
+            <div className="kpi-grid">
+              <div className="kpi-card kc-r"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{kpi.avg||'–'}</div><div className="kpi-sub">turnos operacionais</div></div>
+              <div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">Conformidade</div><div className="kpi-val">{kpi.taxa}%</div><div className="kpi-sub">{kpi.conf}/{kpi.tot} ok</div></div>
+              <div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Total Falhas</div><div className="kpi-val">{kpi.fl}</div><div className="kpi-sub">em {kpi.tot} turnos</div></div>
+              <div className="kpi-card kc-o"><div className="kpi-ico">🔴</div><div className="kpi-lbl">Críticos</div><div className="kpi-val">{kpi.cr}</div></div>
+              <div className="kpi-card kc-b"><div className="kpi-ico">🏢</div><div className="kpi-lbl">Rel. Gerenciais</div><div className="kpi-val">{gerData.length}</div><div className="kpi-sub">Derik</div></div>
+              <div className="kpi-card kc-t"><div className="kpi-ico">🗂️</div><div className="kpi-lbl">Rotinas DP</div><div className="kpi-val">{dpData.length}</div><div className="kpi-sub">Viviane</div></div>
+            </div>
+          )}
         </div>
       )}
 
@@ -1110,12 +1072,11 @@ function CEODashboard(props){
                 <div style={{fontSize:36}}>{dpDetail.status==='ok'?'✅':dpDetail.status==='atencao'?'⚠️':'🚨'}</div>
                 <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Score: {dpDetail.score}/100</div><div style={{fontSize:12,marginTop:2}}>{dpDetail.falhas} falha(s) · {dpDetail.total} itens</div></div>
               </div>
-              {/* Blocos detalhados */}
               {(DP_FREQ_MAP[dpDetail.freq]||DP_FREQ_MAP.diario).blocos.map(function(bloco){
-                var resps=dpDetail.resps||{};var negs=dpDetail.negs||{};
+                var rs=dpDetail.resps||{};var ng=dpDetail.negs||{};
                 var itens=bloco.itens||[];
-                var fl=itens.filter(function(i){return resps[i.id]==='nao';}).length;
-                var ok=itens.every(function(i){return resps[i.id];});
+                var fl=itens.filter(function(i){return rs[i.id]==='nao';}).length;
+                var ok=itens.every(function(i){return rs[i.id];});
                 return(
                   <div key={bloco.id} style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',marginBottom:10,overflow:'hidden'}}>
                     <div style={{padding:'11px 14px',background:fl>0?'#FEF2F2':ok?'#F0FDF4':'#F9FAFB',borderBottom:'1px solid #E5E7EB',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
@@ -1123,7 +1084,7 @@ function CEODashboard(props){
                       <span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':ok?'var(--ok)':'var(--ink3)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):ok?'✅ OK':'⏳'}</span>
                     </div>
                     {itens.map(function(item){
-                      var r=resps[item.id];var neg=negs[item.id];
+                      var r=rs[item.id];var neg=ng[item.id];
                       return(
                         <div key={item.id} style={{padding:'10px 14px',borderBottom:'1px solid #F3F4F6',background:r==='nao'?'#FFF5F5':r==='sim'?'#F9FEFE':'#FAFAFA'}}>
                           <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
@@ -1144,14 +1105,7 @@ function CEODashboard(props){
           <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'var(--brand)',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{dpData.length} rotina{dpData.length!==1?'s':''} registrada{dpData.length!==1?'s':''}</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>Score médio: {dpKpi.avg||'–'}/100 · Falhas: {dpKpi.fl}</div></div>
           <div className="kpi-grid"><div className="kpi-card kc-t"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{dpKpi.avg||'–'}</div></div><div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">OK</div><div className="kpi-val">{dpKpi.ok}</div></div><div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Falhas</div><div className="kpi-val">{dpKpi.fl}</div></div><div className="kpi-card kc-o"><div className="kpi-ico">📋</div><div className="kpi-lbl">Total</div><div className="kpi-val">{dpKpi.tot}</div></div></div>
           {dpData.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'var(--surface)',borderRadius:'var(--r12)',textAlign:'center',border:'1px solid var(--line)',color:'var(--ink3)',fontSize:13}}>Nenhuma rotina DP ainda.</div>}
-          {dpData.length>0&&dpData.slice(0,30).map(function(d,i){
-            var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';
-            var st=d.status==='ok'?'OK':d.status==='atencao'?'Atenção':'Crítico';
-            var stBg=st==='OK'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';
-            var stC=st==='OK'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';
-            var freqLabel={'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'}[d.freq]||'📅';
-            return(<div key={d.id||i} onClick={function(){setDpDetail(d);}} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px',cursor:'pointer'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:11,fontWeight:600,color:'#0891B2'}}>{freqLabel}</span><span style={{fontSize:11,color:'var(--ink3)'}}>{d.data_fmt||d.data} · {d.hora}</span></div><div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{sc}</span><span className="pill" style={{background:stBg,color:stC}}>{st}</span><span style={{fontSize:10,color:'var(--ink3)'}}>→</span></div></div><div style={{display:'flex',gap:16,fontSize:11,color:'var(--ink2)'}}><span>✅ {d.total-d.falhas}/{d.total} conformes</span>{d.falhas>0&&<span style={{color:'var(--danger)',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}</div></div>);
-          })}
+          {dpData.length>0&&dpData.slice(0,30).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='ok'?'OK':d.status==='atencao'?'Atenção':'Crítico';var stBg=st==='OK'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';var stC=st==='OK'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';var freqLabel={'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'}[d.freq]||'📅';return(<div key={d.id||i} onClick={function(){setDpDetail(d);}} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px',cursor:'pointer'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:11,fontWeight:600,color:'#0891B2'}}>{freqLabel}</span><span style={{fontSize:11,color:'var(--ink3)'}}>{d.data_fmt||d.data} · {d.hora}</span></div><div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{sc}</span><span className="pill" style={{background:stBg,color:stC}}>{st}</span><span style={{fontSize:10,color:'var(--ink3)'}}>→</span></div></div><div style={{display:'flex',gap:16,fontSize:11,color:'var(--ink2)'}}><span>✅ {d.total-d.falhas}/{d.total} conformes</span>{d.falhas>0&&<span style={{color:'var(--danger)',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}</div></div>);})}
           {dpSugs.length>0&&(<div style={{margin:'10px 16px 0'}}><div style={{background:'linear-gradient(135deg,#1A0003,#EA1D2C)',borderRadius:'var(--r12)',padding:'12px 14px',marginBottom:10}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>💡 Sugestões da equipe ({dpSugs.length})</div></div>{dpSugs.slice().reverse().map(function(s,i){var sug=s.sugestao||{};return(<div key={i} style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid #E5E7EB',padding:'13px 14px',marginBottom:8}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'#0891B2',marginBottom:4}}>{s.nome||s.login} · {s.data_fmt||s.data}</div><div style={{fontSize:13,color:'var(--ink)',lineHeight:1.5}}>{sug.atividade}</div></div>);})}</div>)}
         </div>
         )
@@ -1161,13 +1115,12 @@ function CEODashboard(props){
 
       {!loading&&tab==='alertas'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">🚨 Alertas Operacionais</div>{alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ok)',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta ativo!</div>}{alertas.map(function(a,i){return(<div key={i} className="alert-row"><div className="a-dot a-r"/><div style={{flex:1}}><div className="a-title">{a.msg}</div><div className="a-sub">{a.sub}</div></div><div className="a-badge" style={{background:'#FEE2E2',color:'#991B1B'}}>🔴 Crítico</div></div>);})}</div>)}
 
-      {!loading&&tab==='turnos'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">📋 Histórico de Turnos</div><div style={{overflowX:'auto'}}><table className="shift-table"><thead><tr><th>Responsável</th><th>Turno</th><th>Data</th><th>Score</th><th>Status</th><th>Falhas</th></tr></thead><tbody>{ckData.slice(0,25).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='conforme'?'Conforme':d.status==='critico'?'Crítico':'Ressalvas';return(<tr key={i}><td><div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12}}>{d.user_name}</div></td><td><span className="pill" style={{background:d.turno==='manha'?'#FEF3C7':'#EDE9FE',color:d.turno==='manha'?'#92400E':'#5B21B6'}}>{d.turno==='manha'?'🌅':'🌙'}</span></td><td style={{fontSize:11,color:'var(--ink2)'}}>{d.data_fmt||d.data}</td><td><span style={{fontFamily:"'Sora',sans-serif",fontWeight:800,color:c}}>{sc}</span></td><td><span className="pill" style={{background:st==='Conforme'?'#D1FAE5':st==='Crítico'?'#FEE2E2':'#FEF3C7',color:st==='Conforme'?'#065F46':st==='Crítico'?'#991B1B':'#92400E'}}>{st}</span></td><td style={{fontFamily:"'Sora',sans-serif",fontWeight:700,color:d.falhas>0?'var(--brand)':'var(--ok)'}}>{d.falhas}</td></tr>);})}</tbody></table></div></div>)}
+      {!loading&&tab==='turnos'&&(<div className="chart-card" style={{margin:'12px 12px 0'}}><div className="chart-t">📋 Histórico de Turnos</div>{ckData.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'var(--ink3)'}}>Nenhum turno ainda.</div>}<div style={{overflowX:'auto'}}><table className="shift-table"><thead><tr><th>Responsável</th><th>Turno</th><th>Data</th><th>Score</th><th>Status</th><th>Falhas</th></tr></thead><tbody>{ckData.slice(0,25).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='conforme'?'Conforme':d.status==='critico'?'Crítico':'Ressalvas';return(<tr key={i}><td><div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12}}>{d.user_name}</div></td><td><span className="pill" style={{background:d.turno==='manha'?'#FEF3C7':'#EDE9FE',color:d.turno==='manha'?'#92400E':'#5B21B6'}}>{d.turno==='manha'?'🌅':'🌙'}</span></td><td style={{fontSize:11,color:'var(--ink2)'}}>{d.data_fmt||d.data}</td><td><span style={{fontFamily:"'Sora',sans-serif",fontWeight:800,color:c}}>{sc}</span></td><td><span className="pill" style={{background:st==='Conforme'?'#D1FAE5':st==='Crítico'?'#FEE2E2':'#FEF3C7',color:st==='Conforme'?'#065F46':st==='Crítico'?'#991B1B':'#92400E'}}>{st}</span></td><td style={{fontFamily:"'Sora',sans-serif",fontWeight:700,color:d.falhas>0?'var(--brand)':'var(--ok)'}}>{d.falhas}</td></tr>);})}</tbody></table></div></div>)}
       <div style={{height:20}}/>
     </div>
   );
 }
 
-/* ═══ HUBS ═══ */
 function CEOHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
@@ -1199,7 +1152,6 @@ function SuporteHub(props){
   return(<div className="hub-bg"><div className="hub-card"><div style={{textAlign:'center',marginBottom:20}}><span style={{fontSize:40,display:'block',marginBottom:8}}>🛡️</span><div className="hub-title">Olá, {user.name}!</div><div className="hub-sub">Suporte · CheckON</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('usuarios');}} style={{padding:'16px',borderRadius:'var(--r12)',background:'var(--brand)',color:'#fff',textAlign:'left',display:'flex',alignItems:'center',gap:12,border:'none',cursor:'pointer'}}><span className="hub-opt-icon">👥</span><div><div className="hub-opt-title">Gestão de Usuários</div></div></button><button onClick={function(){setMode('ceo');}} className="hub-opt"><span className="hub-opt-icon">👁️</span><div><div className="hub-opt-title">Painel Gerencial</div></div></button><button onClick={function(){setMode('checklist');}} className="hub-opt"><span className="hub-opt-icon">📋</span><div><div className="hub-opt-title">Preencher Checklist</div></div></button></div><button onClick={onLogout} className="hub-logout">Sair</button></div></div>);
 }
 
-/* ═══ USER MANAGER ═══ */
 function UserManager(props){
   var user=props.user;var onBack=props.onBack;var onLogout=props.onLogout;
   var _u=useState(function(){return getUsers();});var users=_u[0];var setUsers=_u[1];
@@ -1221,7 +1173,6 @@ function UserManager(props){
   return(<div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}><div className="um-hdr"><div className="um-hdr-inner"><div><div style={{fontSize:10,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase',color:'#fff'}}>CheckON · Suporte</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:800,color:'#fff'}}>👥 Gestão de Usuários</div></div><div style={{display:'flex',gap:6}}><button onClick={onBack} className="hdr-btn">← Hub</button><button onClick={onLogout} className="hdr-btn">Sair</button></div></div></div>{toast&&<div style={{position:'fixed',top:70,left:'50%',transform:'translateX(-50%)',background:'#1A1A1A',color:'#fff',padding:'9px 20px',borderRadius:99,fontSize:13,fontWeight:600,zIndex:9999,whiteSpace:'nowrap'}}>{toast}</div>}<div style={{margin:'14px 14px 0',background:'#fff',borderRadius:'var(--r12)',boxShadow:'var(--sh1)',overflow:'hidden'}}><div style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>Usuários do Sistema</div><button onClick={function(){setShowNew(function(s){return !s;});}} style={{background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',padding:'7px 14px',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>{showNew?'✕ Cancelar':'+ Novo'}</button></div>{showNew&&(<div style={{padding:'16px',background:'#F0F4FF',borderBottom:'1px solid var(--line)'}}><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}><div className="f-group"><label className="f-label">Nome *</label><input className="f-input" value={newUser.name} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{name:e.target.value});});}} placeholder="Nome completo"/></div><div className="f-group"><label className="f-label">Login *</label><input className="f-input" value={newUser.login} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{login:e.target.value.toLowerCase()});});}} placeholder="login"/></div></div><div className="f-group" style={{marginBottom:12}}><label className="f-label">Role</label><select className="f-input" value={newUser.role} onChange={function(e){setNewUser(function(n){return Object.assign({},n,{role:e.target.value});});}}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div><button onClick={createUser} style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800}}>CRIAR USUÁRIO</button></div>)}{userList.map(function(entry){var key=entry[0];var u=entry[1];var isEdit=editKey===key;var inactive=u.active===false;return(<div key={key} style={{padding:'14px 16px',borderBottom:'1px solid var(--line)',opacity:inactive?.5:1}}>{!isEdit?(<div><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:10}}><div style={{width:36,height:36,borderRadius:'50%',background:u.color||'#555',display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontFamily:"'Sora',sans-serif",fontWeight:800,fontSize:14,flexShrink:0}}>{u.name.charAt(0)}</div><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700}}>{u.name}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:1}}>@{u.login} · <span style={{background:(ROLE_COLORS[u.role]||'#555')+'22',color:ROLE_COLORS[u.role]||'#555',borderRadius:99,padding:'1px 7px',fontSize:10,fontWeight:700}}>{ROLES[u.role]||u.role}</span></div></div></div><div style={{display:'flex',gap:5,flexWrap:'wrap',justifyContent:'flex-end'}}><button onClick={function(){setEditKey(key);}} style={{background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>✏️</button><button onClick={function(){resetPwd(key);}} style={{background:'#FEF3C7',color:'#92400E',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🔑</button><button onClick={function(){toggleActive(key);}} style={{background:inactive?'#D1FAE5':'#FEE2E2',color:inactive?'#065F46':'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>{inactive?'✅':'⛔'}</button>{key!=='camila'&&key!=='bruna'&&<button onClick={function(){deleteUser(key);}} style={{background:'#FEE2E2',color:'#991B1B',borderRadius:'var(--r8)',padding:'5px 10px',fontSize:11,fontWeight:700}}>🗑</button>}</div></div></div>):(<div style={{background:'#F8F8F8',borderRadius:'var(--r8)',padding:'12px'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--brand)',marginBottom:10,textTransform:'uppercase'}}>Editando: @{key}</div><div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:10}}><div className="f-group" style={{marginBottom:0}}><label className="f-label">Nome</label><input className="f-input" defaultValue={u.name} id={'name_'+key}/></div><div className="f-group" style={{marginBottom:0}}><label className="f-label">Role</label><select className="f-input" defaultValue={u.role} id={'role_'+key}>{Object.entries(ROLES).map(function(x){return<option key={x[0]} value={x[0]}>{x[1]}</option>;})}</select></div></div><div style={{display:'flex',gap:8}}><button onClick={function(){var n=document.getElementById('name_'+key).value;var r=document.getElementById('role_'+key).value;saveEdit(key,{name:n,role:r});}} style={{flex:1,padding:'10px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>💾 Salvar</button><button onClick={function(){setEditKey(null);}} style={{flex:1,padding:'10px',background:'#F0F0F0',color:'var(--ink)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>Cancelar</button></div></div>)}</div>);})}</div></div>);
 }
 
-/* ═══ LOGIN ═══ */
 function Login(props){
   var onLogin=props.onLogin;
   var _l=useState('');var login=_l[0];var setLogin=_l[1];
@@ -1266,7 +1217,6 @@ function Login(props){
   );
 }
 
-/* ═══ APP ROOT ═══ */
 function App(){
   var _p=useState('loading');var phase=_p[0];var setPhase=_p[1];
   var _u=useState(null);var user=_u[0];var setUser=_u[1];
