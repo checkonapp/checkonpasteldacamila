@@ -3828,30 +3828,40 @@ function SubgerSummaryScreen(props){
 /* ══════════════════════════════════════════
    BANCO DE MENSAGENS DE ENCERRAMENTO
    ══════════════════════════════════════════ */
+/* Mensagens rotativas por dia do mês — genéricas, sem contexto de turno ou equipe */
 var MSGS_PERFEITO=[
-  {titulo:'Turno impecável.',texto:'Você deixou a operação em ordem para quem vem depois. Isso não é obrigação — é caráter. Vai descansar.',autor:''},
-  {titulo:'Zero falhas.',texto:'Registrar tudo certo é mais difícil do que parece. Poucos fazem isso com consistência. Você está no caminho certo.',autor:''},
-  {titulo:'Responsabilidade real.',texto:'Você entregou o turno com responsabilidade. A equipe seguinte vai trabalhar melhor por causa disso.',autor:''},
-  {titulo:'Operação controlada.',texto:'Controlar um turno sem falhas exige atenção constante. Você fez isso hoje. Reconheça isso antes de dormir.',autor:''},
-  {titulo:'Bem feito.',texto:'Liderança não é cargo — é o que você faz quando ninguém está olhando. Você provou hoje que sabe disso.',autor:''},
-  {titulo:'Turno fechado com excelência.',texto:'A equipe que vem depois vai trabalhar melhor por causa do que você fez hoje. Isso tem valor real.',autor:''},
+  {titulo:'Zero falhas.',texto:'Registrar tudo certo é mais difícil do que parece. Poucos fazem isso com consistência. Reconheça isso.'},
+  {titulo:'Bem feito.',texto:'Liderança não é cargo — é o que você faz quando ninguém está olhando. Você provou hoje que sabe disso.'},
+  {titulo:'Excelente.',texto:'Atenção constante dá esse resultado. Não subestime o que você acabou de fazer.'},
+  {titulo:'No caminho certo.',texto:'Consistência é o que separa bons profissionais de ótimos. Você está construindo isso dia a dia.'},
+  {titulo:'Impecável.',texto:'Isso tem valor. Não porque alguém pediu — mas porque você decidiu fazer assim.'},
+  {titulo:'Tudo em ordem.',texto:'Quem entende de processo sabe o quanto isso exige. Você entende.'},
+  {titulo:'Padrão alto.',texto:'Manter o padrão mesmo quando ninguém cobra é o que define caráter profissional. Vai descansar.'},
+  {titulo:'Resultado real.',texto:'O que você fez hoje importa. Não porque parece bonito — mas porque é real.'},
+  {titulo:'Muito bem.',texto:'Execução limpa é rara. Você entregou isso. Reconheça antes de ir embora.'},
+  {titulo:'Feito com cuidado.',texto:'Você não passou por cima. Foi com atenção. Isso faz toda a diferença no longo prazo.'},
 ];
 var MSGS_BOM=[
-  {titulo:'Turno com ocorrências — registradas.',texto:'Você não escondeu nada. Registrou o que não funcionou e tomou ação. Isso é maturidade profissional.',autor:''},
-  {titulo:'Imperfeito e honesto.',texto:'O erro que você registra hoje é o problema que não vai se repetir amanhã. Continue assim.',autor:''},
-  {titulo:'Primeiro passo da melhoria.',texto:'Reconhecer o que não funcionou é o primeiro passo de quem quer melhorar. Poucos têm essa coragem.',autor:''},
-  {titulo:'Registrou, tratou, entregou.',texto:'Ninguém tem turnos perfeitos todo dia. O que diferencia quem evolui é o que faz com os erros. Você fez certo.',autor:''},
-  {titulo:'Progresso, não perfeição.',texto:'Cada falha registrada é dados para melhorar o sistema. Você está contribuindo para algo maior que o seu turno.',autor:''},
+  {titulo:'Registrou, tratou, entregou.',texto:'Ninguém acerta tudo sempre. O que diferencia quem evolui é o que faz com os erros. Você fez certo.'},
+  {titulo:'Honesto e profissional.',texto:'Você não escondeu nada. Registrou o que não funcionou e tomou ação. Isso é maturidade.'},
+  {titulo:'Progresso, não perfeição.',texto:'O erro registrado hoje é o problema que não se repete amanhã. Você está melhorando o sistema.'},
+  {titulo:'Coragem de registrar.',texto:'Reconhecer o que não funcionou é o primeiro passo de quem quer melhorar de verdade.'},
+  {titulo:'Imperfeito e honesto.',texto:'Dias assim existem. O que importa é que você não fingiu que estava tudo bem.'},
+  {titulo:'Seguindo em frente.',texto:'Não foi perfeito. Mas foi registrado, tratado e entregue. Isso é o que conta.'},
+  {titulo:'Quem registra, evolui.',texto:'Cada ocorrência registrada é dado para melhorar. Você está contribuindo para algo maior.'},
 ];
 var MSGS_CRITICO=[
-  {titulo:'Turno difícil. Você chegou até o fim.',texto:'Dias assim existem. O que importa é que você não abandonou o processo. Descanso agora, análise amanhã.',autor:''},
-  {titulo:'Honestidade acima de tudo.',texto:'Registrar um turno crítico é mais corajoso do que fingir que está tudo bem. Você fez a coisa certa.',autor:''},
-  {titulo:'Todo turno difícil ensina algo.',texto:'Reflita com calma depois do descanso. O que você aprendeu hoje vai servir para proteger o próximo turno.',autor:''},
+  {titulo:'Você chegou até o fim.',texto:'Dias difíceis existem. O que importa é que você não abandonou o processo. Descanso agora.'},
+  {titulo:'Honestidade acima de tudo.',texto:'Registrar quando é difícil é mais corajoso do que fingir que está tudo bem. Você fez a coisa certa.'},
+  {titulo:'Todo dia difícil ensina algo.',texto:'Reflita com calma depois do descanso. O que você aprendeu hoje vai servir nos próximos.'},
+  {titulo:'Não desistiu.',texto:'Continuar quando está difícil é o que separa quem cresce de quem estagna. Você continuou.'},
 ];
 
 function getMensagem(falhas,criticos){
+  /* Rotaciona pelo dia do mês — muda todo dia, determinístico (mesma pessoa vê a mesma no mesmo dia) */
+  var diaDoMes=new Date().getDate();
   var pool=criticos>0?MSGS_CRITICO:falhas===0?MSGS_PERFEITO:MSGS_BOM;
-  return pool[Math.floor(Math.random()*pool.length)];
+  return pool[diaDoMes % pool.length];
 }
 
 /* ══════════════════════════════════════════
