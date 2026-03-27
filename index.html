@@ -1075,7 +1075,7 @@ img{display:block;max-width:100%}
 .overlay-card{background:var(--surface);border-radius:var(--r16);padding:28px 24px;width:100%;max-width:280px;text-align:center;box-shadow:var(--sh3)}
 .spin{width:36px;height:36px;border:3px solid var(--line2);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ceo-hdr{background:linear-gradient(135deg,#1A1A1A 0%,#2D0008 50%,#EA1D2C 100%);color:#fff;padding:20px 16px 16px}
+.ceo-hdr{background:#EA1D2C;color:#fff;padding:20px 16px 16px}
 .ceo-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.3px}
 .ceo-sub{font-size:10px;opacity:.55;margin-top:2px;letter-spacing:.3px}
 .ceo-badge{display:inline-block;background:rgba(255,255,255,.12);border-radius:var(--r99);padding:3px 11px;font-size:9px;font-weight:700;margin-top:7px;letter-spacing:.3px}
@@ -1114,7 +1114,7 @@ img{display:block;max-width:100%}
 .shift-table tr:last-child td{border-bottom:none}
 .shift-table tr:hover td{background:var(--surface2)}
 .pill{display:inline-block;border-radius:var(--r99);padding:3px 9px;font-size:10px;font-weight:700}
-.hub-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at 60% 0%,#3D0007 0%,#1A0003 40%,#0D0D0D 100%)}
+.hub-bg{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#F5F5F5}
 .hub-card{background:var(--surface);border-radius:var(--r20);padding:32px 26px;width:100%;max-width:420px;box-shadow:0 32px 64px rgba(0,0,0,.5)}
 .hub-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:900;margin-bottom:4px}
 .hub-sub{font-size:13px;color:var(--ink2);margin-bottom:22px}
@@ -1169,7 +1169,7 @@ function openWA(){
 }
 const USERS_KEY='konclui_users';
 const SESSION_KEY='konclui_session';
-const VERSION='2026.14';
+const VERSION='2026.15';
 const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab';
 
 (function(){
@@ -1599,7 +1599,7 @@ function DPSummaryScreen(props){
     setCopied(true);
   }
 
-  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={0} score={score} turnoLabel={'📋 DP — '+freqCfg.titulo} cor='#0891B2' onHub={onNovo} onBack={props.onBack} onLogout={props.onLogout} onRevisar={function(){setEncerrado(false);}}/>;}  if(confirmando){
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={0} score={score} turnoLabel={'📋 DP — '+freqCfg.titulo} cor='var(--brand)' onHub={onNovo} onBack={props.onBack} onLogout={props.onLogout} onRevisar={function(){setEncerrado(false);}}/>;}  if(confirmando){
     return(
       <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
         <div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}>
@@ -1615,7 +1615,7 @@ function DPSummaryScreen(props){
           <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10,textDecoration:'none',boxSizing:'border-box'}}>
             <span style={{fontSize:22}}>📲</span>{copied?'Enviado ✓':'Abrir WhatsApp'}
           </a>
-          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'#0891B2',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei minha rotina</button>}
+          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei minha rotina</button>}
           <button onClick={function(){setConfirmando(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Revisar checklist</button>
         </div>
       </div>
@@ -1753,8 +1753,8 @@ function DPChecklistScreen(props){
 
   if(screen==='freq'){
     var rascunhoSalvo=(function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));return s&&s.freq===freq&&s.resps&&Object.keys(s.resps).length>0?s:null;}catch(e){return null;}})();
-    return(<div>{dpHdr}<div className="day-badge"><div className="day-dot"/>{todayFmt()}</div><BoasVindasInteligente user={user} tabela="dp_checklists" turnoLabel="DP" cor="#0891B2" emoji="📋" itensCriticos={DP_BLOCOS_DATA.reduce(function(a,b){return a.concat(b.itens);},[])} pendencias={0} onIniciar={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}}/>
-        <div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{(DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'Checklist'} <span style={{fontSize:18}}>→</span></button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button></div>}</div>);
+    return(<div>{dpHdr}
+        <div className="card"><div className="card-title">📅 Qual rotina você vai preencher?</div><div style={{display:'flex',flexDirection:'column',gap:10}}>{[{key:'diario',emoji:'📅',lbl:'DP — Checklist Diário',sub:'Rotina diária do DP'},{key:'semanal',emoji:'📆',lbl:'DP — Checklist Semanal',sub:'Revisão semanal'},{key:'mensal',emoji:'🗓️',lbl:'DP — Checklist Mensal',sub:'Fechamento mensal'}].map(function(opt){var sel=freq===opt.key;var cfg2=DP_FREQ_MAP[opt.key];return(<button key={opt.key} onClick={function(){setFreq(opt.key);}} style={{width:'100%',padding:'15px 16px',borderRadius:'var(--r12)',border:'2px solid'+(sel?'var(--brand)':'var(--line)'),background:sel?'var(--brand-light)':'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',position:'relative',transition:'all .15s'}}>{sel&&<div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'var(--brand)',borderRadius:'var(--r12) var(--r12) 0 0'}}/>}<span style={{fontSize:32}}>{opt.emoji}</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:sel?'var(--brand)':'var(--ink)'}}>{opt.lbl}</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>{opt.sub}</div></div>{sel&&<div style={{flexShrink:0,textAlign:'right'}}><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.length:0} blocos</div><div style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>{cfg2?cfg2.blocos.reduce(function(a,b){return a+b.itens.length;},0):0} itens</div></div>}</button>);})}</div></div>{rascunhoSalvo&&(<div style={{margin:'10px 16px 0',background:'var(--warn-bg)',border:'1.5px solid var(--warn-line)',borderRadius:'var(--r12)',padding:'13px 14px',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>📝</span><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--warn)'}}>Rascunho em andamento</div></div><div style={{display:'flex',gap:6,flexShrink:0}}><button onClick={function(){try{var s=JSON.parse(localStorage.getItem(DP_SAVE_KEY));if(s){setFreq(s.freq||'diario');setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||nowTime());setScreen('checklist');}}catch(e){}}} style={{padding:'7px 12px',borderRadius:'var(--r8)',background:'var(--warn)',color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',border:'none'}}>Continuar</button><button onClick={function(){try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});}} style={{padding:'7px 10px',borderRadius:'var(--r8)',background:'transparent',color:'var(--ink3)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>Zerar</button></div></div>)}<div style={{padding:'12px 16px 0'}}><button onClick={function(){setResps({});setNegs({});setHoraInicio(nowTime());setScreen('contexto');}} style={{width:'100%',padding:15,background:'var(--brand)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>{'Iniciar ' + ((DP_FREQ_MAP[freq]&&DP_FREQ_MAP[freq].label)||'checklist') + ' →'}</button></div>{onBack&&<div style={{padding:'8px 16px 0'}}><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button></div>}</div>);
   }
 
 
@@ -1873,7 +1873,7 @@ function DPHub(props){
   if(mode==='dp')return<DPChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
-      <div style={{background:'#0891B2',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{background:'var(--brand)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · DP</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
           <button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button>
@@ -1882,7 +1882,7 @@ function DPHub(props){
       <HistoricoPanel user={user} tabela="dp_checklists" labelTurno={function(d){return({'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'})[d.freq]||'📋';}}/>
     </div>
   );
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#1A0003,#3D0007,#EA1D2C)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>📋</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>DP — Departamento Pessoal · CheckON</div></div><button onClick={function(){setMode('dp');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:32}}>📋</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Preencher Checklist</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Diário · Semanal · Mensal</div></div></button><button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:28}}>📈</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico e falhas frequentes</div></div></button><button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+  return(<div style={{minHeight:'100vh',background:'#EA1D2C',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>📋</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>DP — Departamento Pessoal · CheckON</div></div><button onClick={function(){setMode('dp');}} style={{width:'100%',padding:'16px',borderRadius:'var(--r12)',border:'2px solid var(--brand)',background:'var(--brand-light)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:32}}>📋</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--brand)'}}>Preencher Checklist</div><div style={{fontSize:11,color:'#4B5563',marginTop:2}}>Diário · Semanal · Mensal</div></div></button><button onClick={function(){setMode('historico');}} style={{width:'100%',padding:'14px 16px',borderRadius:'var(--r12)',border:'1.5px solid var(--line)',background:'var(--surface)',textAlign:'left',display:'flex',alignItems:'center',gap:13,cursor:'pointer',marginBottom:10}}><span style={{fontSize:28}}>📈</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'var(--ink)'}}>Minha Evolução</div><div style={{fontSize:11,color:'var(--ink3)',marginTop:2}}>Histórico e falhas frequentes</div></div></button><button onClick={onLogout} style={{width:'100%',padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
 }
 
 function GerNaoForm(props){return<SharedNaoForm data={props.data} onChange={props.onChange} showErr={props.showErr} responsaveis={['Bruna','Camila','Derik','Vinicius','Débora','Cíntia','Viviane','Manutenção','Eu mesmo']}/>;}
@@ -1996,7 +1996,7 @@ function OcorrenciasScreen(props){
   var _r=useState('');var relato=_r[0];var setRelato=_r[1];
   var falhas=items.filter(function(i){return resps[i.id]==='nao';});
   var nome=user&&user.name||'Subgerente';
-  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:24}}><div style={{background:'linear-gradient(135deg,#7C0010,#EA1D2C)',color:'#fff',padding:'13px 16px',display:'flex',alignItems:'center',gap:10}}><button onClick={onBack} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer'}}>← Voltar</button><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,flex:1,textAlign:'center'}}>{falhas.length===0?'Tudo certo 🙌':'Quase lá ✍️'}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'16px'}}>{falhas.length===0&&<div style={{background:'#F0FDF4',borderRadius:12,padding:'28px 20px',marginBottom:12,textAlign:'center',border:'1px solid #BBF7D0'}}><div style={{fontSize:36,marginBottom:8}}>🎉</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,color:'#16A34A'}}>Turno impecável!</div></div>}{falhas.length>0&&<div style={{marginBottom:10}}><label style={{display:'block',fontSize:13,fontWeight:600,color:'#111',marginBottom:6}}>Conta o que aconteceu 👇</label><textarea value={relato} onChange={function(e){setRelato(e.target.value);}} placeholder="Ex: faltou produto..." style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#fff',resize:'none',minHeight:88,fontFamily:'inherit',lineHeight:1.6}}/></div>}<button onClick={function(){onConfirm(nome,relato);}} style={{width:'100%',padding:15,background:'#EA1D2C',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🚀 Enviar relatório</button></div></div>);
+  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:24}}><div style={{background:'#EA1D2C',color:'#fff',padding:'13px 16px',display:'flex',alignItems:'center',gap:10}}><button onClick={onBack} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer'}}>← Voltar</button><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,flex:1,textAlign:'center'}}>{falhas.length===0?'Tudo certo 🙌':'Quase lá ✍️'}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'16px'}}>{falhas.length===0&&<div style={{background:'#F0FDF4',borderRadius:12,padding:'28px 20px',marginBottom:12,textAlign:'center',border:'1px solid #BBF7D0'}}><div style={{fontSize:36,marginBottom:8}}>🎉</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,color:'#16A34A'}}>Turno impecável!</div></div>}{falhas.length>0&&<div style={{marginBottom:10}}><label style={{display:'block',fontSize:13,fontWeight:600,color:'#111',marginBottom:6}}>Conta o que aconteceu 👇</label><textarea value={relato} onChange={function(e){setRelato(e.target.value);}} placeholder="Ex: faltou produto..." style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#fff',resize:'none',minHeight:88,fontFamily:'inherit',lineHeight:1.6}}/></div>}<button onClick={function(){onConfirm(nome,relato);}} style={{width:'100%',padding:15,background:'#EA1D2C',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🚀 Enviar relatório</button></div></div>);
 }
 
 function LegacySummaryScreen(props){
@@ -2007,7 +2007,7 @@ function LegacySummaryScreen(props){
   var feedback=score===100?{emoji:'🏆',titulo:'Perfeito! Zero falhas.',cor:'#16A34A',bg:'#F0FDF4',border:'#BBF7D0'}:score>=75?{emoji:'💪',titulo:'Bom turno!',cor:'#D97706',bg:'#FFFBEB',border:'#FDE68A'}:{emoji:'⚠️',titulo:'Turno com problemas.',cor:'#DC2626',bg:'#FEF2F2',border:'#FECACA'};
   function handleGrupo(){openWA();}
   function handleCopy(){var falhasItems=items.filter(function(i){return resps[i.id]==='nao';});var lines=[SISTEMA,'━━━━━━━━━━',feedback.emoji+' Score: '+score+'/100',nome+' · '+turnoLabel+' · '+ident.data];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━','✅ Feitos: '+items.filter(function(i){return resps[i.id]==='sim';}).length+'/'+total+'  ❌ Falhas: '+falhas);if(falhasItems.length>0){lines.push('','🔴 NÃO FEITO');falhasItems.forEach(function(item,i){lines.push((i+1)+'. '+item.ti);});}lines.push('━━━━━━━━━━','_'+SISTEMA+'_');var txt=lines.join('\n');if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});}}
-  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'linear-gradient(135deg,#1A0005,#EA1D2C)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:11,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno finalizado ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{nome} · {turnoLabel} · {ident.data}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:feedback.bg,border:'1.5px solid '+feedback.border,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{feedback.emoji}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:feedback.cor}}>{feedback.titulo}</div>{tempoTotal&&<div style={{fontSize:11,color:feedback.cor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:feedback.cor}}>{score}</div><div style={{fontSize:9,color:feedback.cor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>{[{icon:'✅',val:items.filter(function(i){return resps[i.id]==='sim';}).length,lbl:'Feitos'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'🔴',val:criticos,lbl:'Críticos'}].map(function(x){return<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>;})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><button onClick={handleGrupo} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button></div></div>);
+  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'#EA1D2C',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:11,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Pastel da Camilla</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno finalizado ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{nome} · {turnoLabel} · {ident.data}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:feedback.bg,border:'1.5px solid '+feedback.border,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{feedback.emoji}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:feedback.cor}}>{feedback.titulo}</div>{tempoTotal&&<div style={{fontSize:11,color:feedback.cor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:feedback.cor}}>{score}</div><div style={{fontSize:9,color:feedback.cor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>{[{icon:'✅',val:items.filter(function(i){return resps[i.id]==='sim';}).length,lbl:'Feitos'},{icon:'❌',val:falhas,lbl:'Falhas'},{icon:'🔴',val:criticos,lbl:'Críticos'}].map(function(x){return<div key={x.lbl} style={{background:'#fff',borderRadius:12,padding:'12px 8px',textAlign:'center',border:'1px solid #E5E7EB'}}><div style={{fontSize:18}}>{x.icon}</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111'}}>{x.val}</div><div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>{x.lbl}</div></div>;})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><button onClick={handleGrupo} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div><button onClick={onBack} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo turno</button></div></div>);
 }
 
 function ChecklistScreen(props){
@@ -2143,6 +2143,7 @@ function CEODashboard(props){
   var _pendData=useState([]);var pendData=_pendData[0];var setPendData=_pendData[1];
   var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
   var _dpDetail=useState(null);var dpDetail=_dpDetail[0];var setDpDetail=_dpDetail[1];
+  var _fbt=useState(null);var feedbackTarget=_fbt[0];var setFeedbackTarget=_fbt[1];
 
   useEffect(function(){
     async function load(){
@@ -2350,7 +2351,7 @@ function CEODashboard(props){
           <div className="kpi-grid"><div className="kpi-card kc-t"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{dpKpi.avg||'–'}</div></div><div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">OK</div><div className="kpi-val">{dpKpi.ok}</div></div><div className="kpi-card kc-r"><div className="kpi-ico">❌</div><div className="kpi-lbl">Falhas</div><div className="kpi-val">{dpKpi.fl}</div></div><div className="kpi-card kc-o"><div className="kpi-ico">📋</div><div className="kpi-lbl">Total</div><div className="kpi-val">{dpKpi.tot}</div></div></div>
           {dpData.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'var(--surface)',borderRadius:'var(--r12)',textAlign:'center',border:'1px solid var(--line)',color:'var(--ink3)',fontSize:13}}>Nenhuma rotina DP ainda.</div>}
           {dpData.length>0&&dpData.slice(0,30).map(function(d,i){var sc=d.score;var c=sc>=80?'var(--ok)':sc>=60?'#F59E0B':'var(--brand)';var st=d.status==='ok'?'OK':d.status==='atencao'?'Atenção':'Crítico';var stBg=st==='OK'?'#D1FAE5':st==='Atenção'?'#FEF3C7':'#FEE2E2';var stC=st==='OK'?'#065F46':st==='Atenção'?'#92400E':'#991B1B';var freqLabel={'diario':'📅 Diário','semanal':'📆 Semanal','mensal':'🗓️ Mensal'}[d.freq]||'📅';return(<div key={d.id||i} onClick={function(){setDpDetail(d);}} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px',cursor:'pointer'}}><div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}><div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:11,fontWeight:600,color:'#0891B2'}}>{freqLabel}</span><span style={{fontSize:11,color:'var(--ink3)'}}>{d.data_fmt||d.data} · {d.hora}</span></div><div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{sc}</span><span className="pill" style={{background:stBg,color:stC}}>{st}</span><span style={{fontSize:10,color:'var(--ink3)'}}>→</span></div></div><div style={{display:'flex',gap:16,fontSize:11,color:'var(--ink2)'}}><span>✅ {d.total-d.falhas}/{d.total} conformes</span>{d.falhas>0&&<span style={{color:'var(--danger)',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}</div></div>);})}
-          {dpSugs.length>0&&(<div style={{margin:'10px 16px 0'}}><div style={{background:'linear-gradient(135deg,#1A0003,#EA1D2C)',borderRadius:'var(--r12)',padding:'12px 14px',marginBottom:10}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>💡 Sugestões da equipe ({dpSugs.length})</div></div>{dpSugs.slice().reverse().map(function(s,i){var sug=s.sugestao||{};return(<div key={i} style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid #E5E7EB',padding:'13px 14px',marginBottom:8}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'#0891B2',marginBottom:4}}>{s.nome||s.login} · {s.data_fmt||s.data}</div><div style={{fontSize:13,color:'var(--ink)',lineHeight:1.5}}>{sug.atividade}</div></div>);})}</div>)}
+          {dpSugs.length>0&&(<div style={{margin:'10px 16px 0'}}><div style={{background:'#EA1D2C',borderRadius:'var(--r12)',padding:'12px 14px',marginBottom:10}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#fff'}}>💡 Sugestões da equipe ({dpSugs.length})</div></div>{dpSugs.slice().reverse().map(function(s,i){var sug=s.sugestao||{};return(<div key={i} style={{background:'#fff',borderRadius:'var(--r12)',border:'1px solid #E5E7EB',padding:'13px 14px',marginBottom:8}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'#0891B2',marginBottom:4}}>{s.nome||s.login} · {s.data_fmt||s.data}</div><div style={{fontSize:13,color:'var(--ink)',lineHeight:1.5}}>{sug.atividade}</div></div>);})}</div>)}
         </div>
         )
       )}
@@ -2372,7 +2373,7 @@ function CEODashboard(props){
 
       {!loading&&tab==='vitoria'&&(
         <div>
-          <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'linear-gradient(135deg,#0a0020,#7C3AED)',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{noiteData.length} turno{noiteData.length!==1?'s':''} da noite</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>Score médio: {noiteKpi.avg||'–'}/100 · Falhas: {noiteKpi.fl} · Pendências: {noiteKpi.pend}</div></div>
+          <div style={{margin:'10px 16px 0',padding:'12px 14px',background:'#EA1D2C',borderRadius:'var(--r12)',color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{noiteData.length} turno{noiteData.length!==1?'s':''} da noite</div><div style={{fontSize:11,opacity:.7,marginTop:2}}>Score médio: {noiteKpi.avg||'–'}/100 · Falhas: {noiteKpi.fl} · Pendências: {noiteKpi.pend}</div></div>
           <div className="kpi-grid">
             <div className="kpi-card kc-t"><div className="kpi-ico">📊</div><div className="kpi-lbl">Score Médio</div><div className="kpi-val">{noiteKpi.avg||'–'}</div></div>
             <div className="kpi-card kc-g"><div className="kpi-ico">✅</div><div className="kpi-lbl">OK</div><div className="kpi-val">{noiteKpi.ok}</div></div>
@@ -2443,12 +2444,915 @@ function CEODashboard(props){
   );
 }
 
+
+/* ══ CEO FEEDBACK — Camila comenta em turnos ══ */
+async function sbUpsert(table,data,matchCol,matchVal){
+  try{
+    var{error}=await sb.from(table).upsert(data,{onConflict:matchCol});
+    if(error)console.error('SB upsert error:',error);
+    return !error;
+  }catch(e){console.error('SB upsert error:',e);return false;}
+}
+
+function CEOFeedbackCard(props){
+  var turno=props.turno;
+  var pessoa=props.pessoa;
+  var onClose=props.onClose;
+  var _txt=useState('');var txt=_txt[0];var setTxt=_txt[1];
+  var _loading=useState(false);var loading=_loading[0];var setLoading=_loading[1];
+  var _ok=useState(false);var ok=_ok[0];var setOk=_ok[1];
+
+  async function enviar(){
+    if(!txt.trim())return;
+    setLoading(true);
+    try{
+      await sbInsert('checkon_feedback_ceo',{
+        login_destino:turno.login||pessoa.toLowerCase(),
+        nome_destino:pessoa,
+        login_ceo:'camila',
+        turno_data:turno.data,
+        turno_hora:turno.hora||'',
+        tabela_origem:props.tabela||'',
+        turno_id:turno.id||'',
+        mensagem:txt.trim(),
+        data_criacao:todayISO(),
+        hora_criacao:nowTime(),
+        lido:false
+      });
+      setOk(true);
+      setTimeout(function(){onClose();},1400);
+    }catch(e){console.error(e);}
+    setLoading(false);
+  }
+
+  if(ok)return(
+    <div style={{background:'#F0FDF4',border:'1.5px solid #BBF7D0',borderRadius:12,padding:'16px',textAlign:'center'}}>
+      <div style={{fontSize:22,marginBottom:6}}>✅</div>
+      <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'#16A34A'}}>Recado enviado!</div>
+      <div style={{fontSize:11,color:'#6B7280',marginTop:4}}>{pessoa} vai ver na próxima vez que abrir o app</div>
+    </div>
+  );
+
+  return(
+    <div style={{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:14,padding:'16px'}}>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+        <div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#111827'}}>Deixar recado para {pessoa}</div>
+          <div style={{fontSize:11,color:'#9CA3AF',marginTop:2}}>Turno de {turno.data_fmt||turno.data}{turno.hora?' às '+turno.hora:''}</div>
+        </div>
+        <button onClick={onClose} style={{background:'#F3F4F6',border:'none',borderRadius:8,padding:'6px 10px',fontSize:12,color:'#6B7280',cursor:'pointer',fontWeight:700}}>✕</button>
+      </div>
+      <textarea
+        value={txt}
+        onChange={function(e){setTxt(e.target.value);}}
+        placeholder={'Ex: Gabriela, ótimo turno hoje! Mas vi que a temperatura do recheio ficou pendente duas vezes essa semana. Vamos conversar?'}
+        style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#FAFAFA',resize:'none',minHeight:100,lineHeight:1.6,fontFamily:'inherit',outline:'none'}}
+      />
+      <div style={{display:'flex',gap:8,marginTop:10}}>
+        <button onClick={onClose} style={{flex:1,padding:'10px',background:'transparent',color:'#9CA3AF',border:'1.5px solid #E5E7EB',borderRadius:8,fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer'}}>Cancelar</button>
+        <button onClick={enviar} disabled={loading||!txt.trim()} style={{flex:2,padding:'10px',background:txt.trim()?'#EA1D2C':'#F3F4F6',color:txt.trim()?'#fff':'#9CA3AF',border:'none',borderRadius:8,fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:txt.trim()?'pointer':'not-allowed'}}>
+          {loading?'Enviando...':'Enviar recado 💬'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* Card que aparece nos hubs da equipe quando a Camila deixou um recado */
+function FeedbackCEOCard(props){
+  var login=props.login;
+  var _feedbacks=useState([]);var feedbacks=_feedbacks[0];var setFeedbacks=_feedbacks[1];
+  var _lido=useState({});var lido=_lido[0];var setLido=_lido[1];
+
+  useEffect(function(){
+    async function load(){
+      try{
+        var data=await sbSelect('checkon_feedback_ceo',{login_destino:login});
+        var naoLidos=data.filter(function(f){return !f.lido;}).slice(0,3);
+        setFeedbacks(naoLidos);
+      }catch(e){}
+    }
+    load();
+  },[login]);
+
+  async function marcarLido(id){
+    setLido(function(l){return Object.assign({},l,{[id]:true});});
+    try{
+      await sb.from('checkon_feedback_ceo').update({lido:true}).eq('id',id);
+    }catch(e){}
+  }
+
+  if(feedbacks.length===0)return null;
+
+  return(
+    <div style={{margin:'10px 16px 0'}}>
+      {feedbacks.filter(function(f){return !lido[f.id];}).map(function(f){return(
+        <div key={f.id} style={{background:'#FFF7ED',border:'1.5px solid #FED7AA',borderRadius:14,padding:'14px 16px',marginBottom:8}}>
+          <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:8}}>
+            <div style={{width:28,height:28,borderRadius:'50%',background:'#EA1D2C',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:900,color:'#fff',flexShrink:0}}>C</div>
+            <div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'#111827'}}>Recado da Camila</div>
+              <div style={{fontSize:10,color:'#9CA3AF'}}>Sobre seu turno de {f.turno_data}</div>
+            </div>
+            <button onClick={function(){marcarLido(f.id);}} style={{marginLeft:'auto',background:'transparent',border:'none',fontSize:12,color:'#9CA3AF',cursor:'pointer',padding:'4px 8px',borderRadius:6,fontWeight:600}}>✓ Li</button>
+          </div>
+          <div style={{fontSize:13,color:'#111827',lineHeight:1.6,background:'#fff',borderRadius:8,padding:'10px 12px',border:'1px solid #FED7AA'}}>{f.mensagem}</div>
+        </div>
+      );})}
+    </div>
+  );
+}
+
+/* ══ HELPERS CEO ══ */
+function normSt(d){
+  if(!d)return null;
+  var s=d.status||'';
+  if(s==='ok'||s==='conforme')return'ok';
+  if(s==='critico'||s==='critico')return'critico';
+  if(s==='atencao'||s==='aten\u00e7\u00e3o'||s==='ressalvas')return'atencao';
+  if(d.criticos>0)return'critico';
+  if(d.falhas>0)return'atencao';
+  return'ok';
+}
+function normSc(d){
+  if(!d)return null;
+  if(d.score!=null)return d.score;
+  if(d.falhas==null||d.total==null)return null;
+  return Math.max(0,Math.round(100-(d.falhas/d.total*50)-(( d.criticos||0)*8)));
+}
+function stCor(st){return st==='ok'?'#16A34A':st==='atencao'?'#D97706':'#DC2626';}
+function stLabel(st){return st==='ok'?'OK':st==='atencao'?'Aten\u00e7\u00e3o':'Cr\u00edtico';}
+
+/* ══ CEOHub — nova arquitetura ══ */
 function CEOHub(props){
   var user=props.user;var onLogout=props.onLogout;
-  var _m=useState(null);var mode=_m[0];var setMode=_m[1];
-  if(mode==='dashboard')return<CEODashboard user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
-  return(<div style={{minHeight:'100vh',background:'linear-gradient(145deg,#0a0014,#1a0a2e,#7C3AED)',display:'flex',alignItems:'center',justifyContent:'center',padding:24}}><div style={{background:'#fff',borderRadius:22,padding:'32px 24px',width:'100%',maxWidth:400,boxShadow:'0 30px 80px rgba(0,0,0,.45)'}}><div style={{textAlign:'center',marginBottom:24}}><div style={{fontSize:46,marginBottom:8}}>👑</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:21,fontWeight:900}}>Olá, {user.name}!</div><div style={{fontSize:13,color:'var(--ink3)',marginTop:4}}>CEO · CheckON · Acesso Total</div></div><div style={{display:'flex',flexDirection:'column',gap:10}}><button onClick={function(){setMode('dashboard');}} className="hub-opt"><span className="hub-opt-icon">📊</span><div><div className="hub-opt-title">Visão CEO</div><div className="hub-opt-sub">KPIs, rankings, alertas — dados em tempo real ☁️</div></div></button></div><button onClick={onLogout} style={{width:'100%',marginTop:14,padding:'10px',background:'transparent',color:'var(--ink3)',border:'1.5px solid var(--line)',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button></div></div>);
+  /* estado central: todos os dados carregam aqui uma vez */
+  var _all=useState(null);var allData=_all[0];var setAllData=_all[1];
+  var _loading=useState(true);var loading=_loading[0];var setLoading=_loading[1];
+  var _view=useState('home');var view=_view[0];var setView=_view[1];
+  var _tab=useState('overview');var tab=_tab[0];var setTab=_tab[1];
+  var _psel=useState(0);var pessoaSel=_psel[0];var setPessoaSel=_psel[1];
+  var _aiMsg=useState(null);var aiMsg=_aiMsg[0];var setAiMsg=_aiMsg[1];
+  var _aiLoading=useState(false);var aiLoading=_aiLoading[0];var setAiLoading=_aiLoading[1];
+
+  useEffect(function(){
+    async function load(){
+      setLoading(true);
+      try{
+        var sg=await sbSelect('subger_checklists');
+        var nt=await sbSelect('subger_noite_checklists');
+        var ger=await sbSelect('ger_checklists');
+        var dp=await sbSelect('dp_checklists');
+        var ck=await sbSelect('checklists');
+        var pend=await sbSelect('checkon_pendencias');
+        var sugs=await sbSelect('dp_sugestoes');
+        setAllData({sg:sg,nt:nt,ger:ger,dp:dp,ck:ck,pend:pend.filter(function(r){return r.status==='aberta';}),sugs:sugs});
+      }catch(e){setAllData({sg:[],nt:[],ger:[],dp:[],ck:[],pend:[],sugs:[]});}
+      setLoading(false);
+    }
+    load();
+  },[]);
+
+  /* ── dados derivados ── */
+  var hoje=todayISO();
+  var hojeStr=todayFmt();
+
+  var pessoas=useMemo(function(){
+    if(!allData)return[];
+    return[
+      {key:'sg',nome:'Gabriela',turno:'Manh\u00e3',emoji:'🌅',d:allData.sg.find(function(r){return r.data===hoje;})||null},
+      {key:'nt',nome:'Vit\u00f3ria',turno:'Noite',emoji:'🌙',d:allData.nt.find(function(r){return r.data===hoje;})||null},
+      {key:'ger',nome:'Derik',turno:'Ger\u00eancia',emoji:'🏢',d:allData.ger.find(function(r){return r.data===hoje;})||null},
+      {key:'dp',nome:'Viviane',turno:'DP',emoji:'🗂️',d:(allData.dp.find(function(r){return r.data===hoje&&r.freq==='diario';})||null)},
+    ];
+  },[allData,hoje]);
+
+  var insights=useMemo(function(){
+    if(!allData)return{pendAbertas:0,criticosHoje:0,quedas:[],destaques:[],falhaMaisFreq:null};
+    var pendAbertas=allData.pend.length;
+    var criticosHoje=0;
+    pessoas.forEach(function(p){if(p.d&&(p.d.criticos||0)>0)criticosHoje++;});
+    /* tendência 7 dias — queda de score */
+    var sete=new Date();sete.setDate(sete.getDate()-7);var seteStr=sete.toISOString().slice(0,10);
+    var quedas=[];
+    ['sg','nt'].forEach(function(k){
+      var arr=k==='sg'?allData.sg:allData.nt;
+      var recentes=arr.filter(function(r){return r.data>=seteStr;}).slice(0,7);
+      if(recentes.length<3)return;
+      var avg7=Math.round(recentes.reduce(function(a,b){return a+(b.score||0);},0)/recentes.length);
+      var ultimos3=recentes.slice(0,3);
+      var avg3=Math.round(ultimos3.reduce(function(a,b){return a+(b.score||0);},0)/ultimos3.length);
+      var nome=k==='sg'?'Gabriela':'Vit\u00f3ria';
+      if(avg3<avg7-8)quedas.push({nome:nome,avg7:avg7,avg3:avg3,diff:avg7-avg3});
+      if(avg3>avg7+5)quedas.push({nome:nome,avg7:avg7,avg3:avg3,diff:-(avg3-avg7),positivo:true});
+    });
+    /* falha mais frequente últimos 7 dias */
+    var contFalhas={};
+    [].concat(allData.sg,allData.nt).filter(function(r){return r.data>=seteStr;}).forEach(function(r){
+      var negs=r.negs||{};
+      Object.keys(negs).forEach(function(id){if(negs[id]&&negs[id].aconteceu)contFalhas[negs[id].aconteceu]=(contFalhas[negs[id].aconteceu]||0)+1;});
+    });
+    var topFalha=Object.entries(contFalhas).sort(function(a,b){return b[1]-a[1];})[0]||null;
+    return{pendAbertas:pendAbertas,criticosHoje:criticosHoje,quedas:quedas,falhaMaisFreq:topFalha?{texto:topFalha[0],count:topFalha[1]}:null};
+  },[allData,pessoas]);
+
+  var ranking=useMemo(function(){
+    if(!allData)return[];
+    var todos=[].concat(
+      allData.sg.map(function(d){return{nome:d.user_name,score:d.score||0};}),
+      allData.nt.map(function(d){return{nome:d.user_name,score:d.score||0};}),
+      allData.ck.map(function(d){return{nome:d.user_name,score:d.score||0};})
+    );
+    var nomes=[];todos.forEach(function(d){if(nomes.indexOf(d.nome)<0&&d.nome)nomes.push(d.nome);});
+    return nomes.map(function(n){
+      var arr=todos.filter(function(x){return x.nome===n;});
+      return{nome:n,avg:Math.round(arr.reduce(function(a,b){return a+b.score;},0)/arr.length),turnos:arr.length};
+    }).sort(function(a,b){return b.avg-a.avg;}).slice(0,6);
+  },[allData]);
+
+  /* ── resumo IA ── */
+  async function gerarResumo(){
+    if(!allData)return;
+    setAiLoading(true);setAiMsg(null);
+    try{
+      /* monta contexto rico para a IA */
+      var linhas=['Operação do Pastel da Camilla — '+hojeStr];
+      linhas.push('');
+      linhas.push('STATUS DE HOJE:');
+      pessoas.forEach(function(p){
+        var d=p.d;
+        if(!d){linhas.push('- '+p.nome+' ('+p.turno+'): nao enviou ainda');}
+        else{
+          var sc=normSc(d);var st=normSt(d);
+          linhas.push('- '+p.nome+' ('+p.turno+'): score '+sc+'/100, '+
+            (d.falhas||0)+' falha(s), '+(d.criticos||0)+' critico(s), status '+st+
+            (d.hora?' - enviado as '+d.hora:''));
+          if(d.relato)linhas.push('  relato: '+d.relato);
+        }
+      });
+      linhas.push('');
+      linhas.push('Pendencias abertas: '+allData.pend.length);
+      if(allData.pend.length>0){
+        allData.pend.slice(0,5).forEach(function(p){
+          linhas.push('  - '+p.user_name+': '+p.item_texto+' ('+p.data_fmt+')');
+        });
+      }
+      if(insights.quedas.length>0){
+        linhas.push('');linhas.push('TENDENCIAS (7 dias):');
+        insights.quedas.forEach(function(q){
+          linhas.push('- '+(q.positivo?'MELHORA':'QUEDA')+': '+q.nome+
+            ', media 7d='+q.avg7+', ultimos 3 turnos='+q.avg3+
+            ', variacao='+(q.positivo?'+':'')+(-q.diff));
+        });
+      }
+      if(insights.falhaMaisFreq){
+        linhas.push('');
+        linhas.push('Falha mais recorrente (7 dias): "'+insights.falhaMaisFreq.texto+'" ('+insights.falhaMaisFreq.count+'x)');
+      }
+      if(ranking.length>0){
+        linhas.push('');linhas.push('RANKING ATUAL:');
+        ranking.slice(0,4).forEach(function(r,i){
+          linhas.push((i+1)+'o '+r.nome+' - media '+r.avg+' ('+r.turnos+' turnos)');
+        });
+      }
+      var contexto=linhas.join('\n');
+      var resp=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-20250514',
+          max_tokens:600,
+          system:'Voce e o assistente de gestao da Camila, CEO do Pastel da Camilla. Com base nos dados operacionais fornecidos, escreva um resumo executivo curto e direto — maximo 4 frases. Formato: 1) o que esta bem hoje, 2) o que precisa de atencao imediata, 3) uma recomendacao pratica e especifica. Linguagem direta, como gerente experiente falando pra dona do negocio. Sem emojis. Sem titulos. Sem bullet points. Texto corrido.',
+          messages:[{role:'user',content:contexto}]
+        })
+      });
+      if(!resp.ok){
+        var errText=await resp.text();
+        throw new Error('HTTP '+resp.status+': '+errText.slice(0,200));
+      }
+      var data=await resp.json();
+      var txt=(data.content&&data.content[0]&&data.content[0].text)||'';
+      setAiMsg(txt||'Sem resposta da IA.');
+    }catch(e){
+      var msg=e.message||'';
+      if(msg.indexOf('Failed to fetch')>=0||msg.indexOf('NetworkError')>=0||msg.indexOf('CORS')>=0){
+        setAiMsg('A análise por IA está disponível quando o sistema está hospedado online (não funciona em arquivo local). Suba o arquivo no Netlify e o botão vai funcionar normalmente.');
+      }else{
+        setAiMsg('Erro ao gerar análise: '+msg.slice(0,120));
+      }
+    }
+    setAiLoading(false);
+  }
+
+  /* ── se ainda carregando ── */
+  if(loading){
+    return(
+      <div style={{minHeight:'100vh',background:'#F5F5F5',display:'flex',flexDirection:'column'}}>
+        <div style={{background:'#EA1D2C',padding:'28px 20px 22px'}}>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:2,textTransform:'uppercase',opacity:.75,color:'rgba(255,255,255,.8)',marginBottom:6}}>CheckON · Pastel da Camilla</div>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:24,fontWeight:900,color:'#fff',letterSpacing:'-.3px'}}>{'Olá, '+user.name+'.'}</div>
+          <div style={{fontSize:13,opacity:.8,marginTop:3,color:'rgba(255,255,255,.85)'}}>Carregando operação...</div>
+        </div>
+        <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <div style={{textAlign:'center'}}>
+            <div className="spin" style={{margin:'0 auto 12px'}}/>
+            <div style={{fontSize:13,color:'#9CA3AF'}}>Buscando dados da equipe</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── view: dashboard (9 abas herdadas) ── */
+  if(view==='dashboard'){
+    return(
+      <CEODashboardNew
+        user={user}
+        onLogout={onLogout}
+        onBack={function(){setView('home');}}
+        allData={allData}
+        initialTab={tab}
+        pessoas={pessoas}
+        insights={insights}
+        ranking={ranking}
+        normSt={normSt}
+        normSc={normSc}
+      />
+    );
+  }
+
+  /* ── view: pessoa individual ── */
+  if(view==='pessoa'){
+    return(
+      <CEOPessoaView
+        user={user}
+        allData={allData}
+        pessoas={pessoas}
+        initialSel={pessoaSel}
+        normSt={normSt}
+        normSc={normSc}
+        stCor={stCor}
+        stLabel={stLabel}
+        onBack={function(){setView('home');}}
+      />
+    );
+  }
+
+  /* ── view: home ── */
+  var pendAbertas=insights.pendAbertas;
+  var criticosHoje=insights.criticosHoje;
+
+  return(
+    <div style={{minHeight:'100vh',background:'#F5F5F5',display:'flex',flexDirection:'column',paddingBottom:32}}>
+
+      {/* HEADER */}
+      <div style={{background:'#EA1D2C',padding:'28px 20px 20px',color:'#fff'}}>
+        <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:20}}>
+          <div>
+            <div style={{fontSize:10,fontWeight:700,letterSpacing:2,textTransform:'uppercase',opacity:.75,marginBottom:5}}>CheckON · Pastel da Camilla</div>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:24,fontWeight:900,letterSpacing:'-.3px'}}>{'Olá, '+user.name+'.'}</div>
+            <div style={{fontSize:13,opacity:.8,marginTop:3}}>{hojeStr}</div>
+          </div>
+          <div style={{width:44,height:44,borderRadius:'50%',background:'rgba(255,255,255,.2)',border:'2px solid rgba(255,255,255,.3)',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900,color:'#fff',flexShrink:0}}>
+            {user.name.charAt(0)}
+          </div>
+        </div>
+
+        {/* STRIP HOJE — 4 chips */}
+        <div style={{display:'flex',gap:6}}>
+          {pessoas.map(function(p){
+            var st=normSt(p.d);var sc=normSc(p.d);
+            var bg=!p.d?'rgba(255,255,255,.1)':st==='ok'?'rgba(255,255,255,.22)':st==='atencao'?'rgba(255,200,0,.28)':'rgba(255,80,80,.22)';
+            var dot=!p.d?'rgba(255,255,255,.25)':st==='ok'?'#4ADE80':st==='atencao'?'#FCD34D':'#FCA5A5';
+            var lbl=!p.d?'—':st==='ok'?'OK':st==='atencao'?'Aten.':'CRIT';
+            return(
+              <div key={p.key} onClick={function(){setPessoaSel(pessoas.indexOf(p));setView('pessoa');}} style={{flex:1,background:bg,borderRadius:10,padding:'10px 6px',textAlign:'center',cursor:'pointer',border:st==='critico'?'1.5px solid rgba(255,255,255,.5)':'1.5px solid transparent'}}>
+                <div style={{fontSize:10,opacity:.8,marginBottom:4,fontWeight:600,color:'#fff'}}>{p.nome}</div>
+                <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:4}}>
+                  <div style={{width:6,height:6,borderRadius:'50%',background:dot,flexShrink:0}}/>
+                  <span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:'#fff'}}>{sc!=null?sc:'–'}</span>
+                </div>
+                <div style={{fontSize:9,opacity:.65,marginTop:2,fontWeight:600,color:'#fff'}}>{lbl}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={{padding:'16px 16px 0'}}>
+
+        {/* ALERTAS RÁPIDOS — aparecem só se houver algo */}
+        {(pendAbertas>0||criticosHoje>0||insights.quedas.filter(function(q){return!q.positivo;}).length>0)&&(
+          <div style={{background:'#FEF2F2',border:'1.5px solid #FECACA',borderRadius:12,padding:'12px 14px',marginBottom:12}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'#DC2626',marginBottom:8}}>Atenção agora</div>
+            {criticosHoje>0&&<div style={{fontSize:13,color:'#111827',marginBottom:4,lineHeight:1.4}}>{'🔴 '+criticosHoje+' crítico'+(criticosHoje>1?'s':'')+' aberto'+(criticosHoje>1?'s':'')+' hoje'}</div>}
+            {pendAbertas>0&&<div style={{fontSize:13,color:'#111827',marginBottom:4,lineHeight:1.4}}>{'⚠️ '+pendAbertas+' pendência'+(pendAbertas>1?'s':'')+' sem resolução'}</div>}
+            {insights.quedas.filter(function(q){return!q.positivo;}).map(function(q,i){return<div key={i} style={{fontSize:13,color:'#111827',lineHeight:1.4}}>{'📉 '+q.nome+' caiu '+q.diff+' pts nos últimos 3 turnos'}</div>;})}
+          </div>
+        )}
+
+        {/* CARD IA — RESUMO INTELIGENTE */}
+        <div style={{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:14,padding:'16px',marginBottom:12}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:aiMsg?12:0}}>
+            <div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#111827'}}>Resumo inteligente</div>
+              <div style={{fontSize:11,color:'#9CA3AF',marginTop:2}}>Análise da operação por IA</div>
+            </div>
+            <button onClick={gerarResumo} disabled={aiLoading} style={{padding:'8px 14px',background:aiLoading?'#F3F4F6':'#EA1D2C',color:aiLoading?'#9CA3AF':'#fff',border:'none',borderRadius:8,fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:aiLoading?'not-allowed':'pointer',flexShrink:0}}>
+              {aiLoading?'Analisando...':'Analisar'}
+            </button>
+          </div>
+          {aiLoading&&(
+            <div style={{display:'flex',alignItems:'center',gap:8,paddingTop:8}}>
+              <div className="spin" style={{width:18,height:18,borderWidth:2}}/>
+              <span style={{fontSize:12,color:'#9CA3AF'}}>Lendo os dados da operação...</span>
+            </div>
+          )}
+          {aiMsg&&!aiLoading&&(
+            <div style={{fontSize:13,color:'#111827',lineHeight:1.7,borderTop:'1px solid #F3F4F6',paddingTop:12}}>{aiMsg}</div>
+          )}
+          {!aiMsg&&!aiLoading&&(
+            <div style={{fontSize:12,color:'#9CA3AF',marginTop:8}}>Clique em Analisar para gerar um resumo executivo da operação de hoje.</div>
+          )}
+        </div>
+
+        {/* NAVEGAÇÃO RÁPIDA */}
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:1.2,marginBottom:10}}>Navegar</div>
+
+        <button onClick={function(){setTab('overview');setView('dashboard');}} style={{width:'100%',background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:12,padding:'15px 16px',display:'flex',alignItems:'center',gap:14,marginBottom:8,cursor:'pointer',textAlign:'left'}}>
+          <div style={{width:40,height:40,borderRadius:10,background:'#EA1D2C',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="12" width="4" height="9" rx="1" fill="#fff"/><rect x="10" y="7" width="4" height="14" rx="1" fill="rgba(255,255,255,.7)"/><rect x="17" y="3" width="4" height="18" rx="1" fill="rgba(255,255,255,.5)"/></svg>
+          </div>
+          <div style={{flex:1}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#111827',marginBottom:1}}>Painel completo</div>
+            <div style={{fontSize:11,color:'#6B7280'}}>Todos os dados, histórico, ranking, alertas</div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#D1D5DB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:8}}>
+          {[
+            {tab:'pendencias',emoji:'⚠️',label:'Pendências',sub:pendAbertas>0?pendAbertas+' abertas':'Nenhuma',urgente:pendAbertas>0},
+            {tab:'ranking',emoji:'🏆',label:'Ranking',sub:ranking.length>0?'1º '+ranking[0].nome:'—',urgente:false},
+            {tab:'alertas',emoji:'🚨',label:'Alertas',sub:criticosHoje>0?criticosHoje+' crítico'+(criticosHoje>1?'s':''):'Sem críticos',urgente:criticosHoje>0},
+            {tab:'turnos',emoji:'📋',label:'Histórico',sub:'Todos os turnos',urgente:false},
+          ].map(function(item){return(
+            <button key={item.tab} onClick={function(){setTab(item.tab);setView('dashboard');}} style={{background:'#fff',border:'1.5px solid '+(item.urgente?'#FECACA':'#E5E7EB'),borderRadius:12,padding:'14px 12px',textAlign:'left',cursor:'pointer'}}>
+              <div style={{fontSize:20,marginBottom:6}}>{item.emoji}</div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'#111827',marginBottom:2}}>{item.label}</div>
+              <div style={{fontSize:11,color:item.urgente?'#DC2626':'#9CA3AF',fontWeight:item.urgente?700:400}}>{item.sub}</div>
+            </button>
+          );})}
+        </div>
+
+        {/* RANKING RÁPIDO */}
+        {ranking.length>0&&(
+          <div style={{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:12,padding:'14px 16px',marginBottom:8}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#111827',marginBottom:12}}>Top performance</div>
+            {ranking.slice(0,3).map(function(p,i){
+              var cor=i===0?'#EA1D2C':i===1?'#6B7280':'#B45309';
+              return(
+                <div key={p.nome} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderBottom:i<2?'1px solid #F3F4F6':'none'}}>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:900,color:cor,width:20,textAlign:'center'}}>{i+1}</div>
+                  <div style={{width:32,height:32,borderRadius:'50%',background:'#F3F4F6',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#374151'}}>{(p.nome||'?').charAt(0)}</div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:'#111827'}}>{p.nome}</div>
+                    <div style={{fontSize:10,color:'#9CA3AF',marginTop:1}}>{p.turnos} turno{p.turnos!==1?'s':''}</div>
+                  </div>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900,color:p.avg>=80?'#16A34A':p.avg>=60?'#D97706':'#DC2626'}}>{p.avg}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+      </div>
+
+      <div style={{padding:'0 16px'}}>
+        <button onClick={onLogout} style={{width:'100%',padding:'11px',background:'transparent',color:'#9CA3AF',border:'1.5px solid #E5E7EB',borderRadius:10,fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700}}>Sair</button>
+      </div>
+    </div>
+  );
 }
+
+
+
+/* ══ CEODashboardNew — dashboard completo herdado, paleta corrigida ══ */
+function CEODashboardNew(props){
+  var user=props.user;var onLogout=props.onLogout;var onBack=props.onBack;
+  var allData=props.allData;var normSt=props.normSt;var normSc=props.normSc;
+  var pessoas=props.pessoas;var insights=props.insights;var ranking=props.ranking;
+  var _t=useState(props.initialTab||'overview');var tab=_t[0];var setTab=_t[1];
+  var _dpDetail=useState(null);var dpDetail=_dpDetail[0];var setDpDetail=_dpDetail[1];
+
+  var hoje=todayISO();var hojeStr=todayFmt();
+
+  /* KPIs */
+  var subgerKpi=useMemo(function(){var r=allData.sg;var tot=r.length;if(!tot)return{tot:0,avg:0,fl:0,pend:0};var avg=Math.round(r.reduce(function(a,b){return a+(b.score||0);},0)/tot);var fl=r.reduce(function(a,b){return a+(b.falhas||0);},0);var pend=r.reduce(function(a,b){return a+(b.pendencias||0);},0);return{tot:tot,avg:avg,fl:fl,pend:pend};},[allData]);
+  var noiteKpi=useMemo(function(){var r=allData.nt;var tot=r.length;if(!tot)return{tot:0,avg:0,fl:0,pend:0};var avg=Math.round(r.reduce(function(a,b){return a+(b.score||0);},0)/tot);var fl=r.reduce(function(a,b){return a+(b.falhas||0);},0);var pend=r.reduce(function(a,b){return a+(b.pendencias||0);},0);return{tot:tot,avg:avg,fl:fl,pend:pend};},[allData]);
+  var gerKpi=useMemo(function(){var r=allData.ger;var tot=r.length;if(!tot)return{tot:0,avg:0,fl:0};var avg=Math.round(r.reduce(function(a,b){return a+(b.score||0);},0)/tot);var fl=r.reduce(function(a,b){return a+(b.falhas||0);},0);return{tot:tot,avg:avg,fl:fl};},[allData]);
+  var dpKpi=useMemo(function(){var r=allData.dp;var tot=r.length;if(!tot)return{tot:0,avg:0,fl:0};var avg=Math.round(r.reduce(function(a,b){return a+(b.score||0);},0)/tot);var fl=r.reduce(function(a,b){return a+(b.falhas||0);},0);return{tot:tot,avg:avg,fl:fl};},[allData]);
+
+  var alertas=useMemo(function(){
+    return[].concat(
+      allData.sg.filter(function(d){return(d.criticos||0)>0;}).map(function(d){return{msg:d.user_name+' · Manhã · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};}),
+      allData.nt.filter(function(d){return(d.criticos||0)>0;}).map(function(d){return{msg:d.user_name+' · Noite · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};}),
+      allData.ck.filter(function(d){return(d.criticos||0)>0;}).map(function(d){return{msg:d.user_name+' · Turno · '+d.data_fmt,sub:d.criticos+' crítico(s) · Score '+d.score,hoje:d.data===hoje};})
+    ).sort(function(a,b){return b.hoje-a.hoje;}).slice(0,12);
+  },[allData,hoje]);
+
+  var TABS=[['overview','Geral'],['subgerencia','Gabriela'],['vitoria','Vitória'],['gerencia','Gerência'],['dp','DP'],['pendencias','Pendências'],['ranking','Ranking'],['alertas','Alertas'],['turnos','Turnos']];
+
+  /* helpers visuais */
+  function ScPill(p){var c=p.sc>=80?'#16A34A':p.sc>=60?'#D97706':'#DC2626';return<span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:c}}>{p.sc}</span>;}
+  function StBadge(p){var st=normSt(p.d);var bg=st==='ok'?'#D1FAE5':st==='atencao'?'#FEF3C7':'#FEE2E2';var col=st==='ok'?'#065F46':st==='atencao'?'#92400E':'#991B1B';var lbl=st==='ok'?'OK':st==='atencao'?'Atenção':'Crítico';return<span style={{background:bg,color:col,borderRadius:99,padding:'2px 9px',fontSize:10,fontWeight:700}}>{lbl}</span>;}
+
+  if(dpDetail){
+    return(
+      <div style={{minHeight:'100vh',background:'#F5F5F5',paddingBottom:32}}>
+        <div style={{background:'#EA1D2C',color:'#fff',padding:'14px 16px'}}>
+          <button onClick={function(){setDpDetail(null);}} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer',marginBottom:8}}>← Voltar</button>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900}}>{dpDetail.checklist}</div>
+          <div style={{fontSize:12,opacity:.7,marginTop:2}}>{dpDetail.user_name} · {dpDetail.data_fmt||dpDetail.data} · {dpDetail.hora}</div>
+        </div>
+        <div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}>
+          <div style={{background:dpDetail.status==='ok'?'#F0FDF4':dpDetail.status==='atencao'?'#FFFBEB':'#FEF2F2',border:'1.5px solid '+(dpDetail.status==='ok'?'#16A34A':dpDetail.status==='atencao'?'#D97706':'#DC2626'),borderRadius:16,padding:'16px',marginBottom:12,display:'flex',alignItems:'center',gap:12}}>
+            <div style={{fontSize:36}}>{dpDetail.status==='ok'?'✅':dpDetail.status==='atencao'?'⚠️':'🚨'}</div>
+            <div><div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Score: {dpDetail.score}/100</div><div style={{fontSize:12,marginTop:2}}>{dpDetail.falhas} falha(s) · {dpDetail.total} itens</div></div>
+          </div>
+          {(DP_FREQ_MAP[dpDetail.freq]||DP_FREQ_MAP.diario).blocos.map(function(bloco){
+            var rs=dpDetail.resps||{};var ng=dpDetail.negs||{};var itens=bloco.itens||[];
+            var fl=itens.filter(function(i){return rs[i.id]==='nao';}).length;var ok2=itens.every(function(i){return rs[i.id];});
+            return(
+              <div key={bloco.id} style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',marginBottom:10,overflow:'hidden'}}>
+                <div style={{padding:'11px 14px',background:fl>0?'#FEF2F2':ok2?'#F0FDF4':'#F9FAFB',borderBottom:'1px solid #E5E7EB',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>{bloco.titulo}</div>
+                  <span style={{fontSize:11,fontWeight:700,color:fl>0?'#DC2626':ok2?'#16A34A':'#9CA3AF'}}>{fl>0?fl+' falha'+(fl>1?'s':''):ok2?'✅ OK':'⏳'}</span>
+                </div>
+                {itens.map(function(item){var r=rs[item.id];var neg=ng[item.id];return(
+                  <div key={item.id} style={{padding:'10px 14px',borderBottom:'1px solid #F3F4F6',background:r==='nao'?'#FFF5F5':r==='sim'?'#F9FEFE':'#FAFAFA'}}>
+                    <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
+                      <div style={{flex:1,fontSize:13,color:'#111',lineHeight:1.4}}>{item.texto}</div>
+                      <span style={{flexShrink:0,fontSize:11,fontWeight:700,color:r==='sim'?'#16A34A':r==='nao'?'#DC2626':'#9CA3AF',background:r==='sim'?'#D1FAE5':r==='nao'?'#FEE2E2':'#F3F4F6',borderRadius:99,padding:'2px 10px'}}>{r==='sim'?'✅ Sim':r==='nao'?'❌ Não':'–'}</span>
+                    </div>
+                    {r==='nao'&&neg&&<div style={{marginTop:8,background:'#FFF0F0',borderRadius:8,padding:'10px 12px',fontSize:12,color:'#991B1B',lineHeight:1.6}}>{neg.ocorrencia&&<div><strong>O que:</strong> {neg.ocorrencia}</div>}{neg.acao&&<div><strong>Ação:</strong> {neg.acao}</div>}{neg.detalhe&&<div><strong>Detalhe:</strong> {neg.detalhe}</div>}</div>}
+                  </div>
+                );})}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  return(
+    <div style={{minHeight:'100vh',background:'#F5F5F5',paddingBottom:32}}>
+      {/* Header */}
+      <div style={{background:'#EA1D2C',color:'#fff',padding:'16px 16px 14px',position:'sticky',top:0,zIndex:100}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            {onBack&&<button onClick={onBack} className="hdr-btn">← Voltar</button>}
+            <div>
+              <div style={{fontSize:9,opacity:.65,fontWeight:700,letterSpacing:1.5,textTransform:'uppercase'}}>CheckON · Visão CEO</div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Painel completo</div>
+            </div>
+          </div>
+          <button onClick={onLogout} className="hdr-btn">Sair</button>
+        </div>
+        {/* Nav tabs */}
+        <div style={{display:'flex',gap:6,overflowX:'auto',WebkitOverflowScrolling:'touch',paddingBottom:2}}>
+          {TABS.map(function(x){var hasBadge=(x[0]==='pendencias'&&allData.pend.length>0)||(x[0]==='alertas'&&alertas.filter(function(a){return a.hoje;}).length>0);return(
+            <button key={x[0]} onClick={function(){setTab(x[0]);}} style={{padding:'6px 12px',borderRadius:99,fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,whiteSpace:'nowrap',border:'1.5px solid '+(tab===x[0]?'#fff':'rgba(255,255,255,.3)'),background:tab===x[0]?'#fff':'transparent',color:tab===x[0]?'#EA1D2C':'#fff',flexShrink:0,position:'relative'}}>
+              {x[1]}{hasBadge&&<span style={{position:'absolute',top:-3,right:-3,width:8,height:8,background:'#FCD34D',borderRadius:'50%',border:'1.5px solid #EA1D2C'}}/>}
+            </button>
+          );})}
+        </div>
+      </div>
+
+      {/* OVERVIEW */}
+      {tab==='overview'&&(
+        <div style={{padding:'12px 16px 0'}}>
+          {/* Cards hoje */}
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>{'Hoje — '+hojeStr}</div>
+          {pessoas.map(function(p){
+            var st=normSt(p.d);var sc=normSc(p.d);
+            var stBg=!p.d?'#F9FAFB':st==='ok'?'#F0FDF4':st==='atencao'?'#FFFBEB':'#FEF2F2';
+            var stBorder=!p.d?'#E5E7EB':st==='ok'?'#BBF7D0':st==='atencao'?'#FDE68A':'#FECACA';
+            return(
+              <div key={p.key} style={{background:'#fff',border:'1.5px solid '+stBorder,borderRadius:12,padding:'12px 14px',marginBottom:8,display:'flex',alignItems:'center',gap:12}}>
+                <div style={{fontSize:22,flexShrink:0}}>{p.emoji}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'#111827'}}>{p.nome} — {p.turno}</div>
+                  {p.d?<div style={{fontSize:11,color:'#6B7280',marginTop:2}}>{p.d.hora} · {p.d.falhas||0} falha{(p.d.falhas||0)!==1?'s':''} · {p.d.pendencias||0} pend.</div>
+                  :<div style={{fontSize:11,color:'#9CA3AF',marginTop:2,fontStyle:'italic'}}>Não enviado ainda</div>}
+                </div>
+                <div style={{textAlign:'right',flexShrink:0}}>
+                  {p.d?<><ScPill sc={sc}/><br/><StBadge d={p.d}/></>:<span style={{fontSize:11,color:'#D1D5DB'}}>–</span>}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* KPIs gerais */}
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:1,marginBottom:10,marginTop:16}}>Geral acumulado</div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8}}>
+            {[
+              {lbl:'Turnos manhã',val:subgerKpi.tot,sub:'Score méd. '+subgerKpi.avg},
+              {lbl:'Turnos noite',val:noiteKpi.tot,sub:'Score méd. '+noiteKpi.avg},
+              {lbl:'Falhas manhã',val:subgerKpi.fl,sub:'Total histórico',danger:subgerKpi.fl>0},
+              {lbl:'Pendências',val:allData.pend.length,sub:'Em aberto',danger:allData.pend.length>0},
+            ].map(function(k){return(
+              <div key={k.lbl} style={{background:'#fff',border:'1px solid #E5E7EB',borderRadius:10,padding:'12px 14px'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:4}}>{k.lbl}</div>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900,color:k.danger?'#DC2626':'#111827',lineHeight:1}}>{k.val}</div>
+                <div style={{fontSize:10,color:'#6B7280',marginTop:3}}>{k.sub}</div>
+              </div>
+            );})}
+          </div>
+        </div>
+      )}
+
+      {/* GABRIELA */}
+      {tab==='subgerencia'&&(
+        <div>
+          <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:12,padding:'12px 14px',color:'#fff'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{allData.sg.length} turno{allData.sg.length!==1?'s':''}</div>
+            <div style={{fontSize:11,opacity:.7,marginTop:2}}>Subgerência Manhã · Score méd. {subgerKpi.avg}/100 · {subgerKpi.fl} falhas</div>
+          </div>
+          {allData.sg.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'#fff',borderRadius:12,textAlign:'center',border:'1px solid #E5E7EB',color:'#9CA3AF',fontSize:13}}>Nenhum turno ainda.</div>}
+          {allData.sg.slice(0,30).map(function(d,i){return React.createElement('div',{key:d.id||i},React.createElement(SubgerCEORow,{d:d}),React.createElement('div',{style:{textAlign:'right',margin:'-2px 16px 6px'}},React.createElement('button',{onClick:function(){setFeedbackTarget(feedbackTarget&&feedbackTarget.id===d.id?null:{id:d.id,turno:d,pessoa:'Gabriela',tabela:'subger_checklists'});},style:{fontSize:11,color:'#EA1D2C',fontWeight:700,background:'transparent',border:'none',cursor:'pointer',padding:'4px 8px'}},'Dar feedback')),feedbackTarget&&feedbackTarget.id===d.id?React.createElement('div',{style:{margin:'0 16px 8px'}},React.createElement(CEOFeedbackCard,{turno:feedbackTarget.turno,pessoa:feedbackTarget.pessoa,tabela:feedbackTarget.tabela,onClose:function(){setFeedbackTarget(null);}})):null);})}}</div>
+      )}
+
+      {/* VITÓRIA */}
+      {tab==='vitoria'&&(
+        <div>
+          <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:12,padding:'12px 14px',color:'#fff'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{allData.nt.length} turno{allData.nt.length!==1?'s':''} da noite</div>
+            <div style={{fontSize:11,opacity:.7,marginTop:2}}>Score méd. {noiteKpi.avg}/100 · {noiteKpi.fl} falhas · {noiteKpi.pend} pend.</div>
+          </div>
+          {allData.nt.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'#fff',borderRadius:12,textAlign:'center',border:'1px solid #E5E7EB',color:'#9CA3AF',fontSize:13}}>Nenhum turno ainda.</div>}
+          {allData.nt.slice(0,20).map(function(d,i){
+            var sc=d.score;var st=normSt(d);var stBg=st==='ok'?'#D1FAE5':st==='atencao'?'#FEF3C7':'#FEE2E2';var stC=st==='ok'?'#065F46':st==='atencao'?'#92400E':'#991B1B';var stL=st==='ok'?'OK':st==='atencao'?'Atenção':'Crítico';
+            return(<div key={d.id||i} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+                <div><span style={{fontSize:13,fontWeight:700,color:'#111827'}}>{d.user_name||'Vitória'}</span><span style={{fontSize:11,color:'#9CA3AF',marginLeft:8}}>{d.data_fmt||d.data} · {d.hora}</span></div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:sc>=80?'#16A34A':sc>=60?'#D97706':'#DC2626'}}>{sc}</span><span style={{background:stBg,color:stC,borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{stL}</span></div>
+              </div>
+              <div style={{display:'flex',gap:14,fontSize:11,color:'#6B7280'}}>
+                <span>✅ {(d.total||0)-(d.falhas||0)}/{d.total||0} OK</span>
+                {(d.falhas||0)>0&&<span style={{color:'#DC2626',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}
+                {(d.pendencias||0)>0&&<span style={{color:'#D97706',fontWeight:600}}>⏳ {d.pendencias} pend.</span>}
+              </div>
+              {d.relato&&<div style={{marginTop:8,fontSize:12,color:'#374151',background:'#F9FAFB',borderRadius:8,padding:'8px 10px',lineHeight:1.5,borderLeft:'3px solid #EA1D2C'}}>{d.relato}</div>}
+            </div>);
+          })}
+        </div>
+      )}
+
+      {/* GERÊNCIA */}
+      {tab==='gerencia'&&(
+        <div>
+          <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:12,padding:'12px 14px',color:'#fff'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{allData.ger.length} relatório{allData.ger.length!==1?'s':''}</div>
+            <div style={{fontSize:11,opacity:.7,marginTop:2}}>Gerência · Score méd. {gerKpi.avg}/100 · {gerKpi.fl} falhas</div>
+          </div>
+          {allData.ger.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'#fff',borderRadius:12,textAlign:'center',border:'1px solid #E5E7EB',color:'#9CA3AF',fontSize:13}}>Nenhum relatório ainda.</div>}
+          {allData.ger.length>0&&(<div style={{margin:'10px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',overflow:'hidden'}}>
+            <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+              <thead><tr style={{borderBottom:'2px solid #F3F4F6'}}><th style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.4}}>Data</th><th style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Turno</th><th style={{padding:'8px 10px',textAlign:'right',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Score</th><th style={{padding:'8px 10px',textAlign:'right',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Falhas</th></tr></thead>
+              <tbody>{allData.ger.slice(0,20).map(function(d,i){var sc=d.score;var st=normSt(d);return(
+                <tr key={i} style={{borderBottom:'1px solid #F9FAFB'}}>
+                  <td style={{padding:'10px 10px',fontSize:11,color:'#374151'}}>{d.data_fmt||d.data}</td>
+                  <td style={{padding:'10px 10px'}}><span style={{background:d.turno==='manha'?'#FEF3C7':'#F3F4F6',color:d.turno==='manha'?'#92400E':'#374151',borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{d.turno==='manha'?'🌅 Manhã':'🌙'}</span></td>
+                  <td style={{padding:'10px 10px',textAlign:'right',fontFamily:"'Sora',sans-serif",fontWeight:900,color:sc>=80?'#16A34A':sc>=60?'#D97706':'#DC2626'}}>{sc}</td>
+                  <td style={{padding:'10px 10px',textAlign:'right',fontFamily:"'Sora',sans-serif",fontWeight:700,color:(d.falhas||0)>0?'#DC2626':'#16A34A'}}>{d.falhas||0}</td>
+                </tr>);
+              })}</tbody>
+            </table>
+          </div>)}
+        </div>
+      )}
+
+      {/* DP */}
+      {tab==='dp'&&(
+        <div>
+          <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:12,padding:'12px 14px',color:'#fff'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{allData.dp.length} rotina{allData.dp.length!==1?'s':''}</div>
+            <div style={{fontSize:11,opacity:.7,marginTop:2}}>DP · Score méd. {dpKpi.avg}/100 · {dpKpi.fl} falhas</div>
+          </div>
+          {allData.dp.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'#fff',borderRadius:12,textAlign:'center',border:'1px solid #E5E7EB',color:'#9CA3AF',fontSize:13}}>Nenhuma rotina ainda.</div>}
+          {allData.dp.slice(0,30).map(function(d,i){var sc=d.score;var st=normSt(d);var stBg=st==='ok'?'#D1FAE5':st==='atencao'?'#FEF3C7':'#FEE2E2';var stC=st==='ok'?'#065F46':st==='atencao'?'#92400E':'#991B1B';var stL=st==='ok'?'OK':st==='atencao'?'Atenção':'Crítico';var fl={diario:'📅',semanal:'📆',mensal:'🗓️'}[d.freq]||'📋';return(
+            <div key={d.id||i} onClick={function(){setDpDetail(d);}} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px',cursor:'pointer'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+                <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:11,fontWeight:600,color:'#0891B2'}}>{fl}</span><span style={{fontSize:11,color:'#9CA3AF'}}>{d.data_fmt||d.data} · {d.hora}</span></div>
+                <div style={{display:'flex',alignItems:'center',gap:6}}><span style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:sc>=80?'#16A34A':sc>=60?'#D97706':'#DC2626'}}>{sc}</span><span style={{background:stBg,color:stC,borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{stL}</span><span style={{fontSize:10,color:'#9CA3AF'}}>→</span></div>
+              </div>
+              <div style={{display:'flex',gap:14,fontSize:11,color:'#6B7280'}}><span>✅ {(d.total||0)-(d.falhas||0)}/{d.total||0} conf.</span>{(d.falhas||0)>0&&<span style={{color:'#DC2626',fontWeight:600}}>❌ {d.falhas}</span>}</div>
+            </div>
+          );})}
+          {allData.sugs.length>0&&(<div style={{margin:'10px 16px 0'}}>
+            <div style={{background:'#EA1D2C',borderRadius:12,padding:'12px 14px',marginBottom:10,color:'#fff'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800}}>💡 Sugestões da equipe ({allData.sugs.length})</div></div>
+            {allData.sugs.slice().reverse().map(function(s,i){var sug=s.sugestao||{};return(<div key={i} style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'13px 14px',marginBottom:8}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'#0891B2',marginBottom:4}}>{s.nome||s.login} · {s.data_fmt||s.data}</div><div style={{fontSize:13,color:'#111827',lineHeight:1.5}}>{sug.atividade}</div></div>);})}
+          </div>)}
+        </div>
+      )}
+
+      {/* PENDÊNCIAS */}
+      {tab==='pendencias'&&(
+        <div>
+          <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:12,padding:'12px 14px',color:'#fff'}}>
+            <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>{allData.pend.length} pendência{allData.pend.length!==1?'s':''} abertas</div>
+            <div style={{fontSize:11,opacity:.7,marginTop:2}}>De toda a equipe · Aguardando confirmação</div>
+          </div>
+          {allData.pend.length===0&&<div style={{margin:'12px 16px',padding:'24px',background:'#fff',borderRadius:12,textAlign:'center',border:'1px solid #E5E7EB',color:'#16A34A',fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:14}}>✅ Nenhuma pendência!</div>}
+          {allData.pend.map(function(p,i){return(
+            <div key={p.id||i} style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1.5px solid #FECACA',padding:'13px 14px'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'#111827'}}>{p.user_name}</div>
+                <span style={{fontSize:10,fontWeight:700,background:'#FEE2E2',color:'#DC2626',borderRadius:99,padding:'2px 8px'}}>⚠️ Aberta</span>
+              </div>
+              <div style={{fontSize:13,color:'#111827',lineHeight:1.4,marginBottom:6}}>{p.item_texto}</div>
+              <div style={{fontSize:11,color:'#9CA3AF'}}>{p.data_fmt} · {p.turno}{p.aconteceu?' · '+p.aconteceu:''}</div>
+              {p.feito&&<div style={{fontSize:11,color:'#374151',marginTop:3}}>Ação: {p.feito}</div>}
+            </div>
+          );})}
+        </div>
+      )}
+
+      {/* RANKING */}
+      {tab==='ranking'&&(
+        <div style={{margin:'12px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'16px'}}>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#111827',marginBottom:14}}>🏆 Ranking da equipe</div>
+          {ranking.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'#9CA3AF'}}>Nenhum dado ainda.</div>}
+          {ranking.map(function(u,i){var cor=i===0?'#EA1D2C':i===1?'#6B7280':'#B45309';return(
+            <div key={u.nome} style={{display:'flex',alignItems:'center',gap:10,padding:'11px 0',borderBottom:i<ranking.length-1?'1px solid #F3F4F6':'none'}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:cor,width:24,textAlign:'center'}}>{i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+              <div style={{width:36,height:36,borderRadius:'50%',background:'#F3F4F6',display:'flex',alignItems:'center',justifyContent:'center',fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#374151'}}>{(u.nome||'?').charAt(0)}</div>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:700,color:'#111827'}}>{u.nome}</div>
+                <div style={{fontSize:11,color:'#9CA3AF',marginTop:2}}>{u.turnos} turnos</div>
+                <div style={{marginTop:5,background:'#F3F4F6',borderRadius:99,height:5,overflow:'hidden'}}><div style={{height:'100%',borderRadius:99,background:u.avg>=80?'#16A34A':u.avg>=60?'#D97706':'#EA1D2C',width:u.avg+'%',transition:'width .5s'}}/></div>
+              </div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,color:u.avg>=80?'#16A34A':u.avg>=60?'#D97706':'#EA1D2C'}}>{u.avg}</div>
+            </div>
+          );})}
+        </div>
+      )}
+
+      {/* ALERTAS */}
+      {tab==='alertas'&&(
+        <div style={{margin:'12px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'16px'}}>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#111827',marginBottom:14}}>🚨 Alertas operacionais</div>
+          {alertas.length===0&&<div style={{textAlign:'center',padding:'24px 0',color:'#16A34A',fontFamily:"'Sora',sans-serif",fontWeight:700}}>✅ Nenhum alerta!</div>}
+          {alertas.map(function(a,i){return(
+            <div key={i} style={{display:'flex',alignItems:'flex-start',gap:10,padding:'11px 0',borderBottom:i<alertas.length-1?'1px solid #F3F4F6':'none'}}>
+              <div style={{width:8,height:8,borderRadius:'50%',background:'#DC2626',flexShrink:0,marginTop:4}}/>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,color:'#111827'}}>{a.msg}{a.hoje&&<span style={{marginLeft:6,background:'#FCD34D',color:'#92400E',borderRadius:99,padding:'1px 7px',fontSize:9,fontWeight:800}}>HOJE</span>}</div>
+                <div style={{fontSize:11,color:'#6B7280',marginTop:2}}>{a.sub}</div>
+              </div>
+              <span style={{background:'#FEE2E2',color:'#DC2626',borderRadius:99,padding:'2px 9px',fontSize:10,fontWeight:700,flexShrink:0}}>Crítico</span>
+            </div>
+          );})}
+        </div>
+      )}
+
+      {/* TURNOS */}
+      {tab==='turnos'&&(function(){
+        var todos=[].concat(
+          allData.sg.map(function(d){return Object.assign({},d,{_tipo:'Manhã',_cor:'#92400E',_bg:'#FEF3C7'});}),
+          allData.nt.map(function(d){return Object.assign({},d,{_tipo:'Noite',_cor:'#5B21B6',_bg:'#F3F0FF'});}),
+          allData.ger.map(function(d){return Object.assign({},d,{_tipo:'Gerência',_cor:'#1E40AF',_bg:'#EFF6FF'});}),
+          allData.dp.map(function(d){return Object.assign({},d,{_tipo:'DP '+(d.freq||''),_cor:'#0369A1',_bg:'#E0F2FE'});}),
+          allData.ck.map(function(d){return Object.assign({},d,{_tipo:'Gerente',_cor:'#374151',_bg:'#F9FAFB'})})
+        ).sort(function(a,b){if(a.data===hoje&&b.data!==hoje)return-1;if(b.data===hoje&&a.data!==hoje)return 1;return(b.created_at||'').localeCompare(a.created_at||'');}).slice(0,40);
+        return(
+          <div style={{margin:'12px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',overflow:'hidden'}}>
+            <div style={{padding:'12px 14px',borderBottom:'1px solid #F3F4F6',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#111827'}}>📋 Todos os turnos</div>
+            <div style={{overflowX:'auto'}}>
+              <table style={{width:'100%',borderCollapse:'collapse',fontSize:13}}>
+                <thead><tr style={{borderBottom:'2px solid #F3F4F6'}}><th style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.4}}>Quem</th><th style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Tipo</th><th style={{padding:'8px 10px',textAlign:'left',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Data</th><th style={{padding:'8px 10px',textAlign:'right',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Score</th><th style={{padding:'8px 10px',textAlign:'right',fontSize:10,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase'}}>Status</th></tr></thead>
+                <tbody>{todos.map(function(d,i){var sc=d.score;var st=normSt(d);var isHoje=d.data===hoje;return(
+                  <tr key={i} style={{borderBottom:'1px solid #F9FAFB',background:isHoje?'#FFFBEB':''}}>
+                    <td style={{padding:'10px 10px'}}><div style={{fontFamily:"'Sora',sans-serif",fontWeight:700,fontSize:12,color:'#111827'}}>{d.user_name}</div>{isHoje&&<div style={{fontSize:9,color:'#D97706',fontWeight:700}}>HOJE</div>}</td>
+                    <td style={{padding:'10px 10px'}}><span style={{background:d._bg,color:d._cor,borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{d._tipo}</span></td>
+                    <td style={{padding:'10px 10px',fontSize:11,color:'#6B7280'}}>{d.data_fmt||d.data}</td>
+                    <td style={{padding:'10px 10px',textAlign:'right',fontFamily:"'Sora',sans-serif",fontWeight:900,color:sc>=80?'#16A34A':sc>=60?'#D97706':'#DC2626'}}>{sc}</td>
+                    <td style={{padding:'10px 10px',textAlign:'right'}}><span style={{background:st==='ok'?'#D1FAE5':st==='atencao'?'#FEF3C7':'#FEE2E2',color:st==='ok'?'#065F46':st==='atencao'?'#92400E':'#991B1B',borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{st==='ok'?'OK':st==='atencao'?'Atenção':'Crítico'}</span></td>
+                  </tr>
+                );})}</tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })()}
+
+    </div>
+  );
+}
+
+/* ══ CEOPessoaView — visão detalhada por pessoa ══ */
+function CEOPessoaView(props){
+  var allData=props.allData;var normSt=props.normSt;var normSc=props.normSc;var stCor=props.stCor;var stLabel=props.stLabel;var onBack=props.onBack;
+  var _sel=useState(props.initialSel||0);var sel=_sel[0];var setSel=_sel[1];
+  var _fbt=useState(null);var fbTarget=_fbt[0];var setFbTarget=_fbt[1];
+  var pessoas=[
+    {nome:'Gabriela',emoji:'🌅',data:allData.sg,turno:'Subger. Manhã',tabela:'subger_checklists',login:'gabriela'},
+    {nome:'Vitória',emoji:'🌙',data:allData.nt,turno:'Subger. Noite',tabela:'subger_noite_checklists',login:'vitoria'},
+    {nome:'Derik',emoji:'🏢',data:allData.ger,turno:'Gerência',tabela:'ger_checklists',login:'derik'},
+    {nome:'Viviane',emoji:'🗂️',data:allData.dp,turno:'DP',tabela:'dp_checklists',login:'viviane'},
+  ];
+  var p=pessoas[sel];
+  var ultimos=p.data.slice(0,10);
+  var avg=ultimos.length>0?Math.round(ultimos.reduce(function(a,b){return a+(b.score||0);},0)/ultimos.length):null;
+  var tendencia=ultimos.length>=3?(function(){var a3=Math.round(ultimos.slice(0,3).reduce(function(a,b){return a+(b.score||0);},0)/3);var a7=ultimos.length>=7?Math.round(ultimos.slice(0,7).reduce(function(a,b){return a+(b.score||0);},0)/Math.min(7,ultimos.length)):a3;return{a3:a3,a7:a7,delta:a3-a7};})():null;
+
+  return(
+    <div style={{minHeight:'100vh',background:'#F5F5F5',paddingBottom:32}}>
+      <div style={{background:'#EA1D2C',color:'#fff',padding:'14px 16px',position:'sticky',top:0,zIndex:100}}>
+        <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+          <button onClick={onBack} className="hdr-btn">← Voltar</button>
+          <div style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900}}>Visão por pessoa</div>
+        </div>
+        <div style={{display:'flex',gap:6}}>
+          {pessoas.map(function(px,i){return(
+            <button key={px.nome} onClick={function(){setSel(i);}} style={{padding:'6px 12px',borderRadius:99,fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,border:'1.5px solid '+(sel===i?'#fff':'rgba(255,255,255,.3)'),background:sel===i?'#fff':'transparent',color:sel===i?'#EA1D2C':'#fff',flexShrink:0,cursor:'pointer'}}>{px.nome}</button>
+          );})}
+        </div>
+      </div>
+
+      <div style={{padding:'14px 16px 0'}}>
+        {/* Card de resumo */}
+        <div style={{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:14,padding:'16px',marginBottom:12}}>
+          <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:12}}>
+            <div style={{fontSize:32}}>{p.emoji}</div>
+            <div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900,color:'#111827'}}>{p.nome}</div>
+              <div style={{fontSize:12,color:'#6B7280'}}>{p.turno} · {p.data.length} turnos registrados</div>
+            </div>
+          </div>
+          {avg!=null&&(
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8}}>
+              <div style={{textAlign:'center',background:'#F9FAFB',borderRadius:8,padding:'10px 4px'}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:avg>=80?'#16A34A':avg>=60?'#D97706':'#DC2626'}}>{avg}</div>
+                <div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>Score médio</div>
+              </div>
+              {tendencia&&<div style={{textAlign:'center',background:'#F9FAFB',borderRadius:8,padding:'10px 4px'}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:tendencia.delta>0?'#DC2626':tendencia.delta<0?'#16A34A':'#6B7280'}}>{tendencia.delta>0?'↓':'↑'}{Math.abs(tendencia.delta)}</div>
+                <div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>Tendência 3d</div>
+              </div>}
+              <div style={{textAlign:'center',background:'#F9FAFB',borderRadius:8,padding:'10px 4px'}}>
+                <div style={{fontFamily:"'Sora',sans-serif",fontSize:22,fontWeight:900,color:'#111827'}}>{p.data.reduce(function(a,b){return a+(b.falhas||0);},0)}</div>
+                <div style={{fontSize:10,color:'#9CA3AF',fontWeight:600,marginTop:2}}>Total falhas</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Histórico */}
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:1,marginBottom:10}}>Últimos turnos</div>
+        {ultimos.length>0&&(function(){
+          var fc={};ultimos.forEach(function(d){
+            var ng=d.negs||{};
+            Object.keys(ng).forEach(function(id){var n=ng[id];if(n&&n.aconteceu)fc[n.aconteceu]=(fc[n.aconteceu]||0)+1;});
+          });
+          var top=Object.entries(fc).sort(function(a,b){return b[1]-a[1];}).slice(0,3);
+          if(!top.length)return null;
+          return(
+            <div style={{background:'#fff',border:'1.5px solid #E5E7EB',borderRadius:12,padding:'14px 16px',marginBottom:12}}>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'#111827',marginBottom:10}}>Falhas mais frequentes</div>
+              {top.map(function(x,i){return(
+                <div key={i} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'6px 0',borderBottom:i<top.length-1?'1px solid #F3F4F6':'none'}}>
+                  <span style={{fontSize:12,color:'#374151',flex:1,lineHeight:1.4}}>{x[0]}</span>
+                  <span style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:900,color:'#EA1D2C',marginLeft:8}}>{x[1]}x</span>
+                </div>
+              );})}
+            </div>
+          );
+        })()}
+        {ultimos.length===0&&<div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'24px',textAlign:'center',color:'#9CA3AF',fontSize:13}}>Nenhum turno ainda.</div>}
+        {ultimos.map(function(d,i){var sc=normSc(d);var st=normSt(d);return(
+          <div key={d.id||i} style={{background:'#fff',border:'1px solid #E5E7EB',borderRadius:12,padding:'12px 14px',marginBottom:8}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+              <div style={{fontSize:12,color:'#6B7280'}}>{d.data_fmt||d.data}{d.hora?' · '+d.hora:''}</div>
+              <div style={{display:'flex',alignItems:'center',gap:6}}>
+                <span style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900,color:stCor(st)}}>{sc}</span>
+                <span style={{background:st==='ok'?'#D1FAE5':st==='atencao'?'#FEF3C7':'#FEE2E2',color:st==='ok'?'#065F46':st==='atencao'?'#92400E':'#991B1B',borderRadius:99,padding:'2px 8px',fontSize:10,fontWeight:700}}>{stLabel(st)}</span>
+              </div>
+            </div>
+            <div style={{display:'flex',gap:12,fontSize:11,color:'#6B7280'}}>
+              <span>✅ {(d.total||0)-(d.falhas||0)}/{d.total||0}</span>
+              {(d.falhas||0)>0&&<span style={{color:'#DC2626',fontWeight:600}}>❌ {d.falhas} falha{d.falhas>1?'s':''}</span>}
+              {(d.pendencias||0)>0&&<span style={{color:'#D97706',fontWeight:600}}>⏳ {d.pendencias}</span>}
+            </div>
+          </div>
+        );})}
+      </div>
+    </div>
+  );
+}
+
 
 function GerenteHub(props){
   var user=props.user;var onLogout=props.onLogout;
@@ -2471,7 +3375,7 @@ function GerenteHub(props){
 
   return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
-      <div style={{background:'linear-gradient(145deg,#0D0D0D,#1A0003,#3D0007)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Gerente</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Checklist do Turno</div></div>
           <div style={{display:'flex',gap:6}}>
@@ -2484,7 +3388,7 @@ function GerenteHub(props){
         user={user}
         tabela="checklists"
         turnoLabel="Gerente"
-        cor="linear-gradient(145deg,#0D0D0D,#1A0003,#3D0007)"
+        cor="#EA1D2C"
         emoji="🗂️"
         itensCriticos={items}
         rascunhoPct={rascunhoPct}
@@ -2960,7 +3864,7 @@ function TurnoEncerrado(props){
   var statusCor=criticos>0?'var(--danger)':falhas===0?'var(--ok)':'var(--warn)';
   var statusEmoji=criticos>0?'🚨':falhas===0?'🏆':'💪';
   return(
-    <div style={{minHeight:'100vh',background:'linear-gradient(160deg,#0D0D0D 0%,#1A0003 50%,#2D0008 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'24px 20px',textAlign:'center'}}>
+    <div style={{minHeight:'100vh',background:cor,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'24px 20px',textAlign:'center'}}>
       <div style={{width:'100%',maxWidth:400}}>
         <div style={{fontSize:64,marginBottom:16,lineHeight:1}}>{statusEmoji}</div>
         <div style={{fontFamily:"'Sora',sans-serif",fontSize:28,fontWeight:900,color:'#fff',marginBottom:6,lineHeight:1.2}}>{msg.titulo}</div>
@@ -3658,7 +4562,7 @@ function HistoricoPanel(props){
   var statusCor=ultimo.status==='ok'||ultimo.status==='conforme'?'var(--ok)':ultimo.status==='atencao'||ultimo.status==='ressalvas'?'var(--warn)':'var(--danger)';
   return(
     <div style={{paddingBottom:16}}>
-      <div style={{margin:'12px 16px 0',background:'linear-gradient(135deg,#1A0003,#EA1D2C)',borderRadius:'var(--r12)',padding:'16px',color:'#fff'}}>
+      <div style={{margin:'12px 16px 0',background:'#EA1D2C',borderRadius:'var(--r12)',padding:'16px',color:'#fff'}}>
         <div style={{fontSize:10,opacity:.7,fontWeight:700,textTransform:'uppercase',letterSpacing:1.5,marginBottom:8}}>Sua evolução</div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,marginBottom:12}}>
           <div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:26,fontWeight:900}}>{ultimo.score}</div><div style={{fontSize:10,opacity:.7}}>Último score</div></div>
@@ -3947,7 +4851,7 @@ function NoiteSummaryScreen(props){
   if(confirmando){
     return(
       <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
-        <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',padding:'14px 16px'}}>
+        <div style={{background:'#EA1D2C',color:'#fff',padding:'14px 16px'}}>
           <button onClick={function(){setConfirmando(false);}} style={{background:'rgba(255,255,255,.15)',border:'1px solid rgba(255,255,255,.3)',color:'#fff',borderRadius:99,padding:'5px 12px',fontSize:11,fontWeight:600,cursor:'pointer',marginBottom:10}}>← Voltar</button>
           <div style={{display:'flex',alignItems:'center',gap:10}}>
             <span style={{fontSize:28}}>📲</span>
@@ -3963,7 +4867,7 @@ function NoiteSummaryScreen(props){
           <a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleEnviarGrupo} style={{width:'100%',padding:16,background:copied?'var(--ok)':'#25D366',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10,display:'flex',alignItems:'center',justifyContent:'center',gap:10,textDecoration:'none',boxSizing:'border-box'}}>
             <span style={{fontSize:22}}>📲</span>{copied?'Enviado ✓':'Abrir WhatsApp'}
           </a>
-          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei meu turno</button>}
+          {copied&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:15,background:'#EA1D2C',color:'#fff',borderRadius:'var(--r12)',fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:10}}>✓ Terminei meu turno</button>}
           <div style={{display:'flex',gap:8}}>
             <button onClick={function(){setConfirmando(false);}} style={{flex:1,padding:11,background:'transparent',color:'var(--ink3)',borderRadius:'var(--r12)',fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid var(--line)'}}>← Voltar</button>
           </div>
@@ -3974,7 +4878,7 @@ function NoiteSummaryScreen(props){
 
   return(
     <div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}>
-      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',padding:'14px 16px'}}>
+      <div style={{background:'#EA1D2C',color:'#fff',padding:'14px 16px'}}>
         <div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Subgerência</div>
         <div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Turno da Noite — Concluído ✓</div>
         <div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {todayFmt()}{tempo?' · ⏱ '+tempo:''}</div>
@@ -4062,7 +4966,7 @@ function NoiteChecklistScreen(props){
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);if(onBack)onBack();}
   var noiteHdr=(
-    <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+    <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
       <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
         <div style={{display:'flex',gap:6}}>
@@ -4084,7 +4988,7 @@ function NoiteChecklistScreen(props){
             <div style={{fontSize:13,color:'var(--ink2)',marginBottom:12}}>{respondidos} de {totalItems} itens · {falhasTotal} falha{falhasTotal!==1?'s':''}</div>
             <label style={{display:'block',fontSize:13,fontWeight:600,color:'var(--ink)',marginBottom:6}}>Observações para a manhã <span style={{color:'var(--ink3)',fontWeight:400}}>(opcional)</span></label>
             <textarea value={relato} onChange={function(e){setRelato(e.target.value);}} placeholder="O que a Gabriela precisa saber ao chegar..." style={{width:'100%',border:'1.5px solid #E5E7EB',borderRadius:10,padding:'11px 13px',fontSize:13,color:'#111',background:'#fff',resize:'none',minHeight:88,fontFamily:'inherit',lineHeight:1.6,marginBottom:12}}/>
-            <button onClick={function(){handleFinalizar(relato);}} style={{width:'100%',padding:15,background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🔒 Fechar turno</button>
+            <button onClick={function(){handleFinalizar(relato);}} style={{width:'100%',padding:15,background:'#EA1D2C',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:700,cursor:'pointer',border:'none'}}>🔒 Fechar turno</button>
           </div>
           <button onClick={function(){setScreen('checklist');setShowErr(false);}} style={{width:'100%',padding:11,background:'transparent',color:'var(--ink3)',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Revisar checklist</button>
         </div>
@@ -4123,7 +5027,7 @@ function NoiteChecklistScreen(props){
       {(function(){
         var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateNoiteNeg(negs[i.id]))return true;return false;}).length;
         var etapaOk=pendentesEtapa===0;
-        var bgOk='linear-gradient(135deg,#0a0020,#7C3AED)';
+        var bgOk='#EA1D2C';
         return(
           <div className="fab"><div className="fab-inner">
             {etapaIdx>0&&<button onClick={handleVoltar} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>← Voltar</button>}
@@ -4155,7 +5059,7 @@ function SubgerenteNoiteHub(props){
   if(mode==='checklist')return<NoiteChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
-      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Minha Evolução</div></div>
           <div style={{display:'flex',gap:6}}><button className="hdr-btn" onClick={function(){setMode(null);}}>← Voltar</button><button className="hdr-btn" onClick={onLogout}>Sair</button></div>
@@ -4181,7 +5085,7 @@ function SubgerenteNoiteHub(props){
 
   return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
-      <div style={{background:'linear-gradient(135deg,#0a0020,#7C3AED)',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+      <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
         <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
           <div style={{display:'flex',gap:6}}>
@@ -4194,7 +5098,7 @@ function SubgerenteNoiteHub(props){
         user={user}
         tabela="subger_noite_checklists"
         turnoLabel="Subgerência Noite"
-        cor="linear-gradient(135deg,#0a0020,#7C3AED)"
+        cor="#EA1D2C"
         emoji="🌙"
         itensCriticos={allNoiteItems}
         etapas={etapasPreview}
@@ -4202,6 +5106,7 @@ function SubgerenteNoiteHub(props){
         pendenciasManhaInfo={pendManhaInfo}
         onIniciar={function(){setMode('checklist');}}
       />
+      <FeedbackCEOCard login="vitoria"/>
     </div>
   );
 }
@@ -4262,6 +5167,7 @@ function SubgerenteHub(props){
         rascunhoPct={rascunhoPct}
         onIniciar={function(){setMode('checklist');}}
       />
+      <FeedbackCEOCard login="gabriela"/>
     </div>
   );
 }
