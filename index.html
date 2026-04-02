@@ -982,7 +982,8 @@ img{display:block;max-width:100%}
 .login-f-input{width:100%;background:#fff;border:1.5px solid #E4DCDA;border-radius:10px;padding:12px 12px 12px 40px;font-size:14px;color:#1A1A1A;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none;}
 .login-f-input::placeholder{color:#C0B8B6}
 .login-f-input:focus{border-color:#EA1D2C;box-shadow:0 0 0 3px rgba(234,29,44,.1)}
-.login-btn{width:100%;padding:14px;background:#EA1D2C;color:#fff;border-radius:10px;border:none;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:background .15s,transform .1s;box-shadow:0 4px 14px rgba(234,29,44,.4);}
+.login-btn{width:100%;padding:14px;background:#EA1D2C;color:#fff;border-radius:10px;border:none;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:background .1s,transform .08s;box-shadow:0 4px 14px rgba(234,29,44,.4);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.login-btn:active{transform:scale(.97);background:#c8111e}
 .login-btn:hover{background:#C0111E;transform:translateY(-1px)}
 .login-btn:active{transform:translateY(0)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
@@ -1014,7 +1015,8 @@ img{display:block;max-width:100%}
 .ctx-btn{padding:7px 16px;border-radius:var(--r99);border:1.5px solid var(--line);background:var(--surface);font-size:12px;font-weight:700;color:var(--ink2);transition:all .13s;min-width:52px;min-height:36px;text-align:center}
 .ctx-btn.yes{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
 .ctx-btn.no{border-color:var(--ink4);background:var(--surface2);color:var(--ink3)}
-.start-btn{width:100%;padding:16px;background:var(--brand);color:#fff;border-radius:var(--r12);font-family:'Sora',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;border:none;box-shadow:var(--sh-brand)}
+.start-btn{width:100%;padding:16px;background:var(--brand);color:#fff;border-radius:var(--r12);font-family:'Sora',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .1s,transform .08s;border:none;box-shadow:var(--sh-brand);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.start-btn:active{transform:scale(.97);background:var(--brand-dark)}
 .start-btn:hover{background:var(--brand-dark);transform:translateY(-2px)}
 .prog-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r12);box-shadow:var(--sh1);padding:16px;margin:12px 16px 0}
 .prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -1051,9 +1053,11 @@ img{display:block;max-width:100%}
 .chk-title{font-size:14px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:4px}
 .chk-desc{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:12px}
 .ans-row{display:flex;gap:8px}
-.ans-sim,.ans-nao{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 14px;border-radius:var(--r8);border:1.5px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;color:var(--ink2);transition:all .13s;cursor:pointer;min-height:48px}
+.ans-sim,.ans-nao{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 14px;border-radius:var(--r8);border:1.5px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;color:var(--ink2);transition:transform .08s ease,background .1s ease,border-color .1s ease,color .1s ease;cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 .ans-sim:hover{border-color:var(--ok-line);background:var(--ok-bg);color:var(--ok)}
 .ans-nao:hover{border-color:var(--danger-line);background:var(--danger-bg);color:var(--danger)}
+.ans-sim:active{transform:scale(.95);border-color:var(--ok);background:var(--ok-bg)}
+.ans-nao:active{transform:scale(.95);border-color:var(--brand);background:var(--danger-bg)}
 .ans-sim.sel{border-color:var(--ok);background:var(--ok);color:#fff}
 .ans-nao.sel{border-color:var(--brand);background:var(--brand);color:#fff;box-shadow:var(--sh-brand)}
 .req-msg{font-size:11px;color:var(--danger);margin-top:6px;font-weight:600;display:flex;align-items:center;gap:4px}
@@ -1077,9 +1081,10 @@ img{display:block;max-width:100%}
 .fab{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--surface);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;box-shadow:0 -2px 12px rgba(0,0,0,.08);min-height:var(--fab-h)}
 .fab-inner{width:100%;max-width:var(--content-max);margin:0 auto;display:flex;gap:6px;align-items:center}
 .fab-save{flex:0 0 auto;padding:11px 12px;border-radius:var(--r8);background:var(--surface2);border:1.5px solid var(--line);font-family:'Sora',sans-serif;font-size:11px;font-weight:700;color:var(--ink2);transition:all .13s;min-height:44px;white-space:nowrap}
-.fab-send{flex:1;padding:12px 8px;border-radius:var(--r8);background:var(--brand);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s;box-shadow:var(--sh-brand);min-height:44px;white-space:nowrap}
+.fab-send{flex:1;padding:12px 8px;border-radius:var(--r8);background:var(--brand);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:5px;transition:transform .08s ease,background .1s ease,box-shadow .1s ease,opacity .1s ease;box-shadow:var(--sh-brand);min-height:48px;white-space:nowrap;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 .fab-send:hover{background:var(--brand-dark)}
-.fab-send:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+.fab-send:active{transform:scale(.96);background:var(--brand-dark);box-shadow:0 1px 4px rgba(234,29,44,.25)}
+.fab-send:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none}
 .fab-del{flex:0 0 auto;padding:11px 14px;border-radius:var(--r8);background:var(--surface2);border:1.5px solid var(--line);font-size:17px;min-height:44px;transition:all .13s}
 .fab-del:hover{background:var(--danger-bg);border-color:var(--danger-line)}
 .toast{position:fixed;top:68px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:9px 20px;border-radius:var(--r99);font-size:12px;font-weight:600;z-index:9999;box-shadow:var(--sh3);opacity:0;transition:opacity .22s;pointer-events:none;white-space:nowrap;max-width:90vw}
@@ -1168,7 +1173,6 @@ const SUPABASE_KEY='sb_publishable_zHkABW_ODWxYqIDbcon1kQ_7P5G86ej';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const SISTEMA='CheckON Pastel da Camilla';
-const WEBHOOK='https://hook.us2.make.com/pz24jw68dgh7c3realu1locfwlq1ny67';
 const WA_GROUP='https://chat.whatsapp.com/G0erwUW5npX4ejKNcU3lT5';
 function openWA(){
   try{
@@ -1246,20 +1250,7 @@ async function sbSelectRecente(table,dias,filters){
   }catch(e){console.error('SB error:',e);return[];}
 }
 
-async function sendWebhook(txt,ep){
-  try{
-    var body={texto:txt,timestamp:new Date().toISOString(),sistema:SISTEMA,email_destino:'pasteldacamilasuporte@gmail.com',email_assunto:(ep&&ep.assunto)||SISTEMA+' – Relatório',email_html:(ep&&ep.html)||txt.replace(/\n/g,'<br>'),email_texto:txt};
-    var r=await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(!r.ok)console.warn('Webhook retornou '+r.status+' — e-mail pode não ter sido enviado.');
-    return r.ok;
-  }catch(e){console.warn('Webhook falhou:',e);return false;}
-}
-/* Chama sendWebhook e exibe toast suave se falhar — não bloqueia o fluxo */
-async function sendWebhookComAviso(txt,ep,showToastFn){
-  var ok=await sendWebhook(txt,ep);
-  if(!ok&&showToastFn)showToastFn('⚠️ Relatório salvo, mas e-mail não enviado. Verifique a conexão.');
-  return ok;
-}
+/* Webhook removido — notificações via WhatsApp manual */
 
 function Toast(props){return React.createElement('div',{className:'toast'+(props.show?' on':'')},props.msg);}
 function useToast(){
@@ -1791,10 +1782,10 @@ function DPChecklistScreen(props){
     var ok=await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{}),ocorrencia:dpCtx.obsOcorrencia||''});
     if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
     if(sugestao&&sugestao.atividade){await sbInsert('dp_sugestoes',{login:user.login,nome:user.name,checklist:freqCfg.titulo,freq:freq,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),sugestao:sugestao});}
-    await sendWebhookComAviso(SISTEMA+' — '+freqCfg.titulo+'\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON DP] '+statusGeral.toUpperCase()+' – '+user.name},showToast);
+
     try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}
     setEnviadoScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
   }
 
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setValErrs([]);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('freq');}
@@ -2030,10 +2021,10 @@ function GerChecklistScreen(props){
     var ok=await sbInsert('ger_checklists',{login:user.login,user_name:user.name,turno:ident&&ident.turno,data:todayISO(),data_fmt:todayFmt(),hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:statusGeral,resps:resps,negs:negs});
     if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
     setIdent(function(prev){return Object.assign({},prev,{horaFim:hora});});
-    await sendWebhookComAviso(SISTEMA+' — GERÊNCIA\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Gerência] '+statusGeral.toUpperCase()+' – '+user.name},showToast);
+
     try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}
     setEnviadoGer(true);
-    setTimeout(function(){setSending(false);setEnviadoGer(false);setScreen('summary');},2200);
+    setTimeout(function(){setSending(false);setEnviadoGer(false);setScreen('summary');},900);
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setScreen('entry');}
   var tLabel=turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
@@ -2126,7 +2117,7 @@ function ChecklistScreen(props){
     var ok=await sbInsert('checklists',{login:user.login,user_name:nome,turno:ident.turno,data:todayISO(),data_fmt:ident.data,hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:status,resps:resps,negs:negs,ff:{obsGerais:ff.obsGerais,relato:relato||''}});
     if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
     var tLabel=ident.turno==='manha'?'Manhã':'Tarde/Noite';
-    await sendWebhookComAviso(SISTEMA+'\n'+nome+' · '+tLabel+' · '+ident.data+(tempo?' · ⏱ '+tempo:'')+'\nScore: '+score+'/100',{assunto:'[CheckON] '+status+' – '+nome},showToast);
+
     setSending(false);try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setScreen('summary');
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setIdent(null);setResps({});setNegs({});setFF({obsGerais:''});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}
@@ -4499,10 +4490,10 @@ function SubgerChecklistScreen(props){
     var ok=await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
     await salvarPendencias(allItems,negs,resps,user,'manha','subger_checklists');
-    await sendWebhookComAviso(SISTEMA+' — SUBGERÊNCIA MANHÃ\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Subgerência] '+statusKey.toUpperCase()+' – '+user.name},showToast);
+
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
     setEnvScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
   }
 
   function handleLimpar(){
@@ -5494,10 +5485,10 @@ function NoiteChecklistScreen(props){
     var ok=await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
     await salvarPendencias(allItems,negs,resps,user,'noite','subger_noite_checklists');
-    await sendWebhookComAviso(SISTEMA+' — SUBGERÊNCIA NOITE\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Noite] '+statusKey.toUpperCase()+' – '+user.name},showToast);
+
     try{localStorage.removeItem(SAVE_KEY);}catch(e){} try{localStorage.removeItem('checkon_ctx_'+user.login);}catch(e){} try{localStorage.setItem('checkon_last_score_'+user.login,JSON.stringify({score:score,data:todayISO()}));}catch(e){}
     setEnvScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);if(onBack)onBack();}
   var noiteHdr=(
