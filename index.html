@@ -5386,6 +5386,10 @@ function NoiteSummaryScreen(props){
           <button onClick={function(){setConfirmando(true);}} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button>
           <button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button>
         </div>
+        {/* Botão encerrar turno — disponível direto no summary, sem precisar passar pelo WhatsApp */}
+        <button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:14,background:'#EA1D2C',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:8}}>
+          ✓ Terminei meu turno
+        </button>
         <button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Voltar ao início</button>
       </div>
     </div>
