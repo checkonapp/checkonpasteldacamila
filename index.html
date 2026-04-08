@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<!-- CHECKON v2026.17 | Pastel da Camilla | Documentação no bloco de comentário abaixo -->
+<!-- CHECKON v2026.15 | Pastel da Camilla | Documentação no bloco de comentário abaixo -->
 <head>
 <!--
 ================================================================================
@@ -518,19 +518,6 @@ CHANGELOG.md
 
 ---
 
-## [2026.16] — Abril 2026 — Correções de consistência e confiabilidade
-
-### Corrigido
-- **Falha silenciosa em `sbInsert`** — todos os `handleFinalizar`/`handleEnviar` agora verificam o retorno do insert. Se o Supabase retornar erro, a tela de summary não avança e o rascunho não é apagado. O usuário vê toast de erro e pode tentar novamente.
-- **Bug `GER_SAVE_KEY`** — `GerenciaHub` agora usa `konclui_ger_[login]`, mesma chave que `GerChecklistScreen`. O indicador de rascunho do Derik passa a funcionar corretamente.
-- **Status com acento na Gerência** — `GerChecklistScreen` e `GerSummaryScreen` agora gravam e exibem `'ok'`/`'atencao'`/`'critico'` sem acento, alinhado com todos os outros perfis.
-
-### Alterado
-- **Fórmula de score unificada** — todos os perfis agora usam `100 - (falhas/total × 50) - (criticos × 8)`. Perfis afetados: DP (era `×60` sem crítico), Gerente/Suporte legado (era `×40` com `criticos×10`). **Scores históricos no banco não são recalculados** — ranking histórico anterior a esta versão é incomparável. A partir de 2026.16 todos os scores são comparáveis.
-- **`sbSelectRecente`** — nova função que filtra por `data >= hoje - 90 dias`. Usada no CEODashboard e CEOHub em vez de `sbSelect` sem limite. Reduz volume de dados carregados à medida que o banco cresce.
-
----
-
 ## [2026.14] — Março 2026 — Sessão atual
 
 ### Adicionado
@@ -1035,7 +1022,6 @@ img{display:block;max-width:100%}
 .login-btn{width:100%;padding:14px;background:#EA1D2C;color:#fff;border-radius:10px;border:none;font-family:'Sora',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:background .1s,transform .08s;box-shadow:0 4px 14px rgba(234,29,44,.4);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
 .login-btn:active{transform:scale(.97);background:#c8111e}
 .login-btn:hover{background:#C0111E;transform:translateY(-1px)}
-.login-btn:active{transform:translateY(0)}
 .login-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 .login-alert{background:#FEE2E2;border:1px solid #FECACA;color:#B91C1C;border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600;margin-bottom:11px;text-align:center;}
 .login-footer-txt{text-align:center;margin-top:14px;font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.3px;}
@@ -1065,8 +1051,7 @@ img{display:block;max-width:100%}
 .ctx-btn{padding:7px 16px;border-radius:var(--r99);border:1.5px solid var(--line);background:var(--surface);font-size:12px;font-weight:700;color:var(--ink2);transition:all .13s;min-width:52px;min-height:36px;text-align:center}
 .ctx-btn.yes{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
 .ctx-btn.no{border-color:var(--ink4);background:var(--surface2);color:var(--ink3)}
-.start-btn{width:100%;padding:16px;background:var(--brand);color:#fff;border-radius:var(--r12);font-family:'Sora',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .1s,transform .08s;border:none;box-shadow:var(--sh-brand);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
-.start-btn:active{transform:scale(.97);background:var(--brand-dark)}
+.start-btn{width:100%;padding:16px;background:var(--brand);color:#fff;border-radius:var(--r12);font-family:'Sora',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;border:none;box-shadow:var(--sh-brand)}
 .start-btn:hover{background:var(--brand-dark);transform:translateY(-2px)}
 .prog-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r12);box-shadow:var(--sh1);padding:16px;margin:12px 16px 0}
 .prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -1103,11 +1088,9 @@ img{display:block;max-width:100%}
 .chk-title{font-size:14px;font-weight:600;color:var(--ink);line-height:1.5;margin-bottom:4px}
 .chk-desc{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:12px}
 .ans-row{display:flex;gap:8px}
-.ans-sim,.ans-nao{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 14px;border-radius:var(--r8);border:1.5px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;color:var(--ink2);transition:transform .08s ease,background .1s ease,border-color .1s ease,color .1s ease;cursor:pointer;min-height:48px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+.ans-sim,.ans-nao{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 14px;border-radius:var(--r8);border:1.5px solid var(--line);background:var(--surface2);font-size:14px;font-weight:700;color:var(--ink2);transition:all .13s;cursor:pointer;min-height:48px}
 .ans-sim:hover{border-color:var(--ok-line);background:var(--ok-bg);color:var(--ok)}
 .ans-nao:hover{border-color:var(--danger-line);background:var(--danger-bg);color:var(--danger)}
-.ans-sim:active{transform:scale(.95);border-color:var(--ok);background:var(--ok-bg)}
-.ans-nao:active{transform:scale(.95);border-color:var(--brand);background:var(--danger-bg)}
 .ans-sim.sel{border-color:var(--ok);background:var(--ok);color:#fff}
 .ans-nao.sel{border-color:var(--brand);background:var(--brand);color:#fff;box-shadow:var(--sh-brand)}
 .req-msg{font-size:11px;color:var(--danger);margin-top:6px;font-weight:600;display:flex;align-items:center;gap:4px}
@@ -1223,6 +1206,7 @@ const SUPABASE_KEY='sb_publishable_zHkABW_ODWxYqIDbcon1kQ_7P5G86ej';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const SISTEMA='CheckON Pastel da Camilla';
+const WEBHOOK='https://hook.us2.make.com/pz24jw68dgh7c3realu1locfwlq1ny67';
 const WA_GROUP='https://chat.whatsapp.com/G0erwUW5npX4ejKNcU3lT5';
 function openWA(){
   try{
@@ -1236,25 +1220,12 @@ function openWA(){
 }
 const USERS_KEY='konclui_users';
 const SESSION_KEY='konclui_session';
-const VERSION='2026.17';
+const VERSION='2026.15';
 const PWD_2026='158a323a7ba44870f23d96f1516dd70aa48e9a72db4ebb026b0a89e212a208ab';
 
 (function(){
-  /* REGRA CENTRAL: sessão nunca persiste entre aberturas do sistema.
-     Sempre começa pelo login. Limpa aqui, antes do React montar qualquer componente.
-     BUG HISTÓRICO: clearSession() estava dentro de useEffect no App() — o React
-     renderizava um frame com phase='loading' antes do efeito rodar, permitindo
-     que componentes filhos lessem a sessão antiga. Corrigido: limpeza síncrona aqui. */
-  localStorage.removeItem(SESSION_KEY);
-  /* Controle de versão — limpa sessão e rascunhos ao mudar versão */
   const sv=localStorage.getItem('konclui_version');
-  if(sv!==VERSION){
-    /* Nova versão — limpa rascunhos que podem ter estrutura incompatível */
-    ['checkon_noite_vitoria','checkon_subger_gabriela','checkon_declaracao_vitoria',
-     'checkon_declaracao_gabriela','checkon_ctx_vitoria','checkon_ctx_gabriela']
-      .forEach(function(k){localStorage.removeItem(k);});
-    localStorage.setItem('konclui_version',VERSION);
-  }
+  if(sv!==VERSION){localStorage.removeItem(SESSION_KEY);localStorage.setItem('konclui_version',VERSION);}
 })();
 
 const DEFAULT_USERS={
@@ -1268,9 +1239,9 @@ const DEFAULT_USERS={
 };
 function getUsers(){try{const u=JSON.parse(localStorage.getItem(USERS_KEY))||{...DEFAULT_USERS};if(!u.derik)u.derik={...DEFAULT_USERS.derik};if(!u.viviane)u.viviane={...DEFAULT_USERS.viviane};if(!u.gabriela)u.gabriela={...DEFAULT_USERS.gabriela};else if(u.gabriela.role!=='subgerente')u.gabriela.role='subgerente';if(!u.vitoria)u.vitoria={...DEFAULT_USERS.vitoria};else if(u.vitoria.role!=='subgerente_noite')u.vitoria.role='subgerente_noite';return u;}catch{return{...DEFAULT_USERS};}}
 function saveUsers(u){localStorage.setItem(USERS_KEY,JSON.stringify(u));}
-function getSession(){try{return JSON.parse(localStorage.getItem(SESSION_KEY));}catch{return null;}}
-function saveSession(s){localStorage.setItem(SESSION_KEY,JSON.stringify(s));}
-function clearSession(){localStorage.removeItem(SESSION_KEY);}
+function getSession(){try{return JSON.parse(sessionStorage.getItem(SESSION_KEY));}catch{return null;}}
+function saveSession(s){sessionStorage.setItem(SESSION_KEY,JSON.stringify(s));}
+function clearSession(){sessionStorage.removeItem(SESSION_KEY);}
 function nowTime(){return new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
 function todayFmt(){return new Date().toLocaleDateString('pt-BR');}
 function todayISO(){return new Date().toISOString().slice(0,10);}
@@ -1288,19 +1259,13 @@ async function sbSelect(table,filters){
   }catch(e){console.error('SB error:',e);return[];}
 }
 
-async function sbSelectRecente(table,dias,filters){
+async function sendWebhook(txt,ep){
   try{
-    var cutoff=new Date();cutoff.setDate(cutoff.getDate()-(dias||90));
-    var cutoffStr=cutoff.toISOString().slice(0,10);
-    let q=sb.from(table).select('*').gte('data',cutoffStr).order('created_at',{ascending:false});
-    if(filters){Object.entries(filters).forEach(function([k,v]){q=q.eq(k,v);});}
-    const{data,error}=await q;
-    if(error){console.error('SB select error:',error);return[];}
-    return data||[];
-  }catch(e){console.error('SB error:',e);return[];}
+    var body={texto:txt,timestamp:new Date().toISOString(),sistema:SISTEMA,email_destino:'pasteldacamilasuporte@gmail.com',email_assunto:(ep&&ep.assunto)||SISTEMA+' – Relatório',email_html:(ep&&ep.html)||txt.replace(/\n/g,'<br>'),email_texto:txt};
+    var r=await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    return r.ok;
+  }catch(e){return false;}
 }
-
-/* Webhook removido — notificações via WhatsApp manual */
 
 function Toast(props){return React.createElement('div',{className:'toast'+(props.show?' on':'')},props.msg);}
 function useToast(){
@@ -1310,23 +1275,23 @@ function useToast(){
 }
 
 var GER_ITEMS=[
-  {id:'g1',bloco:'Visão Geral do Turno',e:'📊',n:'critico',critico:true, ti:'Fluxo de caixa do turno está dentro do esperado',d:'Conferir entradas e saídas. Qualquer divergência deve ser registrada imediatamente.'},
-  {id:'g2',bloco:'Visão Geral do Turno',e:'📊',n:'critico',critico:true, ti:'Metas de venda do turno estão sendo atingidas',d:'Comparar ticket médio e volume de pedidos com a meta diária.'},
-  {id:'g3',bloco:'Visão Geral do Turno',e:'📊',n:'importante',critico:false,ti:'Indicadores de delivery estão dentro do SLA',d:'Tempo médio de preparo e entrega dentro do esperado.'},
-  {id:'g4',bloco:'Visão Geral do Turno',e:'📊',n:'importante',critico:false,ti:'Comunicação com turno anterior foi realizada e registrada',d:'Passagem de turno feita com registro de pendências.'},
-  {id:'g5',bloco:'Equipe e Atendimento',e:'👥',n:'critico',critico:true, ti:'Equipe presente e em conformidade com escala do dia',d:'Verificar presença de todos os colaboradores escalados.'},
-  {id:'g6',bloco:'Equipe e Atendimento',e:'👥',n:'critico',critico:true, ti:'Todos os colaboradores estão uniformizados corretamente',d:'Uniforme completo, limpo e dentro do padrão da marca.'},
-  {id:'g7',bloco:'Equipe e Atendimento',e:'👥',n:'importante',critico:false,ti:'Atendimento ao cliente está no padrão de qualidade exigido',d:'Cordialidade, agilidade e precisão nos pedidos.'},
-  {id:'g8',bloco:'Equipe e Atendimento',e:'👥',n:'importante',critico:false,ti:'Nenhuma ocorrência de conflito ou reclamação formal em aberto',d:'Reclamações devem ser registradas e tratadas na hora.'},
-  {id:'g9',bloco:'Equipe e Atendimento',e:'👥',n:'rotina',critico:false, ti:'Colaboradores novatos estão sendo supervisionados',d:'Novato nunca deve ficar sozinho em posto crítico.'},
-  {id:'g10',bloco:'Produção e Qualidade',e:'🥟',n:'critico',critico:true, ti:'Padrão de qualidade do produto está sendo mantido',d:'Produto dentro do padrão: massa crocante, recheio generoso, temperatura ideal.'},
-  {id:'g11',bloco:'Produção e Qualidade',e:'🥟',n:'critico',critico:true, ti:'Estoque de insumos suficiente para o turno e o próximo',d:'Verificar quantidade de massa, recheios, embalagens e bebidas.'},
-  {id:'g12',bloco:'Produção e Qualidade',e:'🥟',n:'critico',critico:true, ti:'Controle de temperatura e validade dos alimentos em conformidade',d:'Recheios ≤4°C, fritadeira entre 175–185°C.'},
-  {id:'g13',bloco:'Produção e Qualidade',e:'🥟',n:'importante',critico:false,ti:'Descarte correto de óleo e resíduos foi realizado',d:'Óleo usado descartado no recipiente correto.'},
-  {id:'g14',bloco:'Estrutura e Organização',e:'🏠',n:'critico',critico:true, ti:'Equipamentos críticos funcionando corretamente',d:'Qualquer falha deve ser reportada imediatamente.'},
-  {id:'g15',bloco:'Estrutura e Organização',e:'🏠',n:'critico',critico:true, ti:'Limpeza e higiene do ambiente estão dentro do padrão',d:'Área de produção, atendimento e banheiros limpos.'},
-  {id:'g16',bloco:'Estrutura e Organização',e:'🏠',n:'importante',critico:false,ti:'Organização do espaço físico está adequada para o volume do turno',d:'Espaço organizado facilita a operação.'},
-  {id:'g17',bloco:'Estrutura e Organização',e:'🏠',n:'rotina',critico:false, ti:'Itens de segurança verificados (extintores, saídas, gás)',d:'Verificação rápida de segurança operacional.'},
+  {id:'g1',bloco:'Visão Geral do Turno',e:'📊',n:'critico',ti:'Fluxo de caixa do turno está dentro do esperado',d:'Conferir entradas e saídas. Qualquer divergência deve ser registrada imediatamente.'},
+  {id:'g2',bloco:'Visão Geral do Turno',e:'📊',n:'critico',ti:'Metas de venda do turno estão sendo atingidas',d:'Comparar ticket médio e volume de pedidos com a meta diária.'},
+  {id:'g3',bloco:'Visão Geral do Turno',e:'📊',n:'importante',ti:'Indicadores de delivery estão dentro do SLA',d:'Tempo médio de preparo e entrega dentro do esperado.'},
+  {id:'g4',bloco:'Visão Geral do Turno',e:'📊',n:'importante',ti:'Comunicação com turno anterior foi realizada e registrada',d:'Passagem de turno feita com registro de pendências.'},
+  {id:'g5',bloco:'Equipe e Atendimento',e:'👥',n:'critico',ti:'Equipe presente e em conformidade com escala do dia',d:'Verificar presença de todos os colaboradores escalados.'},
+  {id:'g6',bloco:'Equipe e Atendimento',e:'👥',n:'critico',ti:'Todos os colaboradores estão uniformizados corretamente',d:'Uniforme completo, limpo e dentro do padrão da marca.'},
+  {id:'g7',bloco:'Equipe e Atendimento',e:'👥',n:'importante',ti:'Atendimento ao cliente está no padrão de qualidade exigido',d:'Cordialidade, agilidade e precisão nos pedidos.'},
+  {id:'g8',bloco:'Equipe e Atendimento',e:'👥',n:'importante',ti:'Nenhuma ocorrência de conflito ou reclamação formal em aberto',d:'Reclamações devem ser registradas e tratadas na hora.'},
+  {id:'g9',bloco:'Equipe e Atendimento',e:'👥',n:'rotina',ti:'Colaboradores novatos estão sendo supervisionados',d:'Novato nunca deve ficar sozinho em posto crítico.'},
+  {id:'g10',bloco:'Produção e Qualidade',e:'🥟',n:'critico',ti:'Padrão de qualidade do produto está sendo mantido',d:'Produto dentro do padrão: massa crocante, recheio generoso, temperatura ideal.'},
+  {id:'g11',bloco:'Produção e Qualidade',e:'🥟',n:'critico',ti:'Estoque de insumos suficiente para o turno e o próximo',d:'Verificar quantidade de massa, recheios, embalagens e bebidas.'},
+  {id:'g12',bloco:'Produção e Qualidade',e:'🥟',n:'critico',ti:'Controle de temperatura e validade dos alimentos em conformidade',d:'Recheios ≤4°C, fritadeira entre 175–185°C.'},
+  {id:'g13',bloco:'Produção e Qualidade',e:'🥟',n:'importante',ti:'Descarte correto de óleo e resíduos foi realizado',d:'Óleo usado descartado no recipiente correto.'},
+  {id:'g14',bloco:'Estrutura e Organização',e:'🏠',n:'critico',ti:'Equipamentos críticos funcionando corretamente',d:'Qualquer falha deve ser reportada imediatamente.'},
+  {id:'g15',bloco:'Estrutura e Organização',e:'🏠',n:'critico',ti:'Limpeza e higiene do ambiente estão dentro do padrão',d:'Área de produção, atendimento e banheiros limpos.'},
+  {id:'g16',bloco:'Estrutura e Organização',e:'🏠',n:'importante',ti:'Organização do espaço físico está adequada para o volume do turno',d:'Espaço organizado facilita a operação.'},
+  {id:'g17',bloco:'Estrutura e Organização',e:'🏠',n:'rotina',ti:'Itens de segurança verificados (extintores, saídas, gás)',d:'Verificação rápida de segurança operacional.'},
 ];
 var GER_BLOCOS=['Visão Geral do Turno','Equipe e Atendimento','Produção e Qualidade','Estrutura e Organização'];
 
@@ -1372,71 +1337,71 @@ function filterItems(allItems,turno,ctx){
 
 var DP_BLOCOS_DATA=[
   {id:'dp_b1',titulo:'Controle Diário do DP',itens:[
-    {id:'dp_b1_i1',texto:'Pendências do dia foram verificadas e priorizadas',categoria:'fechamento'},
-    {id:'dp_b1_i2',texto:'Admissões e demissões do dia foram conferidas',cond:'admissao',categoria:'documentacao'},
-    {id:'dp_b1_i3',texto:'Documentos obrigatórios do período foram organizados',categoria:'documentacao'},
-    {id:'dp_b1_i4',texto:'⚠️ Tem algum prazo que, se não for tratado hoje, vai causar problema?',alerta:true,categoria:'fechamento'}
+    {id:'dp_b1_i1',texto:'Pendências do dia foram verificadas e priorizadas'},
+    {id:'dp_b1_i2',texto:'Admissões e demissões do dia foram conferidas',cond:'admissao'},
+    {id:'dp_b1_i3',texto:'Documentos obrigatórios do período foram organizados'},
+    {id:'dp_b1_i4',texto:'⚠️ Tem algum prazo que, se não for tratado hoje, vai causar problema?',alerta:true}
   ]},
   {id:'dp_b2',titulo:'Documentação e Arquivos',itens:[
-    {id:'dp_b2_i1',texto:'Documentos físicos e digitais estão devidamente organizados',categoria:'documentacao'},
-    {id:'dp_b2_i2',texto:'Arquivos recentes foram atualizados no sistema',categoria:'sistema'},
-    {id:'dp_b2_i3',texto:'Pendências documentais foram identificadas e registradas',categoria:'documentacao'},
-    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada',cond:'assinatura',categoria:'documentacao'}
+    {id:'dp_b2_i1',texto:'Documentos físicos e digitais estão devidamente organizados'},
+    {id:'dp_b2_i2',texto:'Arquivos recentes foram atualizados no sistema'},
+    {id:'dp_b2_i3',texto:'Pendências documentais foram identificadas e registradas'},
+    {id:'dp_b2_i4',texto:'Conferência de assinaturas pendentes foi realizada',cond:'assinatura',cond:'assinatura'}
   ]},
   {id:'dp_b3',titulo:'Apoio à Operação e Equipe',itens:[
-    {id:'dp_b3_i1',texto:'Solicitações dos colaboradores foram verificadas e encaminhadas',categoria:'equipe'},
-    {id:'dp_b3_i2',texto:'Dúvidas internas foram tratadas ou direcionadas',categoria:'equipe'},
-    {id:'dp_b3_i3',texto:'Demandas urgentes foram identificadas e priorizadas',categoria:'equipe'},
-    {id:'dp_b3_i4',texto:'Algum colaborador trouxe algo pessoal ou operacional para o DP hoje? O responsável foi informado?',cond:'colaborador_trouxe',categoria:'equipe'}
+    {id:'dp_b3_i1',texto:'Solicitações dos colaboradores foram verificadas e encaminhadas'},
+    {id:'dp_b3_i2',texto:'Dúvidas internas foram tratadas ou direcionadas'},
+    {id:'dp_b3_i3',texto:'Demandas urgentes foram identificadas e priorizadas'},
+    {id:'dp_b3_i4',texto:'Algum colaborador trouxe algo pessoal ou operacional para o DP hoje? O responsável foi informado?',cond:'colaborador_trouxe'}
   ]},
   {id:'dp_b4',titulo:'Fechamento e Continuidade',itens:[
-    {id:'dp_b4_i1',texto:'Pendências para o próximo turno/dia foram registradas',categoria:'fechamento'},
-    {id:'dp_b4_i2',texto:'Status das atividades do DP foi atualizado',categoria:'fechamento'},
-    {id:'dp_b4_i3',texto:'Ocorrências relevantes do dia foram registradas',categoria:'fechamento'},
-    {id:'dp_b4_i4',texto:'Rotina do dia foi concluída conforme planejado',categoria:'fechamento'},
-    {id:'dp_b4_i5',texto:'Sistema de ponto foi acompanhado e está correto hoje',critico:true,categoria:'sistema'}
+    {id:'dp_b4_i1',texto:'Pendências para o próximo turno/dia foram registradas'},
+    {id:'dp_b4_i2',texto:'Status das atividades do DP foi atualizado'},
+    {id:'dp_b4_i3',texto:'Ocorrências relevantes do dia foram registradas'},
+    {id:'dp_b4_i4',texto:'Rotina do dia foi concluída conforme planejado'},
+    {id:'dp_b4_i5',texto:'Sistema de ponto foi acompanhado e está correto hoje',critico:true}
   ]}
 ];
 var DP_BLOCOS_SEMANAL=[
   {id:'dp_s1',titulo:'Revisão Semanal de Documentos',itens:[
-    {id:'dp_s1_i1',texto:'Ponto da semana foi conferido e lançado corretamente',categoria:'sistema'},
-    {id:'dp_s1_i4',texto:'Comunicados internos da semana foram enviados',cond:'comunicado',categoria:'equipe'}
+    {id:'dp_s1_i1',texto:'Ponto da semana foi conferido e lançado corretamente'},
+    {id:'dp_s1_i4',texto:'Comunicados internos da semana foram enviados',cond:'comunicado'}
   ]},
   {id:'dp_s2',titulo:'Acompanhamento de Equipe',itens:[
-    {id:'dp_s2_i1',texto:'Ausências e atestados da semana foram registrados',categoria:'equipe'},
-    {id:'dp_s2_i2',texto:'Banco de horas da semana foi apurado e registrado',categoria:'documentacao'},
-    {id:'dp_s2_i3',texto:'Feedbacks pendentes foram realizados ou agendados',categoria:'equipe'},
-    {id:'dp_s2_i4',texto:'Situação de uniformes e EPI foi verificada',cond:'uniforme',categoria:'equipe'}
+    {id:'dp_s2_i1',texto:'Ausências e atestados da semana foram registrados'},
+    {id:'dp_s2_i2',texto:'Banco de horas da semana foi apurado e registrado'},
+    {id:'dp_s2_i3',texto:'Feedbacks pendentes foram realizados ou agendados'},
+    {id:'dp_s2_i4',texto:'Situação de uniformes e EPI foi verificada',cond:'uniforme'}
   ]},
   {id:'dp_s3',titulo:'Pendências e Encaminhamentos',itens:[
-    {id:'dp_s3_i1',texto:'Pendências da semana anterior foram resolvidas ou reencaminhadas',categoria:'fechamento'},
-    {id:'dp_s3_i2',texto:'Relatório semanal de DP foi preparado',categoria:'documentacao'},
-    {id:'dp_s3_i4',texto:'Algum colaborador trouxe algo para o DP esta semana? O responsável foi informado?',cond:'colaborador_trouxe',categoria:'equipe'}
+    {id:'dp_s3_i1',texto:'Pendências da semana anterior foram resolvidas ou reencaminhadas'},
+    {id:'dp_s3_i2',texto:'Relatório semanal de DP foi preparado'},
+    {id:'dp_s3_i4',texto:'Algum colaborador trouxe algo para o DP esta semana? O responsável foi informado?',cond:'colaborador_trouxe'}
   ]}
 ];
 var DP_BLOCOS_MENSAL=[
   {id:'dp_m1',titulo:'Fechamento Mensal de Folha',itens:[
-    {id:'dp_m1_i1',texto:'Ponto mensal foi apurado e conferido',categoria:'sistema'},
-    {id:'dp_m1_i2',texto:'Banco de horas do mês foi calculado e conferido por colaborador',categoria:'documentacao'},
-    {id:'dp_m1_i3',texto:'Descontos e benefícios foram verificados',categoria:'documentacao'},
-    {id:'dp_m1_i4',texto:'Folha de pagamento foi fechada e enviada para aprovação',categoria:'documentacao'}
+    {id:'dp_m1_i1',texto:'Ponto mensal foi apurado e conferido'},
+    {id:'dp_m1_i2',texto:'Banco de horas do mês foi calculado e conferido por colaborador'},
+    {id:'dp_m1_i3',texto:'Descontos e benefícios foram verificados'},
+    {id:'dp_m1_i4',texto:'Folha de pagamento foi fechada e enviada para aprovação'}
   ]},
   {id:'dp_m2',titulo:'Obrigações Legais e Documentos',itens:[
-    {id:'dp_m2_i1',texto:'eSocial do mês foi conferido e transmitido',categoria:'sistema'},
-    {id:'dp_m2_i2',texto:'Admissões e demissões do mês foram regularizadas',cond:'admissao_mensal',categoria:'documentacao'},
-    {id:'dp_m2_i3',texto:'Exames médicos periódicos foram verificados',cond:'exame',categoria:'equipe'},
-    {id:'dp_m2_i4',texto:'FGTS e contribuições foram conferidos',categoria:'documentacao'}
+    {id:'dp_m2_i1',texto:'eSocial do mês foi conferido e transmitido'},
+    {id:'dp_m2_i2',texto:'Admissões e demissões do mês foram regularizadas',cond:'admissao_mensal'},
+    {id:'dp_m2_i3',texto:'Exames médicos periódicos foram verificados',cond:'exame'},
+    {id:'dp_m2_i4',texto:'FGTS e contribuições foram conferidos'}
   ]},
   {id:'dp_m3',titulo:'Planejamento do Próximo Mês',itens:[
-    {id:'dp_m3_i1',texto:'Férias e licenças do próximo mês foram mapeadas',categoria:'equipe'},
-    {id:'dp_m3_i2',texto:'Necessidades de contratação foram levantadas',categoria:'equipe'},
-    {id:'dp_m3_i3',texto:'Treinamentos obrigatórios foram agendados',categoria:'equipe'},
-    {id:'dp_m3_i5',texto:'Escalas do mês foram conferidas e estão alinhadas com os contratos',categoria:'documentacao'}
+    {id:'dp_m3_i1',texto:'Férias e licenças do próximo mês foram mapeadas'},
+    {id:'dp_m3_i2',texto:'Necessidades de contratação foram levantadas'},
+    {id:'dp_m3_i3',texto:'Treinamentos obrigatórios foram agendados'},
+    {id:'dp_m3_i5',texto:'Escalas do mês foram conferidas e estão alinhadas com os contratos'}
   ]},
   {id:'dp_m4',titulo:'Pagamentos — VR, VT e Combustível',itens:[
-    {id:'dp_m4_i1',texto:'VT processado e pago corretamente — Dia 15',vr_vt:'vt',categoria:'documentacao'},
-    {id:'dp_m4_i3',texto:'Vale combustível do gerente calculado e pago — Dia 15',vr_vt:'vt',categoria:'documentacao'},
-    {id:'dp_m4_i2',texto:'VR processado e pago corretamente — Dia 30',vr_vt:'vr',categoria:'documentacao'}
+    {id:'dp_m4_i1',texto:'VT processado e pago corretamente — Dia 15',vr_vt:'vt'},
+    {id:'dp_m4_i3',texto:'Vale combustível do gerente calculado e pago — Dia 15',vr_vt:'vt'},
+    {id:'dp_m4_i2',texto:'VR processado e pago corretamente — Dia 30',vr_vt:'vr'}
   ]}
 ];
 var DP_FREQ_MAP={
@@ -1457,10 +1422,7 @@ var DP_CHIPS={
 var DP_ACOES=[{v:'resolvi',l:'✅ Resolvi na hora',cor:'var(--ok)'},{v:'pendente',l:'🕐 Ficou pendente',cor:'var(--warn)'},{v:'escalei',l:'📲 Passei para alguém',cor:'var(--info)'}];
 var DP_ESCALADOS=['Camila','Bruna','Derik','Gestão'];
 
-function detectarCategoriaDP(texto,item){
-  /* Usa campo categoria explícito do item quando disponível — evita fragilidade de keyword match */
-  if(item&&item.categoria)return item.categoria;
-  /* Fallback: keyword match para compatibilidade com itens sem categoria */
+function detectarCategoriaDP(texto){
   var t=(texto||'').toLowerCase();
   if(t.indexOf('ifood')>=0||t.indexOf('ponto mais')>=0||t.indexOf('cartão bom')>=0||t.indexOf('benefício')>=0||t.indexOf('sistema')>=0||t.indexOf('acesso')>=0||t.indexOf('app')>=0)return'sistema';
   if(t.indexOf('document')>=0||t.indexOf('arquivo')>=0||t.indexOf('assinat')>=0||t.indexOf('prazo')>=0||t.indexOf('lançado')>=0)return'documentacao';
@@ -1509,11 +1471,11 @@ function SharedNaoForm(props){
 }
 
 function DPNaoForm(props){
-  var data=props.data||{};var showErr=props.showErr;var textoItem=props.textoItem||'';var itemObj=props.itemObj||null;
+  var data=props.data||{};var showErr=props.showErr;var textoItem=props.textoItem||'';
   function set(k,v){props.onChange(function(prev){return Object.assign({},prev||{},{[k]:v});});}
   function setMulti(obj){props.onChange(function(prev){return Object.assign({},prev||{},obj);});}
   function stop(e){e.stopPropagation();}
-  var cat=detectarCategoriaDP(textoItem,itemObj);var cfg=DP_CHIPS[cat]||DP_CHIPS.default;
+  var cat=detectarCategoriaDP(textoItem);var cfg=DP_CHIPS[cat]||DP_CHIPS.default;
   var isEscalei=data.acao==='escalei';var isPendente=data.acao==='pendente';
   var isOutro=data.ocorrencia==='Outro'||data.ocorrencia==='Outro sistema';
   var precisaDetalhe=isOutro||isPendente||isEscalei;
@@ -1592,7 +1554,7 @@ function DPBlocoItem(props){
       {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
       {resp==='nao'&&(
         <div>
-          <DPNaoForm data={neg} textoItem={item.texto} itemObj={item} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>
+          <DPNaoForm data={neg} textoItem={item.texto} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>
           {validateDPNeg(neg)&&(
             <button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>
               ✓ Confirmar e recolher
@@ -1635,14 +1597,12 @@ function DPSummaryScreen(props){
   var total=allItems.length;
   var falhas=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
   var blocosConcluidos=blocos.filter(function(b){return b.itens.every(function(i){return resps[i.id];});}).length;
-  var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
-  var statusGeral=criticos>0?'critico':falhas>0?'atencao':'ok';
-  var statusLabel=criticos>0?'Crítico':falhas>0?'Atenção':'OK';
-  var statusCor=criticos>0?'var(--danger)':falhas>0?'var(--warn)':'var(--ok)';
-  var statusBg=criticos>0?'var(--danger-bg)':falhas>0?'var(--warn-bg)':'var(--ok-bg)';
-  var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+  var statusGeral=falhas===0?'OK':falhas<=2?'Atenção':'Crítico';
+  var statusCor=falhas===0?'var(--ok)':falhas<=2?'var(--warn)':'var(--danger)';
+  var statusBg=falhas===0?'var(--ok-bg)':falhas<=2?'var(--warn-bg)':'var(--danger-bg)';
+  var score=Math.max(0,Math.round(100-(falhas/total*60)));
   var falhasItens=allItems.filter(function(i){return resps[i.id]==='nao';});
-  var bloqueiosSistema=falhasItens.filter(function(i){return detectarCategoriaDP(i.texto,i)==='sistema';});
+  var bloqueiosSistema=falhasItens.filter(function(i){return detectarCategoriaDP(i.texto)==='sistema';});
 
   function buildTextGrupo(){
     var data=todayFmt();var nome=user.name;var linhas=[];
@@ -1722,8 +1682,8 @@ function DPSummaryScreen(props){
       </div>
       <div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}>
         <div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}>
-          <div style={{fontSize:44,flexShrink:0}}>{statusGeral==='ok'?'✅':statusGeral==='atencao'?'⚠️':'🚨'}</div>
-          <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusLabel}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma não conformidade.':falhas+' item(ns) com pendência.'}</div>{tempoTotal&&<div style={{fontSize:11,color:statusCor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div>
+          <div style={{fontSize:44,flexShrink:0}}>{statusGeral==='OK'?'✅':statusGeral==='Atenção'?'⚠️':'🚨'}</div>
+          <div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusGeral}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma não conformidade.':falhas+' item(ns) com pendência.'}</div>{tempoTotal&&<div style={{fontSize:11,color:statusCor,marginTop:4,fontWeight:600}}>⏱ Tempo total: {tempoTotal}</div>}</div>
           <div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div><div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div></div>
         </div>
         {bloqueiosSistema.length>0&&(<div style={{background:'#FEF3C7',border:'1.5px solid #FDE68A',borderRadius:'var(--r12)',padding:'12px 14px',marginBottom:12,display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:20,flexShrink:0}}>⚠️</span><div><div style={{fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:800,color:'#92400E'}}>Bloqueios de sistema ({bloqueiosSistema.length})</div><div style={{fontSize:11,color:'#92400E',marginTop:2}}>{bloqueiosSistema.map(function(i){var n=negs[i.id];return n&&n.ocorrencia||'Sistema';}).join(' · ')}</div></div></div>)}
@@ -1825,17 +1785,15 @@ function DPChecklistScreen(props){
     var tempo=calcTempo(horaInicio);setTempoTotal(tempo);
     var total=allItems.length;
     var falhas=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
-    var criticos=allItems.filter(function(i){return i.critico&&resps[i.id]==='nao';}).length;
-    var statusGeral=criticos>0?'critico':falhas>0?'atencao':'ok';
-    var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+    var statusGeral=falhas===0?'ok':falhas<=2?'atencao':'critico';
+    var score=Math.max(0,Math.round(100-(falhas/total*60)));
     var blocosConcluidos=blocos.filter(function(b){return b.itens.every(function(i){return resps[i.id];});}).length;
-    var ok=await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{}),ocorrencia:dpCtx.obsOcorrencia||''});
-    if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
+    await sbInsert('dp_checklists',{login:user.login,user_name:user.name,freq:freq,checklist:freqCfg.titulo,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),tempo_total:tempo,score:score,total:total,falhas:falhas,blocos_concluidos:blocosConcluidos,status:statusGeral,resps:resps,negs:negs,sugestao:(sugestao&&sugestao.atividade?sugestao:{}),ocorrencia:dpCtx.obsOcorrencia||''});
     if(sugestao&&sugestao.atividade){await sbInsert('dp_sugestoes',{login:user.login,nome:user.name,checklist:freqCfg.titulo,freq:freq,data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),sugestao:sugestao});}
-
+    await sendWebhook(SISTEMA+' — '+freqCfg.titulo+'\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON DP] '+statusGeral.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}
     setEnviadoScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
 
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(DP_SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setValErrs([]);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);setScreen('freq');}
@@ -2026,16 +1984,13 @@ function GerSummaryScreen(props){
   var resps=props.resps;var negs=props.negs;var user=props.user;var ident=props.ident;var onNovo=props.onNovo;var tempoTotal=props.tempoTotal||'';
   var _enc=useState(false);var encerrado=_enc[0];var setEncerrado=_enc[1];
   var total=GER_ITEMS.length;var falhas=GER_ITEMS.filter(function(i){return resps[i.id]==='nao';}).length;
-  var criticos=GER_ITEMS.filter(function(i){return i.n==='critico'&&resps[i.id]==='nao';}).length;
-  var statusGeral=criticos>0?'critico':falhas>0?'atencao':'ok';
-  var statusLabel=criticos>0?'Crítico':falhas>0?'Atenção':'OK';
-  var statusCor=criticos>0?'var(--danger)':falhas>0?'var(--warn)':'var(--ok)';var statusBg=criticos>0?'var(--danger-bg)':falhas>0?'var(--warn-bg)':'var(--ok-bg)';
-  var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
-  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={criticos} score={score} turnoLabel={'🏢 Gerência · '+(ident&&ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde')} cor='#0F4C81' onHub={onNovo} onRevisar={function(){setEncerrado(false);}}/>;}  function buildText(){var lines=[SISTEMA+' — Gerência','━━━━━━━━━━',user.name+' · '+(ident&&ident.data||todayFmt()),'Status: '+statusLabel+' · Score: '+score+'/100'];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━');GER_BLOCOS.forEach(function(b){var fl=GER_ITEMS.filter(function(i){return i.bloco===b&&resps[i.id]==='nao';}).length;lines.push((fl>0?'❌ ':'✅ ')+b+(fl>0?' — '+fl+' falha'+(fl>1?'s':''):''));});lines.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');return lines.join('\n');}
+  var statusGeral=falhas===0?'OK':falhas<=2?'Atenção':'Crítico';var statusCor=falhas===0?'var(--ok)':falhas<=2?'var(--warn)':'var(--danger)';var statusBg=falhas===0?'var(--ok-bg)':falhas<=2?'var(--warn-bg)':'var(--danger-bg)';
+  var score=Math.max(0,Math.round(100-(falhas/total*60)));
+  if(encerrado){return<TurnoEncerrado user={user} falhas={falhas} criticos={GER_ITEMS.filter(function(i){return i.n==='critico'&&resps[i.id]==='nao';}).length} score={score} turnoLabel={'🏢 Gerência · '+(ident&&ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde')} cor='#0F4C81' onHub={onNovo} onRevisar={function(){setEncerrado(false);}}/>;}  function buildText(){var lines=[SISTEMA+' — Gerência','━━━━━━━━━━',user.name+' · '+(ident&&ident.data||todayFmt()),'Status: '+statusGeral+' · Score: '+score+'/100'];if(tempoTotal)lines.push('⏱ Tempo: '+tempoTotal);lines.push('━━━━━━━━━━');GER_BLOCOS.forEach(function(b){var fl=GER_ITEMS.filter(function(i){return i.bloco===b&&resps[i.id]==='nao';}).length;lines.push((fl>0?'❌ ':'✅ ')+b+(fl>0?' — '+fl+' falha'+(fl>1?'s':''):''));});lines.push('━━━━━━━━━━','_CheckON · Pastel da Camilla_');return lines.join('\n');}
   var _envGrupo=useState(false);var enviouGrupo=_envGrupo[0];var setEnviouGrupo=_envGrupo[1];
   function handleGrupo(){openWA();setEnviouGrupo(true);}
   function handleCopy(){var txt=buildText();if(navigator.clipboard){navigator.clipboard.writeText(txt).catch(function(){var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);})}else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}}
-  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Visão do Turno — Concluído ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {ident&&ident.data||todayFmt()}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{statusGeral==='ok'?'✅':statusGeral==='atencao'?'⚠️':'🚨'}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusLabel}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma falha.':falhas+' falha(s).'}</div></div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div><div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}><div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por bloco</div>{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});var fl=its.filter(function(i){return resps[i.id]==='nao';}).length;var ok=its.every(function(i){return resps[i.id];});return(<div key={b} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{b}</div><span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':'var(--ok)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):'OK'}</span></div>);})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleGrupo} style={{flex:2,padding:13,background:enviouGrupo?'var(--ok)':'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none',textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>📲 {enviouGrupo?'Enviado ✓':'Enviar para o grupo'}</a><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div>{enviouGrupo&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:14,background:'#0F4C81',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,cursor:'pointer',border:'none',marginBottom:8}}>✓ Terminei meu turno</button>}<button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo checklist</button></div></div>);
+  return(<div style={{minHeight:'100vh',background:'#F4F4F6',paddingBottom:32}}><div style={{background:'var(--brand)',color:'#fff',padding:'14px 16px'}}><div style={{fontSize:10,fontWeight:700,opacity:.6,textTransform:'uppercase',letterSpacing:1.5,marginBottom:4}}>CheckON · Gerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:18,fontWeight:900}}>Visão do Turno — Concluído ✓</div><div style={{fontSize:12,opacity:.7,marginTop:2}}>{user.name} · {ident&&ident.data||todayFmt()}{tempoTotal?' · ⏱ '+tempoTotal:''}</div></div><div style={{maxWidth:720,margin:'0 auto',padding:'14px 16px 0'}}><div style={{background:statusBg,border:'1.5px solid '+statusCor,borderRadius:16,padding:'18px 16px',marginBottom:12,display:'flex',alignItems:'center',gap:14}}><div style={{fontSize:44,flexShrink:0}}>{statusGeral==='OK'?'✅':statusGeral==='Atenção'?'⚠️':'🚨'}</div><div style={{flex:1}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:17,fontWeight:900,color:statusCor}}>Status: {statusGeral}</div><div style={{fontSize:12,color:statusCor,opacity:.85}}>{falhas===0?'Nenhuma falha.':falhas+' falha(s).'}</div></div><div style={{textAlign:'center'}}><div style={{fontFamily:"'Sora',sans-serif",fontSize:32,fontWeight:900,color:statusCor}}>{score}</div><div style={{fontSize:9,color:statusCor,opacity:.7,fontWeight:700}}>/ 100</div></div></div><div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}><div style={{fontSize:11,fontWeight:700,color:'#9CA3AF',textTransform:'uppercase',letterSpacing:.5,marginBottom:10}}>Resumo por bloco</div>{GER_BLOCOS.map(function(b){var its=GER_ITEMS.filter(function(i){return i.bloco===b;});var fl=its.filter(function(i){return resps[i.id]==='nao';}).length;var ok=its.every(function(i){return resps[i.id];});return(<div key={b} style={{display:'flex',alignItems:'center',gap:10,padding:'7px 0',borderBottom:'1px solid #F3F4F6'}}><span>{ok?'✅':fl>0?'❌':'⏳'}</span><div style={{flex:1,fontSize:13,fontWeight:600}}>{b}</div><span style={{fontSize:11,fontWeight:700,color:fl>0?'var(--danger)':'var(--ok)'}}>{fl>0?fl+' falha'+(fl>1?'s':''):'OK'}</span></div>);})}</div><div style={{display:'flex',gap:8,marginBottom:8}}><a href={WA_GROUP} target="_blank" rel="noopener noreferrer" onClick={handleGrupo} style={{flex:2,padding:13,background:enviouGrupo?'var(--ok)':'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none',textDecoration:'none',display:'flex',alignItems:'center',justifyContent:'center',gap:6}}>📲 {enviouGrupo?'Enviado ✓':'Enviar para o grupo'}</a><button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button></div>{enviouGrupo&&<button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:14,background:'#0F4C81',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,cursor:'pointer',border:'none',marginBottom:8}}>✓ Terminei meu turno</button>}<button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Novo checklist</button></div></div>);
 }
 
 function GerChecklistScreen(props){
@@ -2065,16 +2020,15 @@ function GerChecklistScreen(props){
     var hora=nowTime();var total=GER_ITEMS.length;
     var falhas=GER_ITEMS.filter(function(i){return resps[i.id]==='nao';}).length;
     var criticos=GER_ITEMS.filter(function(i){return i.n==='critico'&&resps[i.id]==='nao';}).length;
-    var statusGeral=criticos>0?'critico':falhas>0?'atencao':'ok';
-    var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+    var statusGeral=falhas===0?'OK':falhas<=2?'Atenção':'Crítico';
+    var score=Math.max(0,Math.round(100-(falhas/total*60)));
     var tempo=calcTempo(ident&&ident.horaInicio);setTempoTotal(tempo);
-    var ok=await sbInsert('ger_checklists',{login:user.login,user_name:user.name,turno:ident&&ident.turno,data:todayISO(),data_fmt:todayFmt(),hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:statusGeral,resps:resps,negs:negs});
-    if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
+    await sbInsert('ger_checklists',{login:user.login,user_name:user.name,turno:ident&&ident.turno,data:todayISO(),data_fmt:todayFmt(),hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:statusGeral.toLowerCase(),resps:resps,negs:negs});
     setIdent(function(prev){return Object.assign({},prev,{horaFim:hora});});
-
+    await sendWebhook(SISTEMA+' — GERÊNCIA\n'+user.name+' · '+todayFmt()+(tempo?' · ⏱ '+tempo:'')+'\nStatus: '+statusGeral+' · Score: '+score+'/100',{assunto:'[CheckON Gerência] '+statusGeral+' – '+user.name});
     try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}
     setEnviadoGer(true);
-    setTimeout(function(){setSending(false);setEnviadoGer(false);setScreen('summary');},900);
+    setTimeout(function(){setSending(false);setEnviadoGer(false);setScreen('summary');},2200);
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(GER_SAVE_KEY);}catch(e){}setIdent(null);setTurno(null);setResps({});setNegs({});setShowErr(false);setValErrs([]);setScreen('entry');}
   var tLabel=turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
@@ -2123,7 +2077,7 @@ function OcorrenciasScreen(props){
 function LegacySummaryScreen(props){
   var ident=props.ident;var resps=props.resps;var items=props.items;var onBack=props.onBack;var tempoTotal=props.tempoTotal||'';var nome=props.nome||'Subgerente';
   var total=items.length;var falhas=items.filter(function(i){return resps[i.id]==='nao';}).length;var criticos=items.filter(function(i){return i.n==='critico'&&resps[i.id]==='nao';}).length;
-  var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+  var score=Math.max(0,Math.round(100-(falhas/total*40)-(criticos*10)));
   var turnoLabel=ident.turno==='manha'?'🌅 Manhã':'🌙 Tarde/Noite';
   var feedback=score===100?{emoji:'🏆',titulo:'Perfeito! Zero falhas.',cor:'#16A34A',bg:'#F0FDF4',border:'#BBF7D0'}:score>=75?{emoji:'💪',titulo:'Bom turno!',cor:'#D97706',bg:'#FFFBEB',border:'#FDE68A'}:{emoji:'⚠️',titulo:'Turno com problemas.',cor:'#DC2626',bg:'#FEF2F2',border:'#FECACA'};
   function handleGrupo(){openWA();}
@@ -2161,13 +2115,12 @@ function ChecklistScreen(props){
     var hora=nowTime();var tempo=calcTempo(ident&&ident.horaInicio);setTempoTotal(tempo);
     var falhasItems=items.filter(function(i){return resps[i.id]==='nao';});
     var total=items.length;var falhas=falhasItems.length;var criticos=falhasItems.filter(function(i){return i.n==='critico';}).length;
-    var score=Math.max(0,Math.round(100-(falhas/total*50)-(criticos*8)));
+    var score=Math.max(0,Math.round(100-(falhas/total*40)-(criticos*10)));
     var status=criticos>0?'critico':falhas>0?'ressalvas':'conforme';
     setSending(true);
-    var ok=await sbInsert('checklists',{login:user.login,user_name:nome,turno:ident.turno,data:todayISO(),data_fmt:ident.data,hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:status,resps:resps,negs:negs,ff:{obsGerais:ff.obsGerais,relato:relato||''}});
-    if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
+    await sbInsert('checklists',{login:user.login,user_name:nome,turno:ident.turno,data:todayISO(),data_fmt:ident.data,hora:hora,tempo_total:tempo,score:score,total:total,falhas:falhas,criticos:criticos,status:status,resps:resps,negs:negs,ff:{obsGerais:ff.obsGerais,relato:relato||''}});
     var tLabel=ident.turno==='manha'?'Manhã':'Tarde/Noite';
-
+    await sendWebhook(SISTEMA+'\n'+nome+' · '+tLabel+' · '+ident.data+(tempo?' · ⏱ '+tempo:'')+'\nScore: '+score+'/100',{assunto:'[CheckON] '+status+' – '+nome});
     setSending(false);try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setScreen('summary');
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist?'))return;try{localStorage.removeItem(CK_USER_KEY);}catch(e){}setIdent(null);setResps({});setNegs({});setFF({obsGerais:''});setShowErr(false);setValErrs([]);setTempoTotal('');setScreen('entry');}
@@ -2190,8 +2143,9 @@ function SubgerCEORow(props){
   var allSgItems=SUBGER_ETAPAS.reduce(function(a,e){return a.concat(e.itens);},[]);
   var etapasDef=[
     {titulo:'Abertura do Turno',ids:SUBGER_ETAPAS[0].itens.map(function(i){return i.id;})},
-    {titulo:'Controle da Operação',ids:SUBGER_ETAPAS[1].itens.map(function(i){return i.id;})},
-    {titulo:'Fechamento do Turno Manhã',ids:SUBGER_ETAPAS[2].itens.map(function(i){return i.id;})}
+    {titulo:'Operação e Pico',ids:SUBGER_ETAPAS[1].itens.map(function(i){return i.id;})},
+    {titulo:'Manutenção da Operação',ids:SUBGER_ETAPAS[2].itens.map(function(i){return i.id;})},
+    {titulo:'Passagem de Turno',ids:SUBGER_ETAPAS[3].itens.map(function(i){return i.id;})}
   ];
   return(
     <div style={{margin:'8px 16px 0',background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',overflow:'hidden'}}>
@@ -2270,11 +2224,11 @@ function CEODashboard(props){
   useEffect(function(){
     async function load(){
       setLoading(true);
-      if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){var d=await sbSelectRecente('checklists',90);setCkData(d);}
-      if(tab==='overview'||tab==='gerencia'){var g=await sbSelectRecente('ger_checklists',90);setGerData(g);}
-      if(tab==='overview'||tab==='dp'){var dp=await sbSelectRecente('dp_checklists',90);setDpData(dp);var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
-      if(tab==='overview'||tab==='subgerencia'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var sg=await sbSelectRecente('subger_checklists',90);setSubgerData(sg);}
-      if(tab==='overview'||tab==='vitoria'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var nt=await sbSelectRecente('subger_noite_checklists',90);setNoiteData(nt);}
+      if(tab==='overview'||tab==='ranking'||tab==='alertas'||tab==='turnos'){var d=await sbSelect('checklists');setCkData(d);}
+      if(tab==='overview'||tab==='gerencia'){var g=await sbSelect('ger_checklists');setGerData(g);}
+      if(tab==='overview'||tab==='dp'){var dp=await sbSelect('dp_checklists');setDpData(dp);var sugs=await sbSelect('dp_sugestoes');setDpSugs(sugs);}
+      if(tab==='overview'||tab==='subgerencia'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var sg=await sbSelect('subger_checklists');setSubgerData(sg);}
+      if(tab==='overview'||tab==='vitoria'||tab==='alertas'||tab==='turnos'||tab==='ranking'){var nt=await sbSelect('subger_noite_checklists');setNoiteData(nt);}
       if(tab==='overview'||tab==='pendencias'){var pd=await sbSelect('checkon_pendencias');setPendData(pd.filter(function(r){return r.status==='aberta';}));}
       setLoading(false);
     }
@@ -2721,11 +2675,11 @@ function CEOHub(props){
     async function load(){
       setLoading(true);
       try{
-        var sg=await sbSelectRecente('subger_checklists',90);
-        var nt=await sbSelectRecente('subger_noite_checklists',90);
-        var ger=await sbSelectRecente('ger_checklists',90);
-        var dp=await sbSelectRecente('dp_checklists',90);
-        var ck=await sbSelectRecente('checklists',90);
+        var sg=await sbSelect('subger_checklists');
+        var nt=await sbSelect('subger_noite_checklists');
+        var ger=await sbSelect('ger_checklists');
+        var dp=await sbSelect('dp_checklists');
+        var ck=await sbSelect('checklists');
         var pend=await sbSelect('checkon_pendencias');
         var sugs=await sbSelect('dp_sugestoes');
         setAllData({sg:sg,nt:nt,ger:ger,dp:dp,ck:ck,pend:pend.filter(function(r){return r.status==='aberta';}),sugs:sugs});
@@ -3538,7 +3492,7 @@ function GerenciaHub(props){
   );
 
   var gerItems=typeof GER_ITEMS!=='undefined'?GER_ITEMS:[];
-  var GER_SAVE_KEY='konclui_ger_'+user.login;
+  var GER_SAVE_KEY='ger_draft_'+user.login;
   var rascunhoPct=(function(){
     try{
       var s=JSON.parse(localStorage.getItem(GER_SAVE_KEY));
@@ -3649,44 +3603,45 @@ var SUBGER_SAVE_KEY_PREFIX='checkon_subger_';
 
 /* ── Checklist Gabriela — 3 momentos com horário ── */
 var SUBGER_ETAPAS=[
-  {id:'sg_e1',titulo:'Abertura do Turno',horario:'9h – 11h',emoji:'🌅',itens:[
-    {id:'sg1', critico:false,texto:'Livro de ocorrências e Trello verificados'},
-    {id:'sg2', critico:false,texto:'Grupo da gerência verificado — pendências do turno anterior identificadas'},
-    {id:'sg3', critico:false,texto:'Equipe presente, redistribuída e com função definida'},
-    {id:'sg4', critico:false,texto:'Atrasos e faltas tratados'},
-    {id:'sg5', critico:true, texto:'Saipos, WebCardápio e iFood funcionando'},
-    {id:'sg6', critico:false,texto:'Impressoras, maquininhas, internet e Wi-Fi funcionando'},
-    {id:'sg7', critico:false,texto:'Cozinha pronta — bancadas organizadas, área de trabalho funcional'},
-    {id:'sg8', critico:true, texto:'Insumos e recheios disponíveis — produtos verificados'},
-    {id:'sg9', critico:true, texto:'Itens próximos do vencimento identificados — uso priorizado do mais antigo'},
-    {id:'sg10',critico:false,texto:'Dispense abastecido — mesa e gaveteiro organizados'},
-    {id:'sg11',critico:true, texto:'Produção iniciada'},
-    {id:'sg26',critico:true, texto:'Os recheios da dispensa foram verificados e estão sendo utilizados na ordem correta (mais antigo → mais novo)'}
+  {id:'sg_e1',titulo:'Abertura do Turno',horario:'8h – 9h30',emoji:'🌅',itens:[
+    {id:'sg1', critico:false,texto:'Passagem do turno da noite recebida — pendências verificadas'},
+    {id:'sg2', critico:false,texto:'Livro de ocorrências, Trello e grupo da gerência verificados'},
+    {id:'sg3', critico:true, texto:'Troco conferido — R$300 no caixa'},
+    {id:'sg4', critico:false,texto:'Equipe presente, redistribuída e com função definida'},
+    {id:'sg5', critico:true, texto:'Atrasos e faltas tratados na escala digital e enviados no grupo'},
+    {id:'sg6', critico:true, texto:'Saipos, WebCardápio e iFood funcionando'},
+    {id:'sg7', critico:false,texto:'Impressoras, maquininhas, internet e Wi-Fi funcionando'},
+    {id:'sg8', critico:true, texto:'Insumos e recheios disponíveis para o turno da manhã'},
+    {id:'sg9', critico:false,texto:'Cozinha organizada e pronta para operação'}
   ]},
-  {id:'sg_e2',titulo:'Controle da Operação',horario:'11h – 13h',emoji:'⚙️',itens:[
-    {id:'sg27',critico:true, texto:'Produção fluindo sem acúmulo'},
-    {id:'sg29',critico:true, texto:'Pedidos parados identificados e tratados'},
-    {id:'sg31',critico:true, texto:'Atrasos tratados antes de impactar cliente'},
-    {id:'sg35',critico:true, texto:'Nenhum colaborador sem direção'},
-    {id:'sg36',critico:true, texto:'Insumos críticos monitorados — reposição antecipada realizada'},
-    {id:'sg38',critico:true, texto:'Não houve falta de insumo por falha de controle'},
-    {id:'sg39',critico:false,texto:'Padrão operacional seguido — nenhuma execução fora do padrão'},
-    {id:'sg41',critico:false,texto:'Checklists da equipe respondidos e validados'},
-    {id:'sg47',critico:true, texto:'Falhas relevantes registradas'},
-    {id:'sg48',critico:true, texto:'Nenhum problema ficou sem responsável'}
+  {id:'sg_e2',titulo:'Operação e Pico',horario:'9h30 – 12h',emoji:'⚡',itens:[
+    {id:'sg10',critico:true, texto:'Pico 11h–13h: tempo e qualidade mantidos'},
+    {id:'sg11',critico:true, texto:'Pedidos delivery monitorados e conferidos antes de sair'},
+    {id:'sg26',critico:true, texto:'Pedidos parados identificados e tratados'},
+    {id:'sg27',critico:true, texto:'Atrasos tratados antes de impactar cliente'},
+    {id:'sg28',critico:true, texto:'Nenhum colaborador sem direção'},
+    {id:'sg29',critico:false,texto:'Padrão operacional seguido — nenhuma execução fora do padrão'},
+    {id:'sg30',critico:false,texto:'Nenhuma reclamação de cliente em aberto'},
+    {id:'sg31',critico:true, texto:'Insumos críticos monitorados — reposição realizada'},
+    {id:'sg32',critico:true, texto:'Falhas relevantes registradas — nenhuma sem responsável'}
   ]},
-  {id:'sg_e3',titulo:'Fechamento do Turno',horario:'13h+',emoji:'✅',itens:[
-    {id:'sg49',critico:false,texto:'Loja organizada para continuidade do dia'},
-    {id:'sg50',critico:true, texto:'Operação está em condição de continuidade'},
-    {id:'sg51',critico:true, texto:'Pendências identificadas e registradas'},
-    {id:'sg52',critico:true, texto:'Falhas relevantes registradas'},
-    {id:'sg53',critico:true, texto:'Problemas encaminhados — nenhum crítico sem responsável'},
-    {id:'sg54',critico:false,texto:'Informações do turno comunicadas para o próximo'}
+  {id:'sg_e3',titulo:'Manutenção da Operação',horario:'12h – 13h30',emoji:'🔧',itens:[
+    {id:'sg33',critico:false,texto:'Postos organizados e limpeza sendo mantida'},
+    {id:'sg34',critico:true, texto:'Reposição de insumos sendo feita corretamente'},
+    {id:'sg35',critico:false,texto:'Nenhum setor abandonado'},
+    {id:'sg36',critico:false,texto:'Tempo ocioso sendo aproveitado'},
+    {id:'sg37',critico:true, texto:'Insumos para o turno da tarde deixados organizados'}
+  ]},
+  {id:'sg_e4',titulo:'Passagem de Turno',horario:'13h30+',emoji:'✅',itens:[
+    {id:'sg38',critico:true, texto:'Caixa conferido — divergência registrada'},
+    {id:'sg39',critico:true, texto:'Falhas relevantes registradas — nenhuma sem responsável'},
+    {id:'sg40',critico:true, texto:'Pendências identificadas e registradas'},
+    {id:'sg41',critico:true, texto:'Passagem registrada — o que a tarde precisa saber'}
   ]}
 ];
 
 /* id do item de recheio especial */
-var SUBGER_RECHEIO_ID='sg26';
+var SUBGER_RECHEIO_ID='';
 
 /* ── Chips de justificativa (spec bloco 9) ── */
 var SUBGER_CHIPS_ACONTECEU=['Não houve tempo','Falta de insumo','Falta de funcionário','Atraso da equipe','Sistema indisponível','Equipamento com falha','Dependência externa','Problema já existia no início do turno','Improviso da operação','Falha de processo','Não verifiquei a dispensa','Peguei recheio sem conferir validade','Organização incorreta na dispensa','Outro'];
@@ -4078,7 +4033,7 @@ async function analisarHistorico(user, tabela, itensCriticos){
   };
 
   try{
-    var rows=await sbSelectRecente(tabela,90,{login:user.login});
+    var rows=await sbSelect(tabela,{login:user.login});
     if(!rows||rows.length===0){
       // Salva cache vazio
       try{localStorage.setItem(CACHE_KEY,JSON.stringify({tabela,data:hoje,hora:nowTime(),resultado}));}catch(e){}
@@ -4399,7 +4354,7 @@ function FeedbackCrescimento(props){
   var score=props.score;var tabela=props.tabela;var user=props.user;
   var _dados=useState(null);var dados=_dados[0];var setDados=_dados[1];
   useEffect(function(){
-    try{sbSelectRecente(tabela,90,{login:user.login}).then(function(rows){
+    try{sbSelect(tabela,{login:user.login}).then(function(rows){
       if(!rows||rows.length<2){setDados({tipo:'primeiro'});return;}
       var anterior=rows[0];var scoreAnt=anterior.score||0;
       var diff=score-scoreAnt;
@@ -4467,6 +4422,12 @@ function SubgerChecklistScreen(props){
   var _sugOpen=useState(false);var sugestaoAberta=_sugOpen[0];var setSugestaoAberta=_sugOpen[1];
   var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
   var _envScore=useState(0);var envScore=_envScore[0];var setEnvScore=_envScore[1];
+  var _avisoHorario=useState(false);var avisoHorario=_avisoHorario[0];var setAvisoHorario=_avisoHorario[1];
+  var _proximaEtapa=useState(0);var proximaEtapa=_proximaEtapa[0];var setProximaEtapa=_proximaEtapa[1];
+
+  /* Horário mínimo por etapa — Gabriela turno manhã
+     Etapa 1=8h | Etapa 2=9h30 → 9 | Etapa 3=12h | Etapa 4=13h30 → 13 */
+  var HORARIO_MINIMO_ETAPA=[8,9,12,13];
 
   useEffect(function(){
     try{
@@ -4514,13 +4475,32 @@ function SubgerChecklistScreen(props){
     var errs=validateEtapa(etapaIdx);
     if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Preencha todos os itens');return;}
     setShowErr(false);
-    if(etapaIdx<SUBGER_ETAPAS.length-1){
-      setEtapaIdx(function(i){return i+1;});
+    var proxIdx=etapaIdx+1;
+    if(proxIdx<SUBGER_ETAPAS.length){
+      var horaAtual=new Date().getHours();
+      var horaMinima=HORARIO_MINIMO_ETAPA[proxIdx];
+      if(horaAtual<horaMinima){
+        setProximaEtapa(proxIdx);
+        setAvisoHorario(true);
+        window.scrollTo({top:0,behavior:'smooth'});
+        return;
+      }
+      setEtapaIdx(proxIdx);
       window.scrollTo({top:0,behavior:'smooth'});
     }else{
       setScreen('ocorrencias');
       window.scrollTo({top:0,behavior:'smooth'});
     }
+  }
+
+  function handleAvancarConfirmado(){
+    setAvisoHorario(false);
+    if(proximaEtapa<SUBGER_ETAPAS.length){
+      setEtapaIdx(proximaEtapa);
+    }else{
+      setScreen('ocorrencias');
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
   }
 
   function handleVoltar(){
@@ -4537,13 +4517,12 @@ function SubgerChecklistScreen(props){
     var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
     var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
     var etapasConcluidas=SUBGER_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
-    var ok=await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
-    if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
+    await sbInsert('subger_checklists',{login:user.login,user_name:user.name,turno:'manha',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     await salvarPendencias(allItems,negs,resps,user,'manha','subger_checklists');
-
+    await sendWebhook(SISTEMA+' — SUBGERÊNCIA MANHÃ\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Subgerência] '+statusKey.toUpperCase()+' – '+user.name});
     try{localStorage.removeItem(SAVE_KEY);}catch(e){}
     setEnvScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
 
   function handleLimpar(){
@@ -4561,7 +4540,7 @@ function SubgerChecklistScreen(props){
         </div>
         <div style={{display:'flex',gap:6}}>
           
-          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,data:todayISO()}));}catch(e){}onBack();}}>← Voltar</button>}
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Voltar</button>}
           
         </div>
       </div>
@@ -4612,6 +4591,42 @@ function SubgerChecklistScreen(props){
       <EnviadoPopup show={enviado} user={user} score={envScore} label='Subgerência Manhã'/>
       {sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
       <Toast msg={toast.msg} show={toast.show}/>
+
+      {/* ── MODAL AVISO DE HORÁRIO ── */}
+      {avisoHorario&&(function(){
+        var proxEtapa=SUBGER_ETAPAS[proximaEtapa];
+        var horaMinima=HORARIO_MINIMO_ETAPA[proximaEtapa];
+        return(
+          <div className="overlay" onClick={function(){setAvisoHorario(false);}}>
+            <div className="overlay-card" onClick={function(e){e.stopPropagation();}} style={{maxWidth:320,textAlign:'left',padding:'24px'}}>
+              <div style={{fontSize:22,marginBottom:10,textAlign:'center'}}>⏰</div>
+              <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:'var(--ink)',marginBottom:8,textAlign:'center'}}>
+                Hora certa pra isso?
+              </div>
+              <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:16,textAlign:'center'}}>
+                A próxima etapa <strong>{proxEtapa.emoji} {proxEtapa.titulo}</strong> é prevista para as <strong>{horaMinima}h</strong>.<br/>
+                Agora são <strong>{new Date().getHours()}h</strong>.
+              </div>
+              <div style={{fontSize:12,color:'var(--ink3)',background:'var(--surface2)',borderRadius:'var(--r8)',padding:'10px 12px',marginBottom:16,lineHeight:1.5}}>
+                Se você está adiantada, pode continuar. Se preferir, volte quando o horário chegar.
+              </div>
+              <div style={{display:'flex',flexDirection:'column',gap:8}}>
+                <button onClick={handleAvancarConfirmado}
+                  style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',
+                    fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,border:'none',cursor:'pointer'}}>
+                  Continuar mesmo assim →
+                </button>
+                <button onClick={function(){setAvisoHorario(false);}}
+                  style={{width:'100%',padding:'11px',background:'transparent',color:'var(--ink3)',borderRadius:'var(--r8)',
+                    fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:600,border:'1px solid var(--line)',cursor:'pointer'}}>
+                  Voltar e aguardar
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {subgerHdr}
       <div className="prog-card">
         <div className="prog-top"><div className="prog-lbl">Progresso geral</div><div className="prog-pct">{pct}%</div></div>
@@ -4647,7 +4662,7 @@ function SubgerChecklistScreen(props){
                   ?(etapaIdx<SUBGER_ETAPAS.length-1?'Próxima etapa →':'Finalizar turno 🚀')
                   :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
               </button>
-              <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,data:todayISO()}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+              <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
             </div>
           </div>
         );
@@ -4677,7 +4692,7 @@ function HistoricoPanel(props){
   useEffect(function(){
     async function load(){
       setLoading(true);
-      var rows=await sbSelectRecente(tabela,90,{login:user.login});
+      var rows=await sbSelect(tabela,{login:user.login});
       setData(rows.slice(0,14));
       setLoading(false);
     }
@@ -4734,14 +4749,10 @@ function HistoricoPanel(props){
    ══════════════════════════════════════════════ */
 async function salvarPendencias(items,negs,resps,user,turno,tabela_origem){
   var pendentes=items.filter(function(i){var n=negs[i.id]||{};return resps[i.id]==='nao'&&(n.prox==='Sim, fica pendente'||n.prox==='Sim');});
-  var falhas=[];
   for(var i=0;i<pendentes.length;i++){
     var it=pendentes[i];var neg=negs[it.id]||{};
-    var ok=await sbInsert('checkon_pendencias',{login:user.login,user_name:user.name,turno:turno,data:todayISO(),data_fmt:todayFmt(),item_id:it.id,item_texto:it.texto||it.ti||it.id,aconteceu:neg.aconteceu||neg.ocorrencia||'',feito:neg.feito||neg.acao||'',detalhe:neg.detalhe||'',status:'aberta',checklist_origem:tabela_origem});
-    if(!ok)falhas.push(it.id);
+    await sbInsert('checkon_pendencias',{login:user.login,user_name:user.name,turno:turno,data:todayISO(),data_fmt:todayFmt(),item_id:it.id,item_texto:it.texto||it.ti||it.id,aconteceu:neg.aconteceu||neg.ocorrencia||'',feito:neg.feito||neg.acao||'',detalhe:neg.detalhe||'',status:'aberta',checklist_origem:tabela_origem});
   }
-  if(falhas.length>0)console.warn('salvarPendencias: '+falhas.length+' pendência(s) não gravada(s):',falhas);
-  return falhas.length===0;
 }
 
 function PendenciasBlock(props){
@@ -4753,7 +4764,7 @@ function PendenciasBlock(props){
   useEffect(function(){
     async function load(){
       setLoading(true);
-      var rows=await sbSelectRecente('checkon_pendencias',90,{login:user.login});
+      var rows=await sbSelect('checkon_pendencias',{login:user.login});
       var abertas=rows.filter(function(r){return r.status==='aberta';});
       setPend(abertas.slice(0,20));
       setLoading(false);
@@ -4796,455 +4807,77 @@ function PendenciasBlock(props){
    VITÓRIA — TURNO DA NOITE
    ══════════════════════════════════════════════ */
 var NOITE_SAVE_KEY_PREFIX='checkon_noite_';
+var NOITE_CHIPS_ACONTECEU=['Não houve tempo','Falta de insumo','Falta de funcionário','Atraso da equipe','Sistema indisponível','Equipamento com falha','Cliente conflituoso','Problema já existia no início do turno','Improviso da operação','Falha de processo','Outro'];
+var NOITE_CHIPS_FEITO=['Resolvi na hora','Corrigi parcialmente','Orientei equipe','Passei para alguém','Ficou pendente','Registrei ocorrência','Acionei gerência','Acionei direção'];
 
-/* ── Chips por missão — contexto real da operação ── */
-var NOITE_CHIPS_ACONTECEU_M1M2=['Insumo em falta','Equipamento com problema','Informação não recebida','Equipe incompleta','Fornecedor não entregou','Outro'];
-var NOITE_CHIPS_ACONTECEU_M3=['Pedido atrasado','Insumo acabou durante o pico','Equipamento parou','Colaborador saiu do posto','Cliente reclamou','Briga ou conflito na equipe','Abandono de turno','Perda de insumo','Problema de infraestrutura','Outro'];
-var NOITE_CHIPS_ACONTECEU_M4M5=['Item não foi feito','Equipamento não desligado','Insumo não guardado','Divergência no caixa','Limpeza incompleta','Outro'];
-/* Chips de ação — específicos por contexto, ensinam o que fazer, não só documentam */
-var NOITE_CHIPS_FEITO_M1M2=[
-  'Reabasteci na hora',
-  'Acionei produção',
-  'Liguei para fornecedor',
-  'Orientei equipe',
-  'Passei para o delivery',
-  'Registrei e monitoro',
-  'Acionei gerência',
-  'Ficou pendente para a próxima etapa'
-];
-var NOITE_CHIPS_FEITO_M3=[
-  'Reposicionei equipe',
-  'Acionei reforço',
-  'Parei e resolvi na hora',
-  'Comuniquei ao cliente',
-  'Registrei e monitorei',
-  'Acionei gerência',
-  'Ficou pendente — anotado'
-];
-var NOITE_CHIPS_FEITO_M4M5=[
-  'Fiz na hora antes de sair',
-  'Delegei para alguém da equipe',
-  'Registrei e deixei anotado para a manhã',
-  'Acionei gerência',
-  'Não foi possível resolver — registrado'
-];
-/* Fallback mantido para compatibilidade */
-var NOITE_CHIPS_FEITO=NOITE_CHIPS_FEITO_M1M2;
-
-/* ── 5 Missões · 17 Combos · 44 itens
-   Arquitetura: Performance Support System com Behavior Design
-   Cada missão tem intenção declarada. O cérebro que sabe o propósito executa melhor.
-   Cada combo agrupa atividades do mesmo lugar, momento e movimento (chunking cognitivo).
-   Referências: Gawande, Kahneman, Fogg, Von Ahn ── */
 var NOITE_ETAPAS=[
-
-  /* ══ MISSÃO 1 — Assumir o controle da loja (14h–15h) ══
-     8 itens · 5 combos
-     Intenção: você assume a loja. Tudo que encontrar vira sua responsabilidade. ══ */
-  {id:'vt_e1',
-   titulo:'Assumir o controle da loja',
-   intencao:'Você assume a loja agora. Tudo que encontrar vira sua responsabilidade.',
-   horario:'14h – 15h',
-   emoji:'🌆',
-   missao:1,
-   itens:[
-    /* COMBO 1.1 — LEITURA DO TURNO */
-    {id:'vt1', critico:false, combo:'1.1', comboTitulo:'📋 Leitura do turno',
-     texto:'Livro de ocorrências e grupo da loja verificados'},
-    /* COMBO 1.2 — PRODUÇÃO */
-    {id:'vt2', critico:true, combo:'1.2', comboTitulo:'🥟 Produção',
-     texto:'Massas e recheios verificados e em quantidade para o turno'},
-    {id:'vt3', critico:false, combo:'1.2', comboTitulo:'🥟 Produção',
-     texto:'Caixas de produção prontas confirmadas'},
-    /* COMBO 1.3 — GELADEIRAS */
-    {id:'vt4', critico:true, combo:'1.3', comboTitulo:'🧊 Geladeiras',
-     texto:'Geladeiras verificadas: caldo, água, refrigerantes e sucos — quantidades e temperatura ok'},
-    /* COMBO 1.4 — GAVETEIRO */
-    {id:'vt5', critico:true, combo:'1.4', comboTitulo:'📦 Gaveteiro',
-     texto:'Gaveteiro verificado — cheio: continuar produção; vazio: montar lista e produzir'},
-    /* COMBO 1.5 — CAIXA E TROCO */
-    {id:'vt6', critico:false, combo:'1.5', comboTitulo:'💰 Caixa e troco',
-     texto:'Troco conferido no caixa: notas de R$2, R$5, R$10 e R$20 — se faltar, acionar motoboy agora'},
-    {id:'vt7', critico:false, combo:'1.5', comboTitulo:'💰 Caixa e troco',
-     texto:'Caixa do turno anterior enviado — troco recebido e conferido'},
-    /* COMBO 1.6 — DELIVERY */
-    {id:'vt8', critico:false, combo:'1.6', comboTitulo:'🛵 Delivery',
-     texto:'Delivery alinhado: equipe informada do turno, pedidos em aberto verificados e sistema funcionando'}
+  {id:'vt_e1',titulo:'Chegada e Recebimento',horario:'17h – 18h',emoji:'🌆',itens:[
+    {id:'vt1', critico:false,texto:'Passagem do turno anterior recebida — pendências verificadas'},
+    {id:'vt2', critico:false,texto:'Livro de ocorrências e Trello verificados'},
+    {id:'vt3', critico:false,texto:'Grupo da gerência verificado'},
+    {id:'vt4', critico:false,texto:'Equipe presente, redistribuída e com função definida'},
+    {id:'vt5', critico:false,texto:'Atrasos e faltas tratados'},
+    {id:'vt6', critico:true, texto:'Saipos, WebCardápio e iFood funcionando'},
+    {id:'vt7', critico:false,texto:'Impressoras, maquininhas, internet e Wi-Fi funcionando'},
+    {id:'vt8', critico:true, texto:'Insumos e recheios disponíveis para o turno da noite'},
+    {id:'vt9', critico:false,texto:'Cozinha organizada e pronta para operação'}
   ]},
-
-  /* ══ MISSÃO 2 — Preparar o pico (15h–18h) ══
-     4 itens · 3 combos
-     Intenção: o pico começa em breve. Tudo tem que estar pronto antes das 18h30. ══ */
-  {id:'vt_e2',
-   titulo:'Preparar o pico',
-   intencao:'O pico começa em breve. Tudo tem que estar pronto antes das 18h30.',
-   horario:'15h – 18h',
-   emoji:'⚡',
-   missao:2,
-   itens:[
-    /* COMBO 2.1 — INSUMOS E EMBALAGENS */
-    {id:'vt9',  critico:false,  combo:'2.1', comboTitulo:'📦 Insumos e embalagens',
-     texto:'Embalagens suficientes para o turno — se faltar, reposição acionada'},
-    {id:'vt10', critico:false, combo:'2.1', comboTitulo:'📦 Insumos e embalagens',
-     texto:'Kit salão completo: papel bandeja, molho verde, maionese, colher, salada fresca, ketchup, mostarda, guardanapo, copos e canudos'},
-    /* COMBO 2.2 — SALÃO E BANHEIROS */
-    {id:'vt11', critico:false, combo:'2.2', comboTitulo:'🏠 Salão e banheiros',
-     texto:'Salão e banheiros verificados: chão, mesas, brinquedão, papel, sabonete e ar condicionado ajustado'},
-    /* COMBO 2.3 — PRÉ-PICO ⚡ CHECKPOINT 18H */
-    {id:'vt12', critico:true, combo:'2.3', comboTitulo:'⚡ Pré-pico — checkpoint 18h',
-     texto:'Gaveteiro abastecido, batata pronta e bacon pronto antes das 18h30',
-     checkpoint:true}
+  {id:'vt_e2',titulo:'Operação e Pico',horario:'18h – 21h',emoji:'⚡',itens:[
+    {id:'vt10',critico:true, texto:'Pico 18h–20h: tempo e qualidade mantidos'},
+    {id:'vt11',critico:true, texto:'Pedidos delivery monitorados e conferidos antes de sair'},
+    {id:'vt12',critico:true, texto:'Pedidos parados identificados e tratados'},
+    {id:'vt13',critico:true, texto:'Atrasos tratados antes de impactar cliente'},
+    {id:'vt14',critico:true, texto:'Nenhum colaborador sem direção'},
+    {id:'vt15',critico:false,texto:'Padrão operacional seguido — nenhuma execução fora do padrão'},
+    {id:'vt16',critico:false,texto:'Nenhuma reclamação de cliente em aberto'},
+    {id:'vt17',critico:true, texto:'Insumos críticos monitorados — reposição realizada'},
+    {id:'vt18',critico:true, texto:'Falhas relevantes registradas — nenhuma sem responsável'}
   ]},
-
-  /* ══ MISSÃO 3 — Defender o turno (18h–21h) ══
-     9 itens · 3 combos
-     ⚠️ Missão de pico — sistema não interrompe durante execução.
-     Intenção: agora é o pico. Você controla. A loja depende de você. ══ */
-  {id:'vt_e3',
-   titulo:'Defender o turno',
-   intencao:'Agora é o pico. Você controla. A loja depende de você.',
-   horario:'18h – 21h',
-   emoji:'🔥',
-   missao:3,
-   pico:true,
-   itens:[
-    /* COMBO 3.1 — PICO */
-    {id:'vt13', critico:true,  combo:'3.1', comboTitulo:'🔥 Pico',
-     texto:'Pico 18h–20h: tempo e qualidade mantidos'},
-    {id:'vt14', critico:true,  combo:'3.1', comboTitulo:'🔥 Pico',
-     texto:'Pedidos delivery monitorados e conferidos antes de sair'},
-    {id:'vt15', critico:true,  combo:'3.1', comboTitulo:'🔥 Pico',
-     texto:'Pedidos parados identificados e tratados antes de impactar cliente'},
-    /* COMBO 3.2 — EQUIPE */
-    {id:'vt16', critico:false, combo:'3.2', comboTitulo:'👥 Equipe',
-     texto:'Nenhum colaborador sem função ou direção'},
-    {id:'vt17', critico:false, combo:'3.2', comboTitulo:'👥 Equipe',
-     texto:'Padrão operacional seguido'},
-    {id:'vt18', critico:false, combo:'3.2', comboTitulo:'👥 Equipe',
-     texto:'Nenhuma reclamação de cliente em aberto'},
-    /* COMBO 3.3 — OPERAÇÃO */
-    {id:'vt19', critico:true,  combo:'3.3', comboTitulo:'🏪 Operação',
-     texto:'Insumos críticos monitorados: massa, recheios, embalagens, bebidas e salada'},
-    {id:'vt20', critico:false, combo:'3.3', comboTitulo:'🏪 Operação',
-     texto:'Limpeza e organização da cozinha verificadas'},
-    {id:'vt21', critico:false, combo:'3.3', comboTitulo:'🏪 Operação',
-     texto:'Lixo retirado — nenhuma lixeira aberta ou transbordando'}
-  ]},
-
-  /* ══ MISSÃO 4 — Iniciar o fechamento (21h–22h) ══
-     10 itens · 3 combos
-     Intenção: a loja está nas suas mãos agora. Vamos fechar direito. ══ */
-  {id:'vt_e4',
-   titulo:'Iniciar o fechamento',
-   intencao:'A loja está nas suas mãos agora. Vamos fechar direito.',
-   horario:'21h – 22h',
-   emoji:'🔒',
-   missao:4,
-   itens:[
-    /* COMBO 4.1 — REGISTROS DO TURNO */
-    {id:'vt22', critico:false, combo:'4.1', comboTitulo:'📊 Registros do turno',
-     texto:'Perdas registradas: pastel abrir/quebrar/furar/encharcar, recheio azedar, bebida congelar, massa ressecar'},
-    {id:'vt23', critico:true,  combo:'4.1', comboTitulo:'📊 Registros do turno',
-     texto:'Falhas relevantes registradas com responsável definido (briga, abandono, comportamento, infraestrutura)'},
-    {id:'vt24', critico:false, combo:'4.1', comboTitulo:'📊 Registros do turno',
-     texto:'Pesagem das gavetas realizada e resultado enviado no grupo'},
-    {id:'vt25', critico:false, combo:'4.1', comboTitulo:'📊 Registros do turno',
-     texto:'Engenho de cana operado e limpo conforme protocolo'},
-    /* COMBO 4.2 — DESLIGAR TUDO */
-    {id:'vt26', critico:true,  combo:'4.2', comboTitulo:'🔴 Desligar tudo',
-     texto:'Gás desligado — PRIMEIRO PASSO, obrigatório'},
-    {id:'vt27', critico:true,  combo:'4.2', comboTitulo:'🔴 Desligar tudo',
-     texto:'Freezers da mesa verificados e desligados'},
-    {id:'vt28', critico:true,  combo:'4.2', comboTitulo:'🔴 Desligar tudo',
-     texto:'Mesas quentes e computadores desligados da tomada'},
-    {id:'vt29', critico:false, combo:'4.2', comboTitulo:'🔴 Desligar tudo',
-     texto:'Ar condicionado e exaustor desligados — maquininhas colocadas para carregar'},
-    /* COMBO 4.3 — GUARDAR TUDO */
-    {id:'vt30', critico:false, combo:'4.3', comboTitulo:'📦 Guardar tudo',
-     texto:'Produção guardada: pastéis, recheios e massa no freezer de inox — gaveteiro e freezers verificados'},
-    {id:'vt31', critico:false, combo:'4.3', comboTitulo:'📦 Guardar tudo',
-     texto:'Geladeiras fechadas e verificadas: bebida, sorvete e dispensa'}
-  ]},
-
-  /* ══ MISSÃO 5 — Entregar a loja melhor (22h–23h) ══
-     7 itens · 3 combos
-     Intenção: último bloco. A Gabriela vai chegar numa loja pronta. Isso é seu legado do turno. ══ */
-  {id:'vt_e5',
-   titulo:'Entregar a loja melhor do que encontrou',
-   intencao:'Último bloco. A Gabriela vai chegar numa loja pronta. Isso é seu legado do turno.',
-   horario:'22h – 23h',
-   emoji:'🌙',
-   missao:5,
-   itens:[
-    /* COMBO 5.1 — LIMPEZA FINAL */
-    {id:'vt32', critico:false, combo:'5.1', comboTitulo:'🧹 Limpeza final',
-     texto:'Louça lavada, mesa limpa e fogão limpo'},
-    {id:'vt33', critico:false,  combo:'5.1', comboTitulo:'🧹 Limpeza final',
-     texto:'Salada guardada corretamente para a manhã — só dura 1 dia'},
-    /* COMBO 5.2 — CAIXA FINAL */
-    {id:'vt34', critico:true,  combo:'5.2', comboTitulo:'💰 Caixa final',
-     texto:'Contagem e conferência de caixa realizada — divergência registrada se houver'},
-    {id:'vt35', critico:false, combo:'5.2', comboTitulo:'💰 Caixa final',
-     texto:'Relatório de caixa salão + delivery feito e enviado no grupo'},
-    /* COMBO 5.3 — SAÍDA */
-    {id:'vt36', critico:true,  combo:'5.3', comboTitulo:'🚪 Saída',
-     texto:'Freezers sem uso desligados'},
-    {id:'vt37', critico:true,  combo:'5.3', comboTitulo:'🚪 Saída',
-     texto:'Passagem registrada para a manhã — enviada no grupo e confirmada'},
-    {id:'vt38', critico:true,  combo:'5.3', comboTitulo:'🚪 Saída',
-     texto:'Alarme ativado — saída pelo delivery com trincos travados'}
+  {id:'vt_e3',titulo:'Fechamento Completo',horario:'21h+',emoji:'🔒',itens:[
+    {id:'vt19',critico:true, texto:'Caixa fechado e conferido — divergência registrada'},
+    {id:'vt20',critico:true, texto:'Contagem de caixa realizada e registrada'},
+    {id:'vt21',critico:true, texto:'Gás desligado e verificado'},
+    {id:'vt22',critico:true, texto:'Fritadeiras desligadas e limpas'},
+    {id:'vt23',critico:true, texto:'Limpeza completa da área de produção e atendimento'},
+    {id:'vt24',critico:true, texto:'Luzes apagadas em todas as áreas'},
+    {id:'vt25',critico:true, texto:'Portas travadas e segurança verificada'},
+    {id:'vt26',critico:true, texto:'Alarme ativado'},
+    {id:'vt27',critico:false,texto:'Insumos para a manhã deixados organizados e identificados'},
+    {id:'vt28',critico:true, texto:'Passagem registrada — o que a manhã precisa saber'}
   ]}
 ];
 
-function validateNoiteNeg(neg,critico){
-  var n=neg||{};
-  /* Campos obrigatórios base */
-  if(!n.aconteceu||!n.feito||!n.prox)return false;
-  /* Crítico não resolvido exige responsável */
-  if(critico&&n.prox!=='resolvi'&&!n.responsavel)return false;
-  return true;
-}
+function validateNoiteNeg(neg){var n=neg||{};return !!(n.aconteceu&&n.feito&&n.prox);}
 
 function NoiteNaoForm(props){
-  /* ══ Form progressivo — Performance Support System com Behavior Design ══
-     Mesa: Gawande (contexto), Kahneman (1 campo por vez), Norman (affordance),
-     Dweck (linguagem de crescimento), Fogg (comportamento mínimo), Frankl (propósito)
-     Referência: progressive disclosure — Von Ahn / Duolingo ══ */
-  var data=props.data||{};
-  var showErr=props.showErr;
-  var missao=props.missao||1;
-  var critico=props.critico||false;
-  var textoItem=props.textoItem||'';
-  var _etapa=useState('aconteceu');var etapa=_etapa[0];var setEtapa=_etapa[1];
-
-  function set(k,v){
-    props.onChange(function(prev){return Object.assign({},prev||{},{[k]:v});});
-  }
+  var data=props.data||{};var showErr=props.showErr;
+  function set(k,v){props.onChange(function(prev){return Object.assign({},prev||{},{[k]:v});});}
   function stop(e){e.stopPropagation();}
-  function avancar(proxEtapa){setEtapa(proxEtapa);}
-
-  /* Chips contextuais por missão */
-  var chipsAconteceu=missao===3?NOITE_CHIPS_ACONTECEU_M3:(missao>=4?NOITE_CHIPS_ACONTECEU_M4M5:NOITE_CHIPS_ACONTECEU_M1M2);
-  var chipsFeito=missao===3?NOITE_CHIPS_FEITO_M3:(missao>=4?NOITE_CHIPS_FEITO_M4M5:NOITE_CHIPS_FEITO_M1M2);
-
-  /* Desfecho — 3 opções reais da operação */
-  var opcoesDesfecho=[
-    {v:'resolvi',label:'✅ Resolvi agora',cor:'var(--ok)',desc:'Problema encerrado neste turno'},
-    {v:'Sim, fica pendente',label:'⚠️ Fica para o próximo turno',cor:'var(--brand)',desc:'A Gabriela vai precisar saber'},
-    {v:'registrei',label:'📋 Registrei sem resolução',cor:'var(--ink2)',desc:'Não foi possível resolver agora'}
-  ];
-
-  /* Precisa de responsável: crítico E não resolveu na hora */
-  var precisaResponsavel=critico&&data.prox!=='resolvi';
-
-  /* Precisa de detalhe: ficou pendente ou registrou sem resolução */
-  var precisaDetalhe=data.prox==='Sim, fica pendente'||data.prox==='registrei';
-
-  /* Progresso visual — quantas etapas já foram respondidas */
-  var etapas=['aconteceu','feito','desfecho'];
-  if(precisaResponsavel)etapas.push('responsavel');
-  etapas.push('aprendizado');
-  var idxAtual=etapas.indexOf(etapa);
-  var total=etapas.length;
-
-  /* Cores e borda por contexto */
-  var bgForm=critico?'#FFF0F0':'#FFF5F5';
-  var borderForm=critico?'2px solid var(--danger)':'1.5px solid var(--danger-line)';
-  var corTitulo=critico?'var(--danger)':'var(--ink2)';
-
-  /* Estilo compartilhado para chips de etapa */
-  function chipStyle(sel,cor){
-    return {
-      padding:'9px 14px',borderRadius:'var(--r99)',border:'1.5px solid',
-      fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',
-      transition:'all .13s',whiteSpace:'nowrap',
-      borderColor:sel?(cor||'var(--brand)'):'var(--line)',
-      background:sel?(cor||'var(--brand)'):'var(--surface)',
-      color:sel?'#fff':'var(--ink2)'
-    };
-  }
-
   return(
-    <div onClick={stop} style={{background:bgForm,border:borderForm,borderRadius:'var(--r12)',padding:'14px',marginTop:10}}>
-
-      {/* ── CABEÇALHO: contexto do item (Gawande) ── */}
+    <div onClick={stop} style={{background:'#FFF5F5',border:'1.5px solid var(--danger-line)',borderRadius:'var(--r12)',padding:'14px',marginTop:10}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+        <span style={{fontSize:16}}>🔴</span>
+        <div style={{fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:800,color:'var(--danger)',textTransform:'uppercase',letterSpacing:.5}}>Não realizado — registre o motivo</div>
+      </div>
       <div style={{marginBottom:12}}>
-        <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:6}}>
-          <span style={{fontSize:14}}>{critico?'🚨':'📝'}</span>
-          <div style={{fontFamily:"'Sora',sans-serif",fontSize:10,fontWeight:800,color:corTitulo,textTransform:'uppercase',letterSpacing:.5}}>
-            {critico?'Item crítico — registre agora':'Vamos registrar para não perder.'}
-          </div>
-        </div>
-        {textoItem&&(
-          <div style={{background:'rgba(0,0,0,.05)',borderRadius:'var(--r8)',padding:'7px 10px',fontSize:12,color:'var(--ink)',fontWeight:600,lineHeight:1.4}}>
-            {textoItem}
-          </div>
-        )}
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>1. O que aconteceu?{showErr&&!data.aconteceu&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{NOITE_CHIPS_ACONTECEU.map(function(c){var sel=data.aconteceu===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('aconteceu',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.aconteceu&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione o motivo</div>}
       </div>
-
-      {/* ── BARRA DE PROGRESSO (Norman: ela sabe que tem fim) ── */}
-      <div style={{display:'flex',gap:4,marginBottom:14}}>
-        {etapas.map(function(e,i){
-          var done=i<idxAtual;var active=i===idxAtual;
-          return(<div key={e} style={{flex:1,height:4,borderRadius:2,
-            background:done?'var(--ok)':active?(critico?'var(--danger)':'var(--brand)'):'var(--line)',
-            transition:'background .2s'}}/>);
-        })}
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>2. O que foi feito?{showErr&&!data.feito&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div className="chip-row">{NOITE_CHIPS_FEITO.map(function(c){var sel=data.feito===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('feito',c);}} className={'chip'+(sel?' sc':'')}>{c}</button>);})}</div>
+        {showErr&&!data.feito&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Selecione a ação</div>}
       </div>
-
-      {/* ── RESPOSTAS JÁ DADAS — histórico visível (Von Ahn: progressive disclosure) ── */}
-      {data.aconteceu&&etapa!=='aconteceu'&&(
-        <div style={{marginBottom:8,display:'flex',alignItems:'center',gap:8,padding:'6px 10px',background:'var(--surface)',borderRadius:'var(--r8)',border:'1px solid var(--line)',cursor:'pointer'}}
-          onClick={function(e){e.stopPropagation();setEtapa('aconteceu');}}>
-          <span style={{fontSize:11,color:'var(--ink3)',flex:1}}>O que aconteceu: <strong style={{color:'var(--ink)'}}>{data.aconteceu}</strong></span>
-          <span style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>editar</span>
-        </div>
-      )}
-      {data.feito&&etapa!=='aconteceu'&&etapa!=='feito'&&(
-        <div style={{marginBottom:8,display:'flex',alignItems:'center',gap:8,padding:'6px 10px',background:'var(--surface)',borderRadius:'var(--r8)',border:'1px solid var(--line)',cursor:'pointer'}}
-          onClick={function(e){e.stopPropagation();setEtapa('feito');}}>
-          <span style={{fontSize:11,color:'var(--ink3)',flex:1}}>O que foi feito: <strong style={{color:'var(--ink)'}}>{data.feito}</strong></span>
-          <span style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>editar</span>
-        </div>
-      )}
-      {data.prox&&etapa!=='aconteceu'&&etapa!=='feito'&&etapa!=='desfecho'&&(
-        <div style={{marginBottom:8,display:'flex',alignItems:'center',gap:8,padding:'6px 10px',background:'var(--surface)',borderRadius:'var(--r8)',border:'1px solid var(--line)',cursor:'pointer'}}
-          onClick={function(e){e.stopPropagation();setEtapa('desfecho');}}>
-          <span style={{fontSize:11,color:'var(--ink3)',flex:1}}>Como ficou: <strong style={{color:'var(--ink)'}}>{data.prox==='resolvi'?'Resolvi agora':data.prox==='Sim, fica pendente'?'Fica pendente':'Registrei sem resolução'}</strong></span>
-          <span style={{fontSize:10,color:'var(--brand)',fontWeight:700}}>editar</span>
-        </div>
-      )}
-
-      {/* ══ ETAPA A — O QUE ACONTECEU ══ */}
-      {etapa==='aconteceu'&&(
-        <div>
-          <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:8,textTransform:'uppercase',letterSpacing:.4}}>
-            O que impediu?{showErr&&!data.aconteceu&&<span style={{color:'var(--danger)'}}> *</span>}
-          </div>
-          <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-            {chipsAconteceu.map(function(c){
-              var sel=data.aconteceu===c;
-              return(<button key={c} onClick={function(e){
-                e.stopPropagation();
-                set('aconteceu',c);
-                avancar('feito');
-              }} style={chipStyle(sel,'var(--brand)')}>{c}</button>);
-            })}
-          </div>
-          {showErr&&!data.aconteceu&&<div style={{fontSize:10,color:'var(--danger)',marginTop:6,fontWeight:600}}>⚠ Selecione o motivo para continuar</div>}
-        </div>
-      )}
-
-      {/* ══ ETAPA B — O QUE FOI FEITO ══ */}
-      {etapa==='feito'&&(
-        <div>
-          <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:8,textTransform:'uppercase',letterSpacing:.4}}>
-            O que você fez?{showErr&&!data.feito&&<span style={{color:'var(--danger)'}}> *</span>}
-          </div>
-          <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-            {chipsFeito.map(function(c){
-              var sel=data.feito===c;
-              return(<button key={c} onClick={function(e){
-                e.stopPropagation();
-                set('feito',c);
-                avancar('desfecho');
-              }} style={chipStyle(sel,'var(--brand)')}>{c}</button>);
-            })}
-          </div>
-          {showErr&&!data.feito&&<div style={{fontSize:10,color:'var(--danger)',marginTop:6,fontWeight:600}}>⚠ Selecione a ação para continuar</div>}
-        </div>
-      )}
-
-      {/* ══ ETAPA C — DESFECHO ══ */}
-      {etapa==='desfecho'&&(
-        <div>
-          <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:8,textTransform:'uppercase',letterSpacing:.4}}>
-            Como ficou?{showErr&&!data.prox&&<span style={{color:'var(--danger)'}}> *</span>}
-          </div>
-          <div style={{display:'flex',flexDirection:'column',gap:8}}>
-            {opcoesDesfecho.map(function(opt){
-              var sel=data.prox===opt.v;
-              return(
-                <button key={opt.v} onClick={function(e){
-                  e.stopPropagation();
-                  set('prox',opt.v);
-                  /* Decide próxima etapa baseado no desfecho e se é crítico */
-                  if(opt.v==='resolvi'){
-                    /* Resolveu — vai direto para aprendizado */
-                    avancar('aprendizado');
-                  }else if(critico){
-                    /* Não resolveu + crítico — precisa de responsável */
-                    avancar('responsavel');
-                  }else{
-                    avancar('aprendizado');
-                  }
-                }} style={{
-                  width:'100%',padding:'11px 14px',borderRadius:'var(--r8)',
-                  border:'1.5px solid',textAlign:'left',cursor:'pointer',
-                  transition:'all .13s',
-                  borderColor:sel?opt.cor:'var(--line)',
-                  background:sel?opt.cor:'var(--surface)',
-                  color:sel?'#fff':'var(--ink2)'
-                }}>
-                  <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700}}>{opt.label}</div>
-                  <div style={{fontSize:10,marginTop:2,opacity:.75}}>{opt.desc}</div>
-                </button>
-              );
-            })}
-          </div>
-          {showErr&&!data.prox&&<div style={{fontSize:10,color:'var(--danger)',marginTop:6,fontWeight:600}}>⚠ Selecione o desfecho para continuar</div>}
-          {/* Campo de detalhe aparece quando ficou pendente ou sem resolução */}
-          {precisaDetalhe&&(
-            <div style={{marginTop:10}}>
-              <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>
-                Detalhe <span style={{color:'var(--ink3)',fontWeight:400,textTransform:'none'}}>(opcional)</span>
-              </div>
-              <textarea className="neg-obs" value={data.detalhe||''} onClick={function(e){e.stopPropagation();}}
-                onChange={function(e){e.stopPropagation();set('detalhe',e.target.value.slice(0,280));}}
-                placeholder="O que a Gabriela precisa saber sobre isso..."
-                style={{minHeight:52,width:'100%'}}/>
-              <div style={{textAlign:'right',fontSize:10,color:(data.detalhe||'').length>240?'var(--warn)':'var(--ink3)',marginTop:2}}>{(data.detalhe||'').length}/280</div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ══ ETAPA D — RESPONSÁVEL (só crítico não resolvido) ══ */}
-      {etapa==='responsavel'&&(
-        <div>
-          <div style={{fontSize:11,fontWeight:700,color:'var(--danger)',marginBottom:8,textTransform:'uppercase',letterSpacing:.4}}>
-            Quem foi acionado?{showErr&&!data.responsavel&&<span> *</span>}
-          </div>
-          <div style={{display:'flex',flexWrap:'wrap',gap:7}}>
-            {['Camila','Derik','Bruna','Eu mesmo','Outro'].map(function(r){
-              var sel=data.responsavel===r;
-              return(<button key={r} onClick={function(e){
-                e.stopPropagation();
-                set('responsavel',r);
-                avancar('aprendizado');
-              }} style={chipStyle(sel,'var(--danger)')}>{r}</button>);
-            })}
-          </div>
-          {showErr&&!data.responsavel&&<div style={{fontSize:10,color:'var(--danger)',marginTop:6,fontWeight:600}}>⚠ Item crítico exige responsável</div>}
-        </div>
-      )}
-
-      {/* ══ ETAPA E — APRENDIZADO (Dweck + Frankl: reflexão que forma) ══ */}
-      {etapa==='aprendizado'&&(
-        <div>
-          <div style={{background:'rgba(0,0,0,.03)',borderRadius:'var(--r8)',padding:'10px 12px'}}>
-            <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>
-              💡 O que faria diferente da próxima vez? <span style={{color:'var(--ink3)',fontWeight:400,textTransform:'none'}}>(opcional)</span>
-            </div>
-            <textarea className="neg-obs" value={data.aprendizado||''} onClick={function(e){e.stopPropagation();}}
-              onChange={function(e){e.stopPropagation();set('aprendizado',e.target.value.slice(0,200));}}
-              placeholder="Uma linha é suficiente..."
-              style={{minHeight:44,width:'100%',background:'transparent',border:'1px solid var(--line)'}}/>
-            <div style={{fontSize:10,color:'var(--ink3)',marginTop:4}}>Isso fica no seu histórico. Em 66 dias vira aprendizado real.</div>
-          </div>
-        </div>
-      )}
-
+      <div style={{marginBottom:12}}>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:7,textTransform:'uppercase',letterSpacing:.4}}>3. Fica para o próximo turno?{showErr&&!data.prox&&<span style={{color:'var(--danger)'}}> *</span>}</div>
+        <div style={{display:'flex',gap:8}}>{['Sim, fica pendente','Não, encerrado'].map(function(c){var sel=data.prox===c;return(<button key={c} onClick={function(e){e.stopPropagation();set('prox',c);}} style={{flex:1,padding:'10px 6px',borderRadius:'var(--r8)',border:'1.5px solid',fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,cursor:'pointer',textAlign:'center',transition:'all .13s',borderColor:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--line)',background:sel?(c==='Sim, fica pendente'?'var(--brand)':'var(--ok)'):'var(--surface)',color:sel?'#fff':'var(--ink2)'}}>{c==='Sim, fica pendente'?'⚠️ '+c:'✅ '+c}</button>);})}</div>
+        {showErr&&!data.prox&&<div style={{fontSize:10,color:'var(--danger)',marginTop:4,fontWeight:600}}>⚠ Obrigatório</div>}
+      </div>
+      <div>
+        <div style={{fontSize:11,fontWeight:700,color:'var(--ink2)',marginBottom:5,textTransform:'uppercase',letterSpacing:.4}}>4. Detalhe <span style={{color:'var(--ink3)',fontWeight:400,textTransform:'none'}}>(opcional)</span></div>
+        <textarea className="neg-obs" value={data.detalhe||''} onClick={function(e){e.stopPropagation();}} onChange={function(e){e.stopPropagation();set('detalhe',e.target.value.slice(0,280));}} placeholder="Complemento rápido..." style={{minHeight:52,width:'100%'}}/>
+      </div>
     </div>
   );
 }
@@ -5278,7 +4911,7 @@ function NoiteBlocoItem(props){
         <button className={'ans-nao'+(resp==='nao'?' sel':'')} onClick={handleNao}><span>{resp==='nao'?'✕':'○'}</span> Não</button>
       </div>
       {!resp&&showErr&&<div className="req-msg">⚠ Obrigatório</div>}
-      {resp==='nao'&&(<div><NoiteNaoForm data={neg} onChange={function(d){onNeg(item.id,d);}} showErr={showErr} missao={item.missao||1} critico={item.critico||false} textoItem={item.texto||''}/>{validateNoiteNeg(neg,item.critico)&&<button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>✓ Confirmar e recolher</button>}</div>)}
+      {resp==='nao'&&(<div><NoiteNaoForm data={neg} onChange={function(d){onNeg(item.id,d);}} showErr={showErr}/>{validateNoiteNeg(neg)&&<button onClick={function(){setOpen(false);}} style={{width:'100%',marginTop:10,padding:'11px',background:'var(--ok)',color:'#fff',borderRadius:'var(--r8)',fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,border:'none',cursor:'pointer'}}>✓ Confirmar e recolher</button>}</div>)}
     </div>
   );
 }
@@ -5290,7 +4923,7 @@ function NoiteEtapaAcc(props){
   var resp=items.filter(function(i){return resps[i.id];}).length;
   var fl=items.filter(function(i){return resps[i.id]==='nao';}).length;
   var allDone=resp===tot&&tot>0;
-  var hasErr=showErr&&items.some(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao')return !validateNoiteNeg(negs[i.id],i.critico);return false;});
+  var hasErr=showErr&&items.some(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao')return !validateNoiteNeg(negs[i.id]);return false;});
   return(
     <div className="section">
       <div className={'sec-head'+(hasErr?' has-err':'')} onClick={function(){setOpen(function(o){return !o;});}}>
@@ -5427,10 +5060,6 @@ function NoiteSummaryScreen(props){
           <button onClick={function(){setConfirmando(true);}} style={{flex:2,padding:13,background:'#25D366',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'none'}}>📲 Enviar para o grupo</button>
           <button onClick={handleCopy} style={{flex:1,padding:13,background:'#F3F4F6',color:'#374151',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:700,cursor:'pointer',border:'1px solid #E5E7EB'}}>📋 Copiar</button>
         </div>
-        {/* Botão encerrar turno — disponível direto no summary, sem precisar passar pelo WhatsApp */}
-        <button onClick={function(){setEncerrado(true);}} style={{width:'100%',padding:14,background:'#EA1D2C',color:'#fff',borderRadius:12,fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800,cursor:'pointer',border:'none',marginBottom:8}}>
-          ✓ Terminei meu turno
-        </button>
         <button onClick={onNovo} style={{width:'100%',padding:11,background:'transparent',color:'#9CA3AF',borderRadius:12,fontSize:12,fontWeight:600,cursor:'pointer',border:'1px solid #E5E7EB'}}>← Voltar ao início</button>
       </div>
     </div>
@@ -5453,24 +5082,8 @@ function NoiteChecklistScreen(props){
   var _sugOpen=useState(false);var sugestaoAberta=_sugOpen[0];var setSugestaoAberta=_sugOpen[1];
   var _enviado=useState(false);var enviado=_enviado[0];var setEnviado=_enviado[1];
   var _envScore=useState(0);var envScore=_envScore[0];var setEnvScore=_envScore[1];
-  useEffect(function(){
-    try{
-      var s=JSON.parse(localStorage.getItem(SAVE_KEY));
-      /* REGRA: só restaura rascunho se for do dia atual.
-         BUG HISTÓRICO: rascunhos antigos sem campo 'data' eram restaurados sempre,
-         causando checklist abrir pré-preenchido. Corrigido: qualquer rascunho sem
-         data válida de hoje é descartado silenciosamente.
-         INVARIANTE: todo setItem do SAVE_KEY deve incluir data:todayISO() */
-      if(s&&s.resps&&Object.keys(s.resps).length>0&&s.data===todayISO()){
-        setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);
-        if(s.sugestao)setSugestao(s.sugestao);
-      }else if(s){
-        /* Qualquer rascunho sem data válida de hoje é descartado */
-        try{localStorage.removeItem(SAVE_KEY);}catch(e){}
-      }
-    }catch(e){}
-  },[]);
-  useEffect(function(){if(screen==='checklist'){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,sugestao:sugestao,data:todayISO()}));}catch(e){}}},[resps,negs,screen,horaInicio,sugestao]);
+  useEffect(function(){try{var s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s&&s.resps&&Object.keys(s.resps).length>0){setResps(s.resps||{});setNegs(s.negs||{});setHoraInicio(s.horaInicio||null);if(s.sugestao)setSugestao(s.sugestao);}}catch(e){}},[]);
+  useEffect(function(){if(screen==='checklist'){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,sugestao:sugestao}));}catch(e){}}},[resps,negs,screen,horaInicio,sugestao]);
   function onAns(id,val){setResps(function(r){return Object.assign({},r,{[id]:val});});if(val==='sim'){setNegs(function(n){var c=Object.assign({},n);delete c[id];return c;});}}
   function onNeg(id,updater){setNegs(function(n){var current=n[id]||{};var next=typeof updater==='function'?updater(current):updater;return Object.assign({},n,{[id]:next});});}
   var allItems=useMemo(function(){return NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]);},[]);
@@ -5479,50 +5092,8 @@ function NoiteChecklistScreen(props){
   var falhasTotal=allItems.filter(function(i){return resps[i.id]==='nao';}).length;
   var pct=totalItems>0?Math.round(respondidos/totalItems*100):0;
   var etapaAtual=NOITE_ETAPAS[etapaIdx];
-  /* Horário mínimo por missão — Caminho B: aviso suave, não bloqueio
-     REGRA: informa que está adiantado mas deixa avançar se confirmar
-     Mesa: Frankl (consciência), Maslow (não punir), Gawande (cada fase no tempo certo) */
-  var HORARIO_MINIMO_MISSAO=[0,15,18,21,22]; /* índice = missão-1 */
-  var _avisoHorario=useState(false);var avisoHorario=_avisoHorario[0];var setAvisoHorario=_avisoHorario[1];
-  var _proximaMissao=useState(0);var proximaMissao=_proximaMissao[0];var setProximaMissao=_proximaMissao[1];
-
-  function validateEtapa(idx){var etapa=NOITE_ETAPAS[idx];var errs=[];etapa.itens.forEach(function(item){if(!resps[item.id]){errs.push(item.texto);return;}if(resps[item.id]==='nao'&&!validateNoiteNeg(negs[item.id],item.critico)){errs.push(item.texto+' — complete o registro');}});return errs;}
-
-  function handleAvancar(){
-    /* Valida itens da etapa atual */
-    var errs=validateEtapa(etapaIdx);
-    if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Preencha todos os itens');return;}
-    setShowErr(false);
-    /* Verifica horário da próxima missão */
-    var proxIdx=etapaIdx+1;
-    if(proxIdx<NOITE_ETAPAS.length){
-      var horaAtual=new Date().getHours();
-      var horaMinima=HORARIO_MINIMO_MISSAO[proxIdx];
-      if(horaAtual<horaMinima){
-        /* Fora do horário — mostra aviso, aguarda confirmação */
-        setProximaMissao(proxIdx);
-        setAvisoHorario(true);
-        window.scrollTo({top:0,behavior:'smooth'});
-        return;
-      }
-      setEtapaIdx(proxIdx);
-      window.scrollTo({top:0,behavior:'smooth'});
-    }else{
-      setScreen('resumo');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-  }
-
-  function handleAvancarConfirmado(){
-    /* Usuária confirmou que quer avançar fora do horário */
-    setAvisoHorario(false);
-    if(proximaMissao<NOITE_ETAPAS.length){
-      setEtapaIdx(proximaMissao);
-    }else{
-      setScreen('resumo');
-    }
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
+  function validateEtapa(idx){var etapa=NOITE_ETAPAS[idx];var errs=[];etapa.itens.forEach(function(item){if(!resps[item.id]){errs.push(item.texto);return;}if(resps[item.id]==='nao'&&!validateNoiteNeg(negs[item.id])){errs.push(item.texto+' — complete o registro');}});return errs;}
+  function handleAvancar(){var errs=validateEtapa(etapaIdx);if(errs.length>0){setShowErr(true);window.scrollTo({top:0,behavior:'smooth'});showToast('⚠ Preencha todos os itens');return;}setShowErr(false);if(etapaIdx<NOITE_ETAPAS.length-1){setEtapaIdx(function(i){return i+1;});window.scrollTo({top:0,behavior:'smooth'});}else{setScreen('resumo');window.scrollTo({top:0,behavior:'smooth'});}}
   function handleVoltar(){if(etapaIdx>0){setEtapaIdx(function(i){return i-1;});window.scrollTo({top:0,behavior:'smooth'});}else{setScreen('inicio');}setShowErr(false);}
   async function handleFinalizar(relato){
     setSending(true);
@@ -5532,13 +5103,12 @@ function NoiteChecklistScreen(props){
     var statusKey=criticos>0?'critico':falhas>0?'atencao':'ok';
     var score=Math.max(0,Math.round(100-(falhas/totalItems*50)-(criticos*8)));
     var etapasConcluidas=NOITE_ETAPAS.filter(function(e){return e.itens.every(function(i){return resps[i.id];});}).length;
-    var ok=await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
-    if(!ok){setSending(false);showToast('❌ Erro ao salvar. Verifique sua conexão e tente novamente.');return;}
+    await sbInsert('subger_noite_checklists',{login:user.login,user_name:user.name,turno:'noite',data:todayISO(),data_fmt:todayFmt(),hora:nowTime(),hora_inicio:horaInicio,score:score,total:totalItems,falhas:falhas,criticos:criticos,pendencias:pendencias,status:statusKey,etapas_concluidas:etapasConcluidas,resps:resps,negs:negs,relato:relato||'',sugestao:(sugestao&&sugestao.atividade?sugestao:{})});
     await salvarPendencias(allItems,negs,resps,user,'noite','subger_noite_checklists');
-
-    try{localStorage.removeItem(SAVE_KEY);}catch(e){} try{localStorage.removeItem('checkon_ctx_'+user.login);}catch(e){} try{localStorage.setItem('checkon_last_score_'+user.login,JSON.stringify({score:score,data:todayISO()}));}catch(e){}
+    await sendWebhook(SISTEMA+' — SUBGERÊNCIA NOITE\n'+user.name+' · '+todayFmt()+'\nStatus: '+statusKey.toUpperCase()+' · Score: '+score+'/100',{assunto:'[CheckON Noite] '+statusKey.toUpperCase()+' – '+user.name});
+    try{localStorage.removeItem(SAVE_KEY);}catch(e){}
     setEnvScore(score);setEnviado(true);
-    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},900);
+    setTimeout(function(){setSending(false);setEnviado(false);setScreen('summary');},2200);
   }
   function handleLimpar(){if(!window.confirm('Limpar checklist atual?'))return;try{localStorage.removeItem(SAVE_KEY);}catch(e){}setResps({});setNegs({});setShowErr(false);setEtapaIdx(0);setHoraInicio(null);setSugestao({});setSugestaoAberta(false);if(onBack)onBack();}
   var noiteHdr=(
@@ -5547,7 +5117,7 @@ function NoiteChecklistScreen(props){
         <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
         <div style={{display:'flex',gap:6}}>
           
-          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,data:todayISO()}));}catch(e){}onBack();}}>← Voltar</button>}
+          {onBack&&<button className="hdr-btn" onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}onBack();}}>← Voltar</button>}
           
         </div>
       </div>
@@ -5572,34 +5142,9 @@ function NoiteChecklistScreen(props){
     );
   }
   if(screen==='inicio'){
-    /* Missões por horário — Gawande: cada fase no momento certo
-       Se tem rascunho de hoje, retoma de onde parou.
-       Se é turno novo, abre a missão do horário atual. */
+    /* Hub já fez o briefing — avança direto para o checklist */
     if(!horaInicio)setHoraInicio(nowTime());
-    setShowErr(false);
-    var temResps=resps&&Object.keys(resps).length>0;
-    if(temResps){
-      /* Tem rascunho — encontra a primeira missão incompleta */
-      var idxRetomar=0;
-      for(var mi=0;mi<NOITE_ETAPAS.length;mi++){
-        var etapaCheck=NOITE_ETAPAS[mi];
-        var completa=etapaCheck.itens.every(function(it){return resps[it.id];});
-        if(!completa){idxRetomar=mi;break;}
-        if(mi===NOITE_ETAPAS.length-1)idxRetomar=mi;
-      }
-      setEtapaIdx(idxRetomar);
-    }else{
-      /* Turno novo — abre pela missão do horário atual */
-      var horaAtual=new Date().getHours();
-      var idxHorario=0;
-      if(horaAtual>=22)idxHorario=4;
-      else if(horaAtual>=21)idxHorario=3;
-      else if(horaAtual>=18)idxHorario=2;
-      else if(horaAtual>=15)idxHorario=1;
-      else idxHorario=0;
-      setEtapaIdx(idxHorario);
-    }
-    setScreen('checklist');
+    setEtapaIdx(0);setShowErr(false);setScreen('checklist');
     return null;
   }
 
@@ -5608,42 +5153,6 @@ function NoiteChecklistScreen(props){
       <EnviadoPopup show={enviado} user={user} score={envScore} label='Subgerência Noite'/>
       {sending&&!enviado&&<div className="overlay"><div className="overlay-card"><div className="spin"/><div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800}}>Salvando...</div></div></div>}
       <Toast msg={toast.msg} show={toast.show}/>
-
-      {/* ── MODAL AVISO DE HORÁRIO — Caminho B: informa, não bloqueia ── */}
-      {avisoHorario&&(function(){
-        var proxEtapa=NOITE_ETAPAS[proximaMissao];
-        var horaMinima=HORARIO_MINIMO_MISSAO[proximaMissao];
-        return(
-          <div className="overlay" onClick={function(){setAvisoHorario(false);}}>
-            <div className="overlay-card" onClick={function(e){e.stopPropagation();}} style={{maxWidth:320,textAlign:'left',padding:'24px'}}>
-              <div style={{fontSize:22,marginBottom:10,textAlign:'center'}}>⏰</div>
-              <div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:900,color:'var(--ink)',marginBottom:8,textAlign:'center'}}>
-                Hora certa pra isso?
-              </div>
-              <div style={{fontSize:13,color:'var(--ink2)',lineHeight:1.6,marginBottom:16,textAlign:'center'}}>
-                A próxima missão <strong>{proxEtapa.emoji} {proxEtapa.titulo}</strong> é prevista para as <strong>{horaMinima}h</strong>.<br/>
-                Agora são <strong>{new Date().getHours()}h</strong>.
-              </div>
-              <div style={{fontSize:12,color:'var(--ink3)',background:'var(--surface2)',borderRadius:'var(--r8)',padding:'10px 12px',marginBottom:16,lineHeight:1.5}}>
-                Se você está adiantada, pode continuar. Se preferir, volte quando o horário chegar.
-              </div>
-              <div style={{display:'flex',flexDirection:'column',gap:8}}>
-                <button onClick={handleAvancarConfirmado}
-                  style={{width:'100%',padding:'12px',background:'var(--brand)',color:'#fff',borderRadius:'var(--r8)',
-                    fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,border:'none',cursor:'pointer'}}>
-                  Continuar mesmo assim →
-                </button>
-                <button onClick={function(){setAvisoHorario(false);}}
-                  style={{width:'100%',padding:'11px',background:'transparent',color:'var(--ink3)',borderRadius:'var(--r8)',
-                    fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:600,border:'1px solid var(--line)',cursor:'pointer'}}>
-                  Voltar e aguardar
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
       {noiteHdr}
       <div className="prog-card">
         <div className="prog-top"><div className="prog-lbl">Progresso geral</div><div className="prog-pct">{pct}%</div></div>
@@ -5662,7 +5171,7 @@ function NoiteChecklistScreen(props){
       <NoiteEtapaAcc etapa={etapaAtual} resps={resps} negs={negs} onAns={onAns} onNeg={onNeg} showErr={showErr}/>
       <SugestaoForm data={sugestao} onChange={setSugestao} aberto={sugestaoAberta} onAbrir={function(){setSugestaoAberta(true);}} onFechar={function(){setSugestaoAberta(false);}} cor="#7C3AED"/>
       {(function(){
-        var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateNoiteNeg(negs[i.id],i.critico))return true;return false;}).length;
+        var pendentesEtapa=etapaAtual.itens.filter(function(i){if(!resps[i.id])return true;if(resps[i.id]==='nao'&&!validateNoiteNeg(negs[i.id]))return true;return false;}).length;
         var etapaOk=pendentesEtapa===0;
         var bgOk='#EA1D2C';
         return(
@@ -5674,7 +5183,7 @@ function NoiteChecklistScreen(props){
                 ?(etapaIdx<NOITE_ETAPAS.length-1?'Próxima etapa →':'Resumo final 🔒')
                 :(pendentesEtapa+' item'+(pendentesEtapa>1?'s':'')+' pendente'+(pendentesEtapa>1?'s':''))}
             </button>
-            <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio,data:todayISO()}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
+            <button onClick={function(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({resps:resps,negs:negs,horaInicio:horaInicio}));}catch(e){}showToast('📝 Rascunho salvo.');setTimeout(function(){if(onBack)onBack();},700);}} style={{flexShrink:0,padding:'10px 13px',borderRadius:'var(--r8)',background:'var(--surface2)',border:'1.5px solid var(--line)',fontFamily:"'Sora',sans-serif",fontSize:11,fontWeight:700,color:'var(--ink2)',cursor:'pointer',whiteSpace:'nowrap'}}>⏸ Depois</button>
           </div></div>
         );
       })()}
@@ -5687,64 +5196,13 @@ function SubgerenteNoiteHub(props){
   var user=props.user;var onLogout=props.onLogout;
   var _m=useState(null);var mode=_m[0];var setMode=_m[1];
   var _pendManha=useState(null);var pendManhaInfo=_pendManha[0];var setPendManhaInfo=_pendManha[1];
-  var _declaracao=useState(null);var declaracao=_declaracao[0];var setDeclaracao=_declaracao[1];
-  var _declaracaoFeita=useState(false);var declaracaoFeita=_declaracaoFeita[0];var setDeclaracaoFeita=_declaracaoFeita[1];
-  var _scoreAnterior=useState(null);var scoreAnterior=_scoreAnterior[0];var setScoreAnterior=_scoreAnterior[1];
   var SAVE_KEY=NOITE_SAVE_KEY_PREFIX+user.login;
 
-  /* Saudação inteligente — respeita o horário real (BJ Fogg: gatilho contextual) */
-  var hora=new Date().getHours();
-  var saudacao=hora>=18?'Boa noite':'Boa tarde';
-
-  /* Chips de declaração de intenção — Gollwitzer: implementation intention */
-  var CHIPS_DECLARACAO=['Equipe incompleta','Estoque no limite','Pico pesado','Entrega atrasada','Outra coisa'];
-
   useEffect(function(){
-    /* Busca pendências da manhã */
-    buscarPendenciasManhaParaNoite()
-      .then(function(info){setPendManhaInfo(info||{responsavel:'',score:0,pendencias:0,horario:''});})
-      .catch(function(){setPendManhaInfo({responsavel:'',score:0,pendencias:0,horario:''});});
-    /* Score: lê cache local primeiro (instantâneo), depois confirma com banco */
-    try{
-      var cachedScore=JSON.parse(localStorage.getItem('checkon_last_score_'+user.login));
-      if(cachedScore&&cachedScore.score!==undefined)setScoreAnterior(cachedScore.score);
-    }catch(e){}
-    sbSelectRecente('subger_noite_checklists',30,{login:user.login})
-      .then(function(rows){
-        if(rows&&rows.length>0){
-          var s=rows[0].score||0;
-          setScoreAnterior(s);
-          try{localStorage.setItem('checkon_last_score_'+user.login,JSON.stringify({score:s,data:todayISO()}));}catch(e){}
-        }
-      })
-      .catch(function(){});
-    /* Recupera declaração — só restaura se tem rascunho de hoje em andamento.
-       BUG HISTÓRICO: declaração era restaurada por data do dia, independente de
-       rascunho existir. Resultado: ao abrir turno novo, pergunta de intenção era
-       pulada porque a declaração do turno anterior ainda estava salva.
-       REGRA: declaração = por turno ativo, não por dia. Turno novo = declaração nova. */
-    try{
-      var savedDecl=JSON.parse(localStorage.getItem('checkon_declaracao_'+user.login));
-      var savedRasc=JSON.parse(localStorage.getItem('checkon_noite_'+user.login));
-      var temRascunhoHoje=savedRasc&&savedRasc.data===todayISO()&&savedRasc.resps&&Object.keys(savedRasc.resps).length>0;
-      if(savedDecl&&savedDecl.data===todayISO()&&temRascunhoHoje){
-        setDeclaracao(savedDecl.chip);setDeclaracaoFeita(true);
-      }else{
-        /* Turno novo — limpa declaração anterior */
-        try{localStorage.removeItem('checkon_declaracao_'+user.login);}catch(e){}
-      }
-    }catch(e){}
+    buscarPendenciasManhaParaNoite().then(function(info){setPendManhaInfo(info||{responsavel:'',score:0,pendencias:0,horario:''});}).catch(function(){});
   },[]);
 
-  function handleDeclaracao(chip){
-    setDeclaracao(chip);
-    try{localStorage.setItem('checkon_declaracao_'+user.login,JSON.stringify({chip:chip,data:todayISO()}));}catch(e){}
-    setDeclaracaoFeita(true);
-  }
-
-  function handleIniciar(){setMode('checklist');}
-
-  if(mode==='checklist')return<NoiteChecklistScreen user={user} onLogout={onLogout} declaracao={declaracao} onBack={function(){setMode(null);}}/>;
+  if(mode==='checklist')return<NoiteChecklistScreen user={user} onLogout={onLogout} onBack={function(){setMode(null);}}/>;
   if(mode==='historico')return(
     <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:80}}>
       <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
@@ -5757,184 +5215,44 @@ function SubgerenteNoiteHub(props){
     </div>
   );
 
-  /* Rascunho — só mostra se for de hoje */
+  /* Rascunho */
   var rascunhoPct=(function(){
     try{
       var s=JSON.parse(localStorage.getItem(SAVE_KEY));
       if(!s||!s.resps||Object.keys(s.resps).length===0)return null;
-      /* Ignora rascunho sem data ou de outro dia */
-      if(!s.data||s.data!==todayISO())return null;
       var total=NOITE_ETAPAS.reduce(function(a,e){return a+e.itens.length;},0);
       var respondidos=Object.keys(s.resps).length;
       return{pct:Math.round(respondidos/total*100),respondidos:respondidos,total:total};
     }catch(e){return null;}
   })();
 
-  var temRascunho=rascunhoPct!==null;
+  var allNoiteItems=NOITE_ETAPAS.reduce(function(acc,e){return acc.concat(e.itens);},[]); 
+  var etapasPreview=NOITE_ETAPAS.map(function(e){return{titulo:e.titulo,horario:e.horario||''};});
 
   return(
-    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:40}}>
-
-      {/* ── HEADER ── */}
-      <div style={{background:'#EA1D2C',color:'#fff',padding:'16px 16px 20px',position:'sticky',top:0,zIndex:100,boxShadow:'0 2px 12px rgba(180,0,20,.28)'}}>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-          <div>
-            <div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase',marginBottom:3}}>CheckON · Subgerência Noite</div>
-            <div style={{fontFamily:"'Sora',sans-serif",fontSize:20,fontWeight:900,letterSpacing:'-.3px'}}>
-              {saudacao}, {user.name.split(' ')[0]}. 🌙
-            </div>
-          </div>
+    <div style={{minHeight:'100vh',background:'var(--bg)',paddingBottom:32}}>
+      <div style={{background:'#EA1D2C',color:'#fff',height:52,padding:'0 16px',display:'flex',alignItems:'center',position:'sticky',top:0,zIndex:100}}>
+        <div style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div><div style={{fontSize:9,opacity:.7,fontWeight:700,letterSpacing:2,textTransform:'uppercase'}}>CheckON · Subgerência</div><div style={{fontFamily:"'Sora',sans-serif",fontSize:15,fontWeight:800}}>Turno da Noite</div></div>
           <div style={{display:'flex',gap:6}}>
             <button onClick={function(){setMode('historico');}} className="hdr-btn">📈 Evolução</button>
             <button className="hdr-btn" onClick={onLogout}>Sair</button>
           </div>
         </div>
       </div>
-
-      <div style={{maxWidth:720,margin:'0 auto',padding:'16px 16px 0'}}>
-
-        {/* ── SCORE ANTERIOR — contexto do turno (Don Norman: ela chega sabendo) ── */}
-        {scoreAnterior!==null&&(
-          <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'12px 14px',marginBottom:12,display:'flex',alignItems:'center',gap:12}}>
-            <div style={{width:44,height:44,borderRadius:'50%',background:scoreAnterior>=80?'#F0FDF4':scoreAnterior>=60?'#FFFBEB':'#FEF2F2',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-              <span style={{fontFamily:"'Sora',sans-serif",fontSize:16,fontWeight:900,color:scoreAnterior>=80?'#16A34A':scoreAnterior>=60?'#D97706':'#DC2626'}}>{scoreAnterior}</span>
-            </div>
-            <div>
-              <div style={{fontSize:12,fontWeight:700,color:'#111827'}}>Seu último turno</div>
-              <div style={{fontSize:11,color:'#6B7280',marginTop:1}}>
-                {scoreAnterior>=80?'Turno sólido. Bora manter! 🔥':scoreAnterior>=60?'Bom turno. Tem espaço pra crescer.':'Turno difícil. Hoje é uma nova chance.'}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── PENDÊNCIAS DA MANHÃ — briefing (Frankl: ela sabe o contexto antes de começar) ── */}
-        {pendManhaInfo&&pendManhaInfo.pendencias>0&&(
-          <div style={{background:'#FEF3C7',border:'1.5px solid #FDE68A',borderRadius:12,padding:'12px 14px',marginBottom:12}}>
-            <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
-              <span style={{fontSize:16}}>⚠️</span>
-              <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#92400E'}}>
-                {pendManhaInfo.pendencias} pendência{pendManhaInfo.pendencias>1?'s':''} da manhã
-              </div>
-            </div>
-            <div style={{fontSize:12,color:'#78350F'}}>
-              {pendManhaInfo.responsavel&&<span>{pendManhaInfo.responsavel} deixou registrado{pendManhaInfo.horario?' às '+pendManhaInfo.horario:''}. </span>}
-              Verifique antes de começar o turno.
-            </div>
-          </div>
-        )}
-        {pendManhaInfo&&pendManhaInfo.pendencias===0&&pendManhaInfo.responsavel&&(
-          <div style={{background:'#F0FDF4',border:'1px solid #BBF7D0',borderRadius:12,padding:'12px 14px',marginBottom:12,display:'flex',alignItems:'center',gap:8}}>
-            <span style={{fontSize:16}}>✅</span>
-            <div style={{fontSize:12,color:'#166534'}}>
-              Manhã sem pendências{pendManhaInfo.responsavel?' — '+pendManhaInfo.responsavel+(pendManhaInfo.horario?' às '+pendManhaInfo.horario:''):''}. Turno limpo pra você.
-            </div>
-          </div>
-        )}
-
-        {/* ── DECLARAÇÃO DE INTENÇÃO — Momento 1 (Gollwitzer: implementation intention) ── */}
-        {!declaracaoFeita?(
-          <div style={{background:'#fff',borderRadius:12,border:'1.5px solid #EA1D2C',padding:'16px',marginBottom:12}}>
-            <div style={{fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,color:'#111827',marginBottom:4}}>
-              Antes de começar — uma pergunta rápida
-            </div>
-            <div style={{fontSize:13,color:'#6B7280',marginBottom:12}}>
-              O que mais preocupa você hoje?
-            </div>
-            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
-              {CHIPS_DECLARACAO.map(function(chip){return(
-                <button key={chip} onClick={function(){handleDeclaracao(chip);}}
-                  style={{padding:'8px 14px',borderRadius:99,border:'1.5px solid #EA1D2C',background:'#FFF0F1',
-                    fontFamily:"'Sora',sans-serif",fontSize:12,fontWeight:700,color:'#EA1D2C',cursor:'pointer'}}>
-                  {chip}
-                </button>
-              );})}
-            </div>
-          </div>
-        ):(
-          <div style={{background:'#FFF0F1',borderRadius:12,border:'1px solid #FECACA',padding:'10px 14px',marginBottom:12,display:'flex',alignItems:'center',gap:8}}>
-            <span style={{fontSize:14}}>🎯</span>
-            <div style={{fontSize:12,color:'#991B1B'}}>
-              Atenção redobrada hoje: <strong>{declaracao}</strong>
-            </div>
-          </div>
-        )}
-
-        {/* ── RASCUNHO — continuar turno ── */}
-        {temRascunho&&(
-          <div style={{background:'#fff',borderRadius:12,border:'1.5px solid #EA1D2C',padding:'14px',marginBottom:12}}>
-            <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#111827',marginBottom:8}}>
-              Você tem um turno em andamento
-            </div>
-            <div style={{background:'#F3F4F6',borderRadius:8,overflow:'hidden',marginBottom:10}}>
-              <div style={{height:8,background:'#EA1D2C',width:rascunhoPct.pct+'%',borderRadius:8,transition:'width .3s'}}/>
-            </div>
-            <div style={{fontSize:11,color:'#6B7280',marginBottom:12}}>
-              {rascunhoPct.pct}% concluído — {rascunhoPct.respondidos} de {rascunhoPct.total} itens respondidos
-            </div>
-            <button onClick={handleIniciar}
-              style={{width:'100%',padding:'13px',background:'#EA1D2C',color:'#fff',borderRadius:10,
-                fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,border:'none',cursor:'pointer'}}>
-              Continuar turno →
-            </button>
-          </div>
-        )}
-
-        {/* ── MISSÕES PREVIEW — com destaque na missão do horário atual ── */}
-        {!temRascunho&&(function(){
-          var horaAtual=new Date().getHours();
-          var idxAtivo=0;
-          if(horaAtual>=22)idxAtivo=4;
-          else if(horaAtual>=21)idxAtivo=3;
-          else if(horaAtual>=18)idxAtivo=2;
-          else if(horaAtual>=15)idxAtivo=1;
-          else idxAtivo=0;
-          var missaoAtiva=NOITE_ETAPAS[idxAtivo];
-          return(
-            <div style={{background:'#fff',borderRadius:12,border:'1px solid #E5E7EB',padding:'14px',marginBottom:12}}>
-              <div style={{fontFamily:"'Sora',sans-serif",fontSize:13,fontWeight:800,color:'#111827',marginBottom:4}}>
-                Seu turno de hoje — 5 missões
-              </div>
-              <div style={{fontSize:11,color:'#6B7280',marginBottom:12}}>
-                Começando pela missão do momento atual
-              </div>
-              {NOITE_ETAPAS.map(function(e,i){
-                var ativa=i===idxAtivo;
-                var passada=i<idxAtivo;
-                return(
-                  <div key={e.id} style={{
-                    display:'flex',alignItems:'center',gap:10,padding:'10px 10px',
-                    marginBottom:6,borderRadius:10,
-                    background:ativa?'#FFF0F1':'transparent',
-                    border:ativa?'1.5px solid #EA1D2C':'1px solid #F3F4F6',
-                    opacity:passada?.5:1
-                  }}>
-                    <span style={{fontSize:18,width:28,textAlign:'center',flexShrink:0}}>{e.emoji}</span>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:13,fontWeight:ativa?800:600,color:ativa?'#EA1D2C':'#111827'}}>{e.titulo}</div>
-                      <div style={{fontSize:11,color:ativa?'#EA1D2C':'#9CA3AF',fontWeight:600,marginTop:1}}>{e.horario}</div>
-                    </div>
-                    <div style={{display:'flex',alignItems:'center',gap:6}}>
-                      <div style={{fontSize:11,color:ativa?'#EA1D2C':'#9CA3AF'}}>{e.itens.length} itens</div>
-                      {ativa&&<span style={{background:'#EA1D2C',color:'#fff',borderRadius:99,padding:'2px 8px',fontSize:9,fontWeight:800}}>AGORA</span>}
-                      {passada&&<span style={{fontSize:12}}>⏭</span>}
-                    </div>
-                  </div>
-                );
-              })}
-              <button onClick={handleIniciar}
-                style={{width:'100%',padding:'13px',background:'#EA1D2C',color:'#fff',borderRadius:10,
-                  fontFamily:"'Sora',sans-serif",fontSize:14,fontWeight:800,border:'none',cursor:'pointer',marginTop:8}}>
-                Iniciar — {missaoAtiva.emoji} {missaoAtiva.titulo} →
-              </button>
-            </div>
-          );
-        })()}
-
-        {/* ── FEEDBACK DA CEO ── */}
-        <FeedbackCEOCard login="vitoria"/>
-
-      </div>
+      <BoasVindasInteligente
+        user={user}
+        tabela="subger_noite_checklists"
+        turnoLabel="Subgerência Noite"
+        cor="#EA1D2C"
+        emoji="🌙"
+        itensCriticos={allNoiteItems}
+        etapas={etapasPreview}
+        rascunhoPct={rascunhoPct}
+        pendenciasManhaInfo={pendManhaInfo}
+        onIniciar={function(){setMode('checklist');}}
+      />
+      <FeedbackCEOCard login="vitoria"/>
     </div>
   );
 }
@@ -6002,47 +5320,6 @@ function SubgerenteHub(props){
 
 /* ══ FIM DOS MÓDULOS SUBGERÊNCIA ══ */
 
-function SplashScreen(props){
-  var onEnter=props.onEnter;
-  return(
-    <div className="splash-bg">
-      <div className="splash-noise"/>
-      <div className="splash-glow"/>
-      <div className="splash-glow2"/>
-      <div className="splash-inner">
-        <div className="splash-badge">
-          <div className="splash-badge-dot"/>
-          <span className="splash-badge-txt">CheckON · Pastel da Camilla</span>
-        </div>
-        <div className="splash-logo-area">
-          <div className="splash-logo-circle">🥟</div>
-          <div className="splash-logo-name">
-            <b>CheckON</b>
-            <small>Gestão de turno inteligente</small>
-          </div>
-        </div>
-        <div className="splash-headline">
-          Se seu checklist<br/>ainda é <em>na mão</em>,<br/>
-          <span className="line-dim">você tá na década errada.</span>
-        </div>
-        <div className="splash-pills">
-          <div className="splash-pill"><span>⚡</span>Tempo real</div>
-          <div className="splash-pill"><span>📊</span>Score por turno</div>
-          <div className="splash-pill"><span>🔒</span>Rastreável</div>
-          <div className="splash-pill"><span>📱</span>100% no celular</div>
-        </div>
-        <div className="splash-sub">
-          Checklists estruturados, score automático e visibilidade total da operação — sem papel, sem WhatsApp perdido.
-        </div>
-        <button className="splash-cta" onClick={onEnter}>
-          Quero conhecer o CheckON →
-        </button>
-        <div className="splash-skip" onClick={onEnter}>Já tenho acesso — fazer login</div>
-      </div>
-    </div>
-  );
-}
-
 function Login(props){
   var onLogin=props.onLogin;
   var _l=useState('');var login=_l[0];var setLogin=_l[1];
@@ -6088,16 +5365,16 @@ function Login(props){
 }
 
 function App(){
-  /* ARQUITETURA DE SESSÃO:
-     - Sessão é limpa no IIFE de inicialização (síncrono, antes do React montar)
-     - App começa sempre em 'login' — sem estado 'loading' que causava race condition
-     - BUG CORRIGIDO: useEffect com clearSession() rodava após o primeiro render,
-       permitindo que componentes lessem sessão antiga antes da limpeza
-     - REGRA: nunca restaurar sessão automaticamente — usuário sempre faz login */
-  var _p=useState('login');var phase=_p[0];var setPhase=_p[1];
+  var _p=useState('loading');var phase=_p[0];var setPhase=_p[1];
   var _u=useState(null);var user=_u[0];var setUser=_u[1];
+  useEffect(function(){
+    var s=getSession();
+    if(s){var users=getUsers();var u=users[s.key];if(u&&!u.first){setUser(u);setPhase('app');}else setPhase('login');}
+    else setPhase('login');
+  },[]);
   function onLogin(u,key){setUser(u);saveSession({key:key});setPhase('app');}
   function onLogout(){clearSession();setUser(null);setPhase('login');}
+  if(phase==='loading'){return<div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#EA1D2C'}}><div style={{color:'#fff',fontFamily:"'Sora',sans-serif",fontSize:15}}>🥟 Carregando...</div></div>;}
   if(phase==='login'){return<Login onLogin={onLogin}/>;}
   if(phase==='app'){
     if(!user)return<Login onLogin={onLogin}/>;
